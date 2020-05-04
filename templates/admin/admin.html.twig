@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion du site{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1 class="text-center">Gestion du Site</h1>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('admin.article') }}">Articles <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user') }}">Utilisateurs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Base de données</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+      Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+    </span>
+            </div>
+        </nav>
+    </div>
+
+
+{% endblock %}
