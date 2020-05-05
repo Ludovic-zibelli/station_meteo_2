@@ -4,6 +4,7 @@ namespace App\Controller;
 
 
 use App\Entity\User;
+use App\Form\UserType;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ArcticlesRepository;
@@ -31,11 +33,16 @@ class adminController extends AbstractController
      * @var User
      */
     private $user;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
-    public function __construct(UserRepository $user)
+    public function __construct(UserRepository $user, EntityManagerInterface $em)
     {
 
         $this->user = $user;
+        $this->em = $em;
     }
 
     /**
@@ -60,5 +67,52 @@ class adminController extends AbstractController
         return $this->render('admin/user.html.twig',[
             'user' => $user
         ]);
+    }
+
+    /**
+     * @Route("/admin/adduser", name="admin.user.add")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passencod
+     * @return Response
+     */
+    public function addUser(Request $request, UserPasswordEncoderInterface $passencod)
+    {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $password = $passencod->encodePassword($user, $user->getPassword());
+            $user->setPassword($password);
+            $this->em->persist($user);
+            $this->em->flush();
+            $this->addFlash('success', 'Utilisateur ajouter avec succés');
+            return $this->redirectToRoute('user');
+        }
+        return $this->render('admin/useradd.html.twig',[
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/useredit/{id}", name="admin.user.edit", methods="GET|POST")
+     * @param Request $request
+     * @return Response
+     */
+    public function editUser(User $user, Request $request)
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $this->em->flush();
+            $this->addFlash('success', 'Utilisateur modifer avec succés');
+            return $this->redirectToRoute('user');
+        }
+        return $this->render('admin/useredit.html.twig',[
+           'form' => $form->createView()
+        ]);
+
     }
 }

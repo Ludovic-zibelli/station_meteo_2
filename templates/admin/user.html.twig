@@ -3,6 +3,56 @@
 {% block title %}Gestion du site{% endblock %}
 
 {% block body %}
-    <h1>Gestion des utilisateurs</h1>
+    <div class="container">
+        <h1 class="text-center titre">Gestion des utilisateurs</h1>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('admin') }}">Accueil admin<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('admin.user.add') }}">Ajouter un utilisateur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+      Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+    </span>
+            </div>
+        </nav>
+        <div class="row">
+            <div class="col-12">
 
+            <table class="table table-striped">
+            <thead>
+            <tr>
+                <td>Nom</td>
+                <td>Prenom</td>
+                <td>E-mail</td>
+                <td>Date d'enregistrement</td>
+                <td>Actions</td>
+            </tr>
+            </thead>
+                <tbody>
+                {% for user in user %}
+                    <tr>
+                        <td>{{ user.nom }}</td>
+                        <td>{{ user.prenom }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.CreatedAt|date("d/m/Y") }}</td>
+                        <td>
+                            <a href="{{ path ('admin.user.edit', {id: user.id})}}" class="btn btn-primary">Editer</a>
+                            <a href="#" class="btn btn-danger">Supprimer</a>
+
+                        </td>
+                    </tr>
+            {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
 {% endblock %}

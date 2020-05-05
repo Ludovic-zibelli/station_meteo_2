@@ -40,6 +40,8 @@
 				<thead>
 					<tr>
 						<td>Titre de l'article</td>
+						<td>Categorie</td>
+						<td>Date de création</td>
 						<td>Actions</td>
 					</tr>
 				</thead>
@@ -47,6 +49,8 @@
 					{% for article in articles %}
 					<tr>
 						<td>{{ article.titre }}</td>
+						<td>{{ article.category }}</td>
+						<td>{{ article.CreatedAt|date("d/m/Y") }}</td>
 						<td>
 							<a href="{{ path ('admin.articles.edit', {id: article.id})}}" class="btn btn-primary">Editer</a>
 							<form method="POST" action="{{ path ('admin.articles.delete', {id: article.id})}}" style="display:inline-block">
