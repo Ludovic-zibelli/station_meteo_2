@@ -1,0 +1,88 @@
+#paysage
+{
+	width: 100%;
+    height: 500px;
+    background-image:url("/images/paysage.jpg") ;
+    background-size: cover;
+}
+
+.donnee_meteo
+{
+	margin-top: 10px;
+}
+
+.articles_home
+{
+	margin-top: 10px;
+}
+
+.contact_home
+{
+	margin-top: 10px;
+}
+
+.gauges_index
+{
+	margin-top: 10px;
+}
+
+ul 
+{
+	list-style-type: none;
+	display: inline-block;
+	margin: 0px;
+}
+
+.bouton_add_sauv
+{
+	padding-top: 10px;
+}
+
+.titre
+{
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+
+.bd-placeholder-img
+{
+	font-size: 1.125rem;
+	text-anchor: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.form-signin
+{
+	width: 100%;
+	max-width: 330px;
+	padding: 15px;
+	margin: auto;
+}
+
+.form-signin .checkbox {
+	font-weight: 400;
+}
+.form-signin .form-control {
+	position: relative;
+	box-sizing: border-box;
+	height: auto;
+	padding: 10px;
+	font-size: 16px;
+}
+.form-signin .form-control:focus {
+	z-index: 2;
+}
+.form-signin input[type="email"] {
+	margin-bottom: -1px;
+	border-bottom-right-radius: 0;
+	border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+	margin-bottom: 10px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}

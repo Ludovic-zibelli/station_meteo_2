@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.titre }}{% endblock %}
+
+{% block body %}
+
+	<div class='jumbotron'>
+		<h1>{{ article.titre }}</h1>
+	</div>
+
+	<div class="row">
+		<div class="container">
+			<div class="col-4">
+			</div>
+			<div class="col-8">
+				{{ article.content }}
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<p>Auteur de l'article: {{ article.auteur }} | Date de création de l'article .</p>
+	</div>
+	<div class="row">
+		<div class="card">
+  			<div class="card-header">
+    			Commentaires
+  			</div>
+  			<div class="card-body">
+    			<h5 class="card-title">Laissez un commentaire sur l'article</h5>
+    			<p> class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    			<a href="#" class="btn btn-primary">Go somewhere</a>
+  			</div>
+		</div>
+	</div>
+{% endblock %}

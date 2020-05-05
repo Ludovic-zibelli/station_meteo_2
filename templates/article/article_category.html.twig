@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des categorys{% endblock %}
+
+{% block body %}
+	{% for message in app.flashes('success')%}
+		<div class="alert alert-success">
+			{{ message }}
+		</div>
+	{% endfor %}
+<div class="container">
+	<a href="{{ path ('admin.article')}}" class="">Retour</a>
+	<div class="row">
+		<div class="col-12">
+			<h2 class="text-center titre">Gérer les categories</h2>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<td>Liste des categories</td>
+						<td>Actions</td>
+					</tr>
+				</thead>
+				<tbody>
+					{% for cot in category %}
+					<tr>
+						<td>{{ cot.category }}</td>
+						<td>
+							<form method="POST" action="{{ path ('admin.articles.deletecategory', {id: cot.id})}}" style="display:inline-block">
+								<input type="hidden" name="_method" value="DELETE">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cot.id)}}">
+								<button class="btn btn-danger">Supprimer</button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+{{ form_start(form) }}
+<hr>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-12">
+			<h2 class="text-center titre">Ajouter une categorie</h2>
+		</div>
+		<div class="col-2">
+			<p>Nouvelle categorie : </p>
+		</div>
+		<div class="col-6">
+			{{ form_widget(form.category) }}
+		</div>
+		<div class="col-4">
+			<button type="submit" class="btn btn-primary btn-block">Ajouter</button>
+		</div>
+	</div>
+</div>	
+{{ form_end(form) }}	
+{% endblock %}
