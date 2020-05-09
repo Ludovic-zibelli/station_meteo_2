@@ -116,13 +116,18 @@ Bonne visite</p>
 			    	{% for article in articles %}
 			    		<div class="col-4">
 			    			<div class="card">
-			    				<img src="{{ asset('/images/logo_meteo.png') }}" width="300" height="300" class=" " alt="Facebook"
+								{% if article.image %}
+									<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
+								{% else %}
+									<img src="{{ asset('/images/logo_meteo.png') }}" width=100% height=auto class=" " alt="{{ article.titre }}">
+								{% endif %}
+
 			    				<div class="card-body">
 			    					<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
 			    					<div class="card-text">{{ article.content }}</div>
 			    				</div>
 			    				<div class="card-footer">
-			    					<p>Auteur de l'article {{ article.auteur }}|</p>
+			    					<p>Auteur de l'article {{ article.auteur }}|Editer le {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
 			    				</div>
 			    			</div>
 			    		</div> 

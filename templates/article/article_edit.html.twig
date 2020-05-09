@@ -5,44 +5,53 @@
 {% block body %}
 
 <div class="container">
-	<a href="{{ path ('admin.article')}}" class="">Retour</a>
-	<h2 class="text-center titre">Editer un article</h2>
-{{ form_start(form)}}
-	<div class="row">
-		<div class="col-6">
-			<label>Titre de l'article :</label>
-			{{ form_widget(form.titre) }}
-		</div>
-		<div class="col-6">
-			<label>Auteur de l'article :</label>
-			{{ form_widget(form.auteur) }}
-		</div>
-		<div class="col-6">
-			<label>Category de l'article :</label>
-			{{ form_widget(form.category)}}
-		</div>
-		<div class="col-6">
-			<label>Mettre en ligne :</label>
-			{{ form_widget(form.online)}}
-		</div>
-		<div class="col-12">
-			<label>Contenu de l'article : </label>
-			{{ form_widget(form.content)}}
-		</div>
-		<div class="col-12">
-			<label>Ajouter une image :</label>
-			{{ form_widget(form.image)}}
-		</div>
-	</div>
-		<div class="row bouton_add_sauv">
-			<div class="col-4"></div>
-			<div class="col-4"></div>
-			<div class="col-4">
-				<button type="submit" class="btn btn-primary btn-lg btn-block">Editer</button>
+		<a href="{{ path ('admin.article')}}" class="">Retour</a>
+		<div class="card">
+		<div class="card-body">
+		<h2 class="text-center card-title titre">Editer un article</h2>
+		<form method="post" enctype="multipart/form-data">
+	{{ form_start(form)}}
+		<div class="row">
+			<div class="col-12 mt-10">
+				<h6 class="card-subtitle mb-2 text-muted">Titre de l'article :</h6>
+				{{ form_widget(form.titre) }}
+			</div>
+			<div class="col-12 mt-10">
+				<h6 class="card-subtitle mb-2 text-muted">Auteur de l'article :</h6>
+				{{ form_widget(form.auteur) }}
+			</div>
+			<div class="col-6 mt-10">
+				<h6 class="card-subtitle mb-2 text-muted">Category de l'article :</h6>
+				{{ form_widget(form.category)}}
+			</div>
+			<div class="col-6 mt-10">
+				<h6 class="card-subtitle mb-2 text-muted">Mettre en ligne :</h6>
+				{{ form_widget(form.online)}}
+			</div>
+			<div class="col-12 mt-10">
+				<h6 class="card-subtitle mb-2 text-muted">Contenu de l'article :</h6>
+				{{ form_widget(form.content)}}
+			</div>
+			<div class="col-12 mt-10">
+				{% if article.image %}
+					<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
+				{% else %}
+					<h6 class="card-subtitle mb-2 text-muted">Aucune image pour cette article</h6>
+				{% endif %}
+				<h6 class="card-subtitle mb-2 text-muted">Ajouter une image :</h6>
+				{{ form_widget(form.imageFile)}}
 			</div>
 		</div>
-</div>
+			<div class="row bouton_add_sauv">
 
+				<div class="col-12">
+					<button type="submit" class="btn btn-primary btn-lg btn-block">Editer</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 {{ form_end(form)}}
+	</form>
 
 {% endblock %}

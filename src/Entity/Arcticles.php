@@ -5,9 +5,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArcticlesRepository")
+ * @Vich\Uploadable
  */
 class Arcticles
 {
@@ -49,9 +54,17 @@ class Arcticles
     private $online;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $image;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="product_images", fileNameProperty="image")
+     *
+     */
+    private $imageFile;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="arcticles")
@@ -63,6 +76,11 @@ class Arcticles
      * @ORM\OneToMany(targetEntity="App\Entity\Commentaires", mappedBy="arcticles")
      */
     private $commentaires;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
 
 
 
@@ -154,7 +172,7 @@ class Arcticles
         return $this->image;
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
 
@@ -203,6 +221,45 @@ class Arcticles
 
         return $this;
     }
+
+    /**
+     * @return File|null
+     */
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param File|null $imageFile
+     * @return Arcticles
+     */
+
+    public function setImageFile(?File $imageFile ): Arcticles
+    {
+        $this->imageFile = $imageFile;
+
+        // Only change the updated af if the file is really uploaded to avoid database updates.
+        // This is needed when the file should be set when loading the entity.
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updated_at = new \DateTime('now');
+        }
+        return $this;
+    }
+
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
 
 
 }

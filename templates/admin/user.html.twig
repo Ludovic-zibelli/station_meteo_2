@@ -4,6 +4,11 @@
 
 {% block body %}
     <div class="container">
+        {% for message in app.flashes('success')%}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
         <h1 class="text-center titre">Gestion des utilisateurs</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse" id="navbarText">
@@ -45,7 +50,11 @@
                         <td>{{ user.CreatedAt|date("d/m/Y") }}</td>
                         <td>
                             <a href="{{ path ('admin.user.edit', {id: user.id})}}" class="btn btn-primary">Editer</a>
-                            <a href="#" class="btn btn-danger">Supprimer</a>
+                            <form method="POST" action="{{ path ('admin.user.delete', {id: user.id})}}" style="display:inline-block">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id)}}">
+                                <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette utilisateur?')">Supprimer</button>
+                            </form>
 
                         </td>
                     </tr>
