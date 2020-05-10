@@ -133,16 +133,23 @@ Bonne visite</p>
 			    		</div> 
 			    	{% endfor %}
 	</div>
+	{{ form_start(form) }}
 	<div class="row contact_home">
 		<div class="col-12">
 			<div class="card">
 			  <div class="card-header">
 			    Contact
 			  </div>
+				{% for message in app.flashes('success')%}
+					<div class="alert alert-success">
+						{{ message }}
+					</div>
+				{% endfor %}
 			  <div class="card-body">
-			    <h5 class="card-title">Contact</h5>
-			    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-			    <a href="#" class="btn btn-primary">Go somewhere</a>
+				 {{ form_widget(form) }}
+				  <button class="btn btn-primary" type="submit">Envoyer</button>
+				  {{ form_end(form) }}
+				  </div>
 			  </div>
 			</div>
 		</div>

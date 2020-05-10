@@ -25,8 +25,9 @@ class ArcticlesRepository extends ServiceEntityRepository
     public function findLatest(): array
     {
          return $this->createQueryBuilder('a')
+             ->where('a.online = true')
             ->orderBy('a.id', 'DESC')
-            ->setMaxResults(5)
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult()
         ;

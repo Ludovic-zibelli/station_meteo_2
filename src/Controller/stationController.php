@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Contact;
+use App\Form\ContactType;
+use App\Notification\ContactNotification;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,11 +39,21 @@ class stationController extends AbstractController
      * @param ArcticlesRepository $repotisory
      * @return Response
      */
-    public function home()
+    public function home(Request $request, ContactNotification $notification)
     {
+        $contact = new Contact();
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $notification->notify($contact);
+            $this->addFlash('success', 'Votre message a bien été envoyer');
+            return $this->redirectToRoute('home');
+        }
     	$articles = $this->repotisory->findLatest();
         return $this->render('station/index.html.twig', [
-        	'articles' => $articles
+        	'articles' => $articles,
+            'form' => $form->createView()
         ]);
     }
 
