@@ -103,3 +103,13 @@ label
 	float: none; /* Added */
 	margin-bottom: 10px; /* Added */
 }
+
+.envoi_contact
+{
+	padding-top: 15px;
+}
+
+.card_admin
+{
+	margin-top: 10px;
+}

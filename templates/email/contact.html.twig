@@ -12,7 +12,7 @@
         <td background="http://projet4.ludoviczibelli.fr/fond_bleu.png" bgcolor="#7bceeb" width="120" height="92" valign="top">
             <!--[if gte mso 9]>
             <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" style="width:120px;height:92px;">
-                <v:fill type="tile" src="http://projet4.ludoviczibelli.fr/fond_bleu.png" color="#7bceeb" />
+                <v:fill type="tile" src="http://projet4.ludoviczibelli.fr/fond_bleu.png" color="#787878" />
                 <v:textbox inset="0,0,0,0">
             <![endif]-->
             <div>
@@ -24,24 +24,26 @@
                          </td>
                      </tr>
                     <tr style="text-align: center;">
-                        <a href="www.meteospit.fr">
-                            <img src="http://projet4.ludoviczibelli.fr/logo_meteo_head.png" width="40" border="0" alt="Logo de meteospit.fr">
-                        </a> 
+                        <td>
+                            <a href="www.meteospit.fr">
+                                <img src="http://meteospit.zibelli-ludovic.fr//logo_meteo_head.png" width="260" height="100" alt="Logo de meteospit.fr">
+                            </a>
+                        </td>
                     </tr>
                      <tr>
                          <td height="30" style="font-size:30px; line-height: 30px;">
                              &nbsp;
                          </td>
                      </tr>
-                    <tr>
-                        <td>{{ contact.prenom }} vous a envoyer un message</td>
+                    <tr style="text-align: center;">
+                        <td>Vous avez eu un message du formulaire de contact du site</td>
                     </tr>
                      <tr>
                          <td height="30" style="font-size:30px; line-height: 30px;">
                              &nbsp;
                          </td>
                      </tr>
-                    <tr>
+                    <tr style="text-align: center;">
                         <td>Message de {{ contact.nom }} {{ contact.prenom }}({{ contact.email }})</td>
                     </tr>
                      <tr>
@@ -52,6 +54,21 @@
                     <tr>
                         <td>{{ contact.message }}</td>
                     </tr>
+                     <tr>
+                         <td height="30" style="font-size:30px; line-height: 30px;">
+                             &nbsp;
+                         </td>
+                     </tr>
+                    <tr style="text-align: center;">
+                        <td>
+                            Répondre au message <a href="mailto:{{contact.email}}">{{ contact.email }}</a>
+                        </td>
+                    </tr>
+                     <tr>
+                         <td height="30" style="font-size:30px; line-height: 30px;">
+                             &nbsp;
+                         </td>
+                     </tr>
                  </tbody>
                 </table>
             </div>

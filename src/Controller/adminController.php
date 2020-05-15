@@ -53,7 +53,10 @@ class adminController extends AbstractController
 
     public function admin()
     {
-        return $this->render('admin/admin.html.twig');
+        $heure = date("H:i");
+        return $this->render('admin/admin.html.twig',[
+            'heure' => $heure
+            ]);
     }
 
     /**

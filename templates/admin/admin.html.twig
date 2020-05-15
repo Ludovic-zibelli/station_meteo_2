@@ -3,6 +3,7 @@
 {% block title %}Gestion du site{% endblock %}
 
 {% block body %}
+    <?php header('Access-Control-Allow-Origin: *'); ?>
     <div class="container-fluid">
         <h1 class="text-center">Gestion du Site</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -26,7 +27,98 @@
     </span>
             </div>
         </nav>
+        <div class="card card_admin">
+            <div class="card-header text-center">
+                <h2>Données brut de la station Météo</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title text-center">Données en direct</h5>
+                <p class="text-center">Rafraîchissement des données dans <span id="compteur">30</span> seconde(s)...</p>
+                <div class="row text-center">
+                    <div class="col">
+
+                        <span id="online"></span>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col">
+                        Heure du relevé: <span id="heure_releve"> </span> Date du relevé:<span id="date_releve"> </span>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col">
+                        <table id="donne_meteo" class="table table-hover">
+                                <tbody>
+                                <tr>
+                                    <td>Température DHT11</td>
+                                    <td id="temp_dht11"></td>
+                                    <td>C°</td>
+                                </tr>
+                                <tr>
+                                    <td>Température BMP180</td>
+                                    <td id="temp_bmp180"></td>
+                                    <td>C°</td>
+                                </tr>
+                                <tr>
+                                    <td>Capteur de lumière</td>
+                                    <td id="capt_lumi"></td>
+                                    <td>lux</td>
+                                </tr>
+                                <tr>
+                                    <td>Anemométre</td>
+                                    <td id="anemo"></td>
+                                    <td>Km/h</td>
+                                </tr>
+                                <tr>
+                                    <td>Tension capteur solaire</td>
+                                    <td id="tens_capt"></td>
+                                    <td>vlt</td>
+                                </tr>
+                                <tr>
+                                    <td>Taux d'ensoleilement</td>
+                                    <td id="taux_soleil"></td>
+                                    <td>%</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" id="taux">
+
+                                    </td>
+                                </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>Humiditer DHT11</td>
+                                    <td id="humiditer"></td>
+                                    <td>%</td>
+                                </tr>
+                                <tr>
+                                    <td>Pression atmo BMP180</td>
+                                    <td id="pression"></td>
+                                    <td>hpa</td>
+                                </tr>
+                                <tr>
+                                    <td>Pluviométre</td>
+                                    <td id="pluvio"></td>
+                                    <td>mm</td>
+                                </tr>
+                                <tr>
+                                    <td>Girouette</td>
+                                    <td id="girou"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="{{ asset('js/donnee_meteo.js') }}"></script>
+    <script src="{{ asset('js/moment-with-locales.js') }}"></script>
 
 
 {% endblock %}

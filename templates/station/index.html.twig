@@ -146,8 +146,38 @@ Bonne visite</p>
 					</div>
 				{% endfor %}
 			  <div class="card-body">
-				 {{ form_widget(form) }}
-				  <button class="btn btn-primary" type="submit">Envoyer</button>
+				  <div class="row">
+					  <div class="col">
+						  <p>Vous avez une question n’hesitez pas contactez nous avec le formulaire ci-dessous</p>
+					  </div>
+				  </div>
+				  <div class="row">
+					  <div class="col">
+						  <h6 class="card-subtitle mb-2 text-muted">Nom</h6>
+						  {{ form_widget(form.nom) }}
+					  </div>
+					  <div class="col">
+						  <h6 class="card-subtitle mb-2 text-muted">Prenom</h6>
+						  {{ form_widget(form.prenom) }}
+					  </div>
+				  </div>
+				  <div class="row">
+					  <div class="col">
+						  <h6 class="card-subtitle mb-2 text-muted">E-mail</h6>
+						  {{ form_widget(form.email) }}
+					  </div>
+				  </div>
+				  <div class="row">
+					  <div class="col">
+						  <h6 class="card-subtitle mb-2 text-muted">Message</h6>
+						  {{ form_widget(form.message) }}
+					  </div>
+				  </div>
+				  <div class="row envoi_contact">
+					  <div class="col">
+						  <button class="btn btn-primary btn-block" type="submit">Envoyer</button>
+					  </div>
+				  </div>
 				  {{ form_end(form) }}
 				  </div>
 			  </div>
