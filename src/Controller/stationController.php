@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Notification\ContactNotification;
+use App\Notification\GetStationNotification;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,6 +87,21 @@ class stationController extends AbstractController
     public function mention()
     {
         return $this->render('station/mention_legales.html.twig');
+    }
+
+    /**
+     * @Route("getstation", name="getstation")
+     * @param Request $request
+     * @return Response
+     */
+    public function getStation(Request $request, GetStationNotification $getstation)
+    {
+        $getstation->getStation($request);
+        $temp1 = $request->get('temp1');
+        $essai = $request;
+        return $this->render('station/historique.html.twig', [
+            'essai' => $temp1
+        ]);
     }
 }
 
