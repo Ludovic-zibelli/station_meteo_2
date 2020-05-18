@@ -98,9 +98,9 @@ class stationController extends AbstractController
     {
         $getstation->getStation($request);
         $temp1 = $request->get('temp1');
-        $essai = $request;
+        $essai = $getstation->essai();
         return $this->render('station/historique.html.twig', [
-            'essai' => $temp1
+            'essai' => $essai
         ]);
     }
 }

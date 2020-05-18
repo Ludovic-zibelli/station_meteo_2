@@ -62,7 +62,6 @@ class Station
     private $point_rosee;
 
 
-
     public function __construct()
     {
         $this->date_heure = new \DateTime();
