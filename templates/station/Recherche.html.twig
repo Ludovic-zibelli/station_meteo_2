@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultat de votre recherche{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Résultat de la recherche</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Nous avons trouvé ??? résulats</p>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Date Heure</th>
+                            <th scope="col">Température</th>
+                            <th scope="col">Pression</th>
+                            <th scope="col">Humidité</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                {% for resultat in resultats %}
+                        <tr>
+                            <th scope="row">{{ resultat.id }}</th>
+                            <td>{{ resultat.dateheure|date("d/m/Y H:i") }}</td>
+                            <td>{{ resultat.temperature }}</td>
+                            <td>{{ resultat.pression }}</td>
+                            <td>{{ resultat.humiditer }}</td>
+                        </tr>
+                {% endfor %}
+                        </tbody>
+                    </table>
+                    <a href="{{ path('historique') }}">Retour a la page Historique</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}

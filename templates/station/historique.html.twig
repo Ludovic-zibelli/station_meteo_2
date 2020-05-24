@@ -1,8 +1,188 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h2>Historique des données Météo de la station</h2>
+{% block title %}Historique de la station Météo{% endblock %}
 
-    {{ essai }}
+{% block body %}
+    <div class="container-fluid">
+        <div class="jumbotron text-center">
+            <h2>Historique des données Météo de la station</h2>
+        </div>
+        <div class="row">
+            <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Températures</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text" >Historiques des températures sur 24H</p>
+                    <div id="div_chartT"></div>
+                </div>
+            </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Pression atmosphérique</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Historiques de la Pression atmosphérique sur 24H</p>
+                        <div id="div_chartP"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Humidité</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Historiques de l'humidité sur 24H</p>
+                        <div id="div_chartH"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Historique des Mini est des Maxi de la station</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Petit historique des Mini et Maxi de la station Météo J-2</p>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col" colspan="2">Température</th>
+                                <th scope="col" colspan="2">Point de rosée</th>
+                                <th scope="col" colspan="2">Humidité</th>
+                                <th scope="col" colspan="2">Pression </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td>Mini</td>
+                                <td>Maxi</td>
+                                <td>Mini</td>
+                                <td>Maxi</td>
+                                <td>Mini</td>
+                                <td>Maxi</td>
+                                <td>Mini</td>
+                                <td>Maxi</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p>Historique des Mini Maxi depuis la mise en marche de la station Météo</p>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col" colspan="2">Température</th>
+                                <th scope="col" colspan="2">Point de rosée</th>
+                                <th scope="col" colspan="2">Humidité</th>
+                                <th scope="col" colspan="2">Pression </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td>Mini</td>
+                                    <td>Maxi</td>
+                                    <td>Mini</td>
+                                    <td>Maxi</td>
+                                    <td>Mini</td>
+                                    <td>Maxi</td>
+                                    <td>Mini</td>
+                                    <td>Maxi</td>
+                                </tr>
+                                <tr class="table-active">
+                                    <th scope="col">Date</th>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">Moteur de recherche de la STATION METEO</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Pour faire des recherches plus presise sur la base de données de la station.</p>
+                        <p class="card-text">Bien respecter le format : 2000-00-00 00: 00: 00</p>
+                        {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="card-subtitle mb-2 text-muted">Filtre</h6>
+                                {{ form_widget(form.filtre) }}
+                            </div>
+                        </div>
+                        <div class="row" >
+                            <div class="col center_div">
+                                <h6 class="card-subtitle mb-2 text-muted">Date de début</h6>
+                                {{ form_widget(form.date_debut) }}
+                            </div>
+                            <div class="col text-center">
+                                <h6 class="card-subtitle mb-2 text-muted">Date de fin</h6>
+                                {{ form_widget(form.date_fin) }}
+                            </div>
+                        </div>
+                        <div class="row recherche">
+                            <div class="col">
+                                <button class="btn btn-primary" type="submit">Recherche</button>
+                            </div>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        {{ gc_language('fr') }}
+        {{ gc_draw(chartT, 'div_chartT') }}
+        {{ gc_draw(chartP, 'div_chartP') }}
+        {{ gc_draw(chartH, 'div_chartH') }}
+    </script>
+
 {% endblock %}
 

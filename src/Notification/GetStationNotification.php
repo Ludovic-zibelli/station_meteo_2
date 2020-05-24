@@ -195,10 +195,9 @@ class GetStationNotification
         }
 
         //$this->addBdd();
-        //$this->miniMaxi();
         $this->realTimeGauges();
         $this->stationDirect();
-        $this->fichierMn();
+
 
 
 
@@ -230,28 +229,6 @@ class GetStationNotification
 
     }
 
-    function fichierMn()
-    {
-        $monfichierMn = fopen('minimaxi.txt', 'w+');
-        fseek($monfichierMn, 0);
-        fputs($monfichierMn, $this->mini_temp . "\n");
-        fputs($monfichierMn, $this->maxi_temp . "\n");
-        fputs($monfichierMn, $this->mini_humi . "\n");
-        fputs($monfichierMn, $this->maxi_humi . "\n");
-        fputs($monfichierMn, $this->mini_pres . "\n");
-        fputs($monfichierMn, $this->maxi_pres . "\n");
-        fputs($monfichierMn, $this->mini_lumi . "\n");
-        fputs($monfichierMn, $this->maxi_lumi . "\n");
-        fputs($monfichierMn, $this->mini_ptro . "\n");
-        fputs($monfichierMn, $this->maxi_ptro . "\n");
-        fputs($monfichierMn, $this->mini_anemo . "\n");
-        fputs($monfichierMn, $this->maxi_anemo . "\n");
-        fputs($monfichierMn, $this->mini_girou . "\n");
-        fputs($monfichierMn, $this->maxi_girou . "\n");
-        fputs($monfichierMn, $this->mini_pluvio . "\n");
-        fputs($monfichierMn, $this->maxi_pluvio . "\n");
-        fclose($monfichierMn);
-    }
 
     //Calcul du point de rosee
     function ptRosee()
@@ -371,77 +348,7 @@ class GetStationNotification
         $this->em->flush();
     }
 
-    //Function pour calculs comparaison des mini/maxi
-    function miniMaxi()
-    {
-        $fichier_sd = 'minimaxi.txt';
-        $read = file($fichier_sd);
-        //Recuperation des mini maxi pour le compare
-        $this->mini_temp = $read[0];
-        $this->maxi_temp = $read[1];
-        $this->mini_humi = $read[2];
-        $this->maxi_humi = $read[3];
-        $this->mini_pres = $read[4];
-        $this->maxi_pres = $read[5];
-        $this->mini_lumi = $read[6];
-        $this->maxi_lumi = $read[7];
-        $this->mini_ptro = $read[8];
-        $this->maxi_ptro = $read[9];
-        $this->mini_anemo = $read[10];
-        $this->maxi_anemo = $read[11];
-        $this->mini_girou = $read[12];
-        $this->maxi_girou = $read[13];
-        $this->mini_pluvio = $read[14];
-        $this->maxi_pluvio = $read[15];
-        //Comparaison table journaliere
-        if ($this->temp2 < $this->mini_temp){
-            $this->mini_temp = $this->temp2;
-        }
-        if ($this->temp2 > $this->maxi_temp){
-            $this->maxi_temp = $this->temp2;
-        }
 
-        if ($this->humiditer < $this->mini_humi){
-            $this->mini_humi = $this->humiditer;
-        }
-
-        if ($this->humiditer > $this->maxi_humi){
-            $this->maxi_humi = $this->humiditer;
-        }
-
-        if ($this->pression_ajt < $this->mini_pres){
-            $this->mini_pres = $this->pression_ajt;
-        }
-
-        if ($this->pression_ajt > $this->maxi_pres){
-            $this->maxi_pres = $this->pression_ajt;
-        }
-
-        if ($this->lumiere < $this->mini_lumi){
-            $this->mini_lumi = $this->lumiere;
-        }
-
-        if ($this->lumiere > $this->maxi_lumi){
-            $this->maxi_lumi = $this->lumiere;
-        }
-
-        if ($this->pt_rosee < $this->mini_ptro){
-            $this->mini_ptro = $this->pt_rosee;
-        }
-
-        if ($this->pt_rosee > $this->maxi_ptro){
-            $this->maxi_ptro = $this->pt_rosee;
-        }
-        //PAs encore présent sur la station
-        $this->mini_anemo = 0;
-        $this->maxi_anemo = 0;
-        $this->mini_girou = 0;
-        $this->maxi_girou = 0;
-        $this->mini_pluvio = 0;
-        $this->maxi_pluvio = 0;
-
-
-    }
 
     function essai()
     {

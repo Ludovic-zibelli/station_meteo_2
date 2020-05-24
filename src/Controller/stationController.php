@@ -3,9 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\Recherche;
 use App\Form\ContactType;
+use App\Form\RechercheType;
 use App\Notification\ContactNotification;
 use App\Notification\GetStationNotification;
+use App\Notification\GrapheNotification;
+use App\Notification\MiniMaxiNotification;
+use App\Repository\StationRepository;
+use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,14 +64,35 @@ class stationController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/historique", name="historique")
-     * @param Request $request
+     * @param StationRepository $stationrepo
      * @return Response
      */
-    public function historique()
+    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request)
     {
-        return $this->render('station/historique.html.twig');
+        $station = $stationrepo->findByGraph();
+        $chartT = $graph->temperature($station);
+        $chartP = $graph->pression($station);
+        $chartH = $graph->humidite($station);
+        $recherche = new Recherche();
+        $form = $this->createForm(RechercheType::class, $recherche);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $resultat = $stationrepo->findSearch($recherche);
+            return $this->render('station/Recherche.html.twig',[
+                'resultats' => $resultat,
+
+            ]);
+        }
+
+        return $this->render('station/historique.html.twig', [
+            'chartT' => $chartT,
+            'chartP' => $chartP,
+            'chartH' => $chartH,
+            'form'   => $form->createView()
+        ]);
     }
 
 
@@ -94,11 +121,12 @@ class stationController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function getStation(Request $request, GetStationNotification $getstation)
+    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax)
     {
-        $getstation->getStation($request);
+        //$getstation->getStation($request);
         $temp1 = $request->get('temp1');
-        $essai = $getstation->essai();
+        $essai = 300;
+        $minimax->getMinimaxi($request);
         return $this->render('station/historique.html.twig', [
             'essai' => $essai
         ]);
