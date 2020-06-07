@@ -53,13 +53,32 @@ class StationRepository extends ServiceEntityRepository
      */
     public function findSearch(Recherche $recherche)
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.date_heure > :dateheure')
+
+        $qery = $this->createQueryBuilder('s')
+         ->andWhere('s.date_heure > :dateheure')
+         ->setParameter('dateheure', $recherche->getDateDebut())
+         ->andWhere('s.date_heure < :datefin')
+         ->setParameter('datefin', $recherche->getDateFin());
+
+         return $qery
+             ->getQuery()
+             ->getResult();
+
+    }
+
+    public function getNb(Recherche $recherche)
+    {
+
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.date_heure > :dateheure')
             ->setParameter('dateheure', $recherche->getDateDebut())
-            ->andWhere('s.date_heure < :datefin')
+            ->andWhere('l.date_heure < :datefin')
             ->setParameter('datefin', $recherche->getDateFin())
+            ->select('COUNT(l.id)')
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
+
+
     }
 
     /*

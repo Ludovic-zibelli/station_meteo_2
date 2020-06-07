@@ -66,28 +66,28 @@ class MiniMaxiNotification
      */
     private $mini_temp = 0;
 
-    private $mini_temp_1 = 0;
+    private $mini_temp_1 ;
 
     /**
      * @var int
      */
     private $maxi_temp = 0;
 
-    private $maxi_temp_1 = 0;
+    private $maxi_temp_1 ;
 
     /**
      * @var int
      */
     private $mini_humi = 0;
 
-    private $mini_humi_1 = 0;
+    private $mini_humi_1;
 
     /**
      * @var int
      */
     private $maxi_humi = 0;
 
-    private $maxi_humi_1 = 0;
+    private $maxi_humi_1 ;
 
     /**
      * @var int
@@ -192,21 +192,33 @@ class MiniMaxiNotification
         //$handle = fopen ($filename, "r");
         //$read = fread ($handle, filesize ($filename));
         //fclose ($handle);
-        $read = file('minimaxi.txt');
+        //$read = file('minimaxi.txt');
         //Recuperation des mini maxi
-        $fichier_sd = 'minimaxi.txt';
-        $read = file($fichier_sd);
+        //$fichier_sd = 'minimaxi.txt';
+        //$read = file($fichier_sd);
+        $ressource = fopen('minimaxi.txt', 'rb');
+        $read = fgets($ressource, 1);
         //Recuperation des mini maxi pour le compar
-        $this->mini_temp = $read[0];
-        $this->maxi_temp = $read[2];
-        $this->mini_humi = $read[3];
-        $this->maxi_humi = $read[5];
-        $this->mini_pres = $read[6];
-        $this->maxi_pres = $read[8];
-        $this->mini_lumi = $read[9];
-        $this->maxi_lumi = $read[11];
-        $this->mini_ptro = $read[19];
-        $this->maxi_ptro = $read[20];
+        $this->mini_temp_1 = $read;
+        $read = fgets($ressource, 2);
+        $this->maxi_temp_1 = $read;
+        $read = fgets($ressource, 3);
+        $this->mini_humi_1 = $read;
+        $read = fgets($ressource, 4);
+        $this->maxi_humi_1 = $read;
+        $read = fgets($ressource, 5);
+        $this->mini_pres = $read;
+        $read = fgets($ressource, 6);
+        $this->maxi_pres = $read;
+        $read = fgets($ressource, 7);
+        $this->mini_lumi = $read;
+        $read = fgets($ressource, 8);
+        $this->maxi_lumi = $read;
+        $read = fgets($ressource, 9);
+        $this->mini_ptro = $read;
+        $read = fgets($ressource, 10);
+        $this->maxi_ptro = $read;
+
 
 
 
@@ -238,33 +250,34 @@ class MiniMaxiNotification
     {
 
         //Comparaison table journaliere
-        if ($this->temp2 < $this->mini_temp)
+        if ($this->temp2 < $this->mini_temp_1)
         {
             $this->mini_temp = $this->temp2;
-        }else
+        }
+        else
         {
-            $this->mini_temp = $this->mini_temp;
+            $this->mini_temp = $this->mini_temp_1;
         }
 
-        if ($this->temp2 > $this->maxi_temp)
+        if ($this->temp2 > $this->maxi_temp_1)
         {
             $this->maxi_temp = $this->temp2;
         }
         else
         {
-            $this->maxi_temp = $this->maxi_temp;
+            $this->maxi_temp = $this->maxi_temp_1;
         }
 
-        if ($this->humiditer < $this->mini_humi)
+        if ($this->humiditer < $this->mini_humi_1)
         {
             $this->mini_humi = $this->humiditer;
         }
         else
         {
-            $this->mini_humi = $this->mini_humi;
+            $this->mini_humi = $this->mini_humi_1;
         }
 
-        if ($this->humiditer > $this->maxi_humi)
+        if ($this->humiditer > $this->maxi_humi_1)
         {
             $this->maxi_humi = $this->humiditer;
         }
@@ -279,16 +292,16 @@ class MiniMaxiNotification
         }
         else
         {
-            $this->mini_pres = $this->mini_pres;
+            $this->mini_pres = $this->mini_pres_1;
         }
 
         if ($this->pression_ajt > $this->maxi_pres)
         {
-            $this->maxi_pres = $this->pression_ajt;
+            $this->maxi_pres = $this->pression_ajt;//
         }
         else
         {
-            $this->maxi_pres = $this->maxi_pres;
+            $this->maxi_pres = $this->maxi_pres_1;
         }
 
         if ($this->lumiere < $this->mini_lumi)
@@ -297,7 +310,7 @@ class MiniMaxiNotification
         }
         else
         {
-            $this->mini_lumi = $this->mini_lumi;
+            $this->mini_lumi = $this->mini_lumi_1;
         }
 
         if ($this->lumiere > $this->maxi_lumi)
@@ -306,7 +319,7 @@ class MiniMaxiNotification
         }
         else
         {
-            $this->maxi_lumi = $this->maxi_lumi;
+            $this->maxi_lumi = $this->maxi_lumi_1;
         }
 
         if ($this->pt_rosee < $this->mini_ptro)
@@ -315,7 +328,7 @@ class MiniMaxiNotification
         }
         else
         {
-            $this->mini_ptro = $this->mini_ptro;
+            $this->mini_ptro = $this->mini_ptro_1;
         }
 
         if ($this->pt_rosee > $this->maxi_ptro)
@@ -324,7 +337,7 @@ class MiniMaxiNotification
         }
         else
         {
-            $this->maxi_ptro = $this->maxi_ptro;
+            $this->maxi_ptro = $this->maxi_ptro_1;
         }
         //PAs encore présent sur la station
         $this->mini_anemo = 0;
@@ -341,22 +354,22 @@ class MiniMaxiNotification
     {
         $monfichierMn = fopen('minimaxi.txt', 'w+');
         fseek($monfichierMn, 0);
-        fputs($monfichierMn, $this->mini_temp. "\n");
-        fputs($monfichierMn, $this->maxi_temp. "\n" );
-        fputs($monfichierMn, $this->mini_humi. "\n" );
-        fputs($monfichierMn, $this->maxi_humi. "\n" );
-        fputs($monfichierMn, $this->mini_pres. "\n" );
-        fputs($monfichierMn, $this->maxi_pres. "\n" );
-        fputs($monfichierMn, $this->mini_lumi. "\n" );
-        fputs($monfichierMn, $this->maxi_lumi. "\n" );
-        fputs($monfichierMn, $this->mini_anemo. "\n" );
-        fputs($monfichierMn, $this->maxi_anemo. "\n" );
-        fputs($monfichierMn, $this->mini_girou. "\n" );
-        fputs($monfichierMn, $this->maxi_girou. "\n" );
-        fputs($monfichierMn, $this->mini_pluvio. "\n" );
-        fputs($monfichierMn, $this->maxi_pluvio. "\n" );
-        fputs($monfichierMn, $this->mini_ptro. "\n" );
-        fputs($monfichierMn, $this->maxi_ptro. "\n" );
+        fwrite($monfichierMn, $this->mini_temp. "\n");
+        fwrite($monfichierMn, $this->maxi_temp. "\n" );
+        fwrite($monfichierMn, $this->mini_humi. "\n" );
+        fwrite($monfichierMn, $this->maxi_humi. "\n" );
+        fwrite($monfichierMn, $this->mini_pres. "\n" );
+        fwrite($monfichierMn, $this->maxi_pres. "\n" );
+        fwrite($monfichierMn, $this->mini_lumi. "\n" );
+        fwrite($monfichierMn, $this->maxi_lumi. "\n" );
+        fwrite($monfichierMn, $this->mini_anemo. "\n" );
+        fwrite($monfichierMn, $this->maxi_anemo. "\n" );
+        fwrite($monfichierMn, $this->mini_girou. "\n" );
+        fwrite($monfichierMn, $this->maxi_girou. "\n" );
+        fwrite($monfichierMn, $this->mini_pluvio. "\n" );
+        fwrite($monfichierMn, $this->maxi_pluvio. "\n" );
+        fwrite($monfichierMn, $this->mini_ptro. "\n" );
+        fwrite($monfichierMn, $this->maxi_ptro. "\n" );
         fclose($monfichierMn);
     }
 }

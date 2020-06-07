@@ -10,6 +10,7 @@ use App\Notification\ContactNotification;
 use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
 use App\Notification\MiniMaxiNotification;
+use App\Repository\MiniMaxiRepository;
 use App\Repository\StationRepository;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
 use DateTime;
@@ -69,7 +70,7 @@ class stationController extends AbstractController
      * @param StationRepository $stationrepo
      * @return Response
      */
-    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request)
+    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request, MiniMaxiRepository $minimaxirepo)
     {
         $station = $stationrepo->findByGraph();
         $chartT = $graph->temperature($station);
@@ -81,16 +82,21 @@ class stationController extends AbstractController
         if($form->isSubmitted() && $form->isValid())
         {
             $resultat = $stationrepo->findSearch($recherche);
+            $chartTR = $graph->temperature($resultat);
+            $count = $stationrepo->getNb($recherche);
             return $this->render('station/Recherche.html.twig',[
                 'resultats' => $resultat,
+                'count' => $count,
+                'chartTR' => $chartTR
 
             ]);
         }
-
+        $minimaxi = $minimaxirepo->findMiniMax();
         return $this->render('station/historique.html.twig', [
             'chartT' => $chartT,
             'chartP' => $chartP,
             'chartH' => $chartH,
+            'minimaxi' => $minimaxi,
             'form'   => $form->createView()
         ]);
     }
@@ -127,7 +133,7 @@ class stationController extends AbstractController
         $temp1 = $request->get('temp1');
         $essai = 300;
         $minimax->getMinimaxi($request);
-        return $this->render('station/historique.html.twig', [
+        return $this->render('station/essai.html.twig', [
             'essai' => $essai
         ]);
     }

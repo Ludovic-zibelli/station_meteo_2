@@ -2,36 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\MiniMaxi;
+use App\Entity\MiniMaxiH;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method MiniMaxi|null find($id, $lockMode = null, $lockVersion = null)
- * @method MiniMaxi|null findOneBy(array $criteria, array $orderBy = null)
- * @method MiniMaxi[]    findAll()
- * @method MiniMaxi[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method MiniMaxiH|null find($id, $lockMode = null, $lockVersion = null)
+ * @method MiniMaxiH|null findOneBy(array $criteria, array $orderBy = null)
+ * @method MiniMaxiH[]    findAll()
+ * @method MiniMaxiH[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MiniMaxiRepository extends ServiceEntityRepository
+class MiniMaxiHRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, MiniMaxi::class);
+        parent::__construct($registry, MiniMaxiH::class);
     }
 
-    /**
-     * @return MiniMaxi[]
-     */
-    public function findMiniMax()
-    {
-        return $this->createQueryBuilder('m')
-            ->orderBy('m.id', 'DESC')
-            ->setMaxResults(2)
-            ->getQuery()
-            ->getResult();
-    }
     // /**
-    //  * @return MiniMaxi[] Returns an array of MiniMaxi objects
+    //  * @return MiniMaxiH[] Returns an array of MiniMaxiH objects
     //  */
     /*
     public function findByExampleField($value)
@@ -48,7 +37,7 @@ class MiniMaxiRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?MiniMaxi
+    public function findOneBySomeField($value): ?MiniMaxiH
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.exampleField = :val')

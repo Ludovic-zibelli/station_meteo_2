@@ -64,28 +64,19 @@
                                 <td>Mini</td>
                                 <td>Maxi</td>
                             </tr>
+                            {% for mima in minimaxi %}
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ mima.creatdat|date("d/m/Y H:i") }}</td>
+                                <td>{{ mima.minitemp }} C°</td>
+                                <td>{{ mima.maxitemp }} C°</td>
+                                <td>{{ mima.miniptro }} C°</td>
+                                <td>{{ mima.maxiptro }} C°</td>
+                                <td>{{ mima.minihumi }} %</td>
+                                <td>{{ mima.maxihumi }} %</td>
+                                <td>{{ mima.minipres }} Hpa</td>
+                                <td>{{ mima.maxipres }} Hpa</td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                         <p>Historique des Mini Maxi depuis la mise en marche de la station Météo</p>

@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\MiniMaxiRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\MiniMaxiHRepository")
  */
-class MiniMaxi
+class MiniMaxiH
 {
     /**
      * @ORM\Id()
@@ -54,11 +54,6 @@ class MiniMaxi
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $maxi_lumi;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $mini_ptro;
 
     /**
@@ -97,9 +92,9 @@ class MiniMaxi
     private $maxi_pluvio;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string", length=255)
      */
-    private $creatd_at;
+    private $maxi_lumi;
 
     public function getId(): ?int
     {
@@ -186,18 +181,6 @@ class MiniMaxi
     public function setMiniLumi(string $mini_lumi): self
     {
         $this->mini_lumi = $mini_lumi;
-
-        return $this;
-    }
-
-    public function getMaxiLumi(): ?string
-    {
-        return $this->maxi_lumi;
-    }
-
-    public function setMaxiLumi(string $maxi_lumi): self
-    {
-        $this->maxi_lumi = $maxi_lumi;
 
         return $this;
     }
@@ -298,14 +281,14 @@ class MiniMaxi
         return $this;
     }
 
-    public function getCreatdAt(): ?\DateTimeInterface
+    public function getMaxiLumi(): ?string
     {
-        return $this->creatd_at;
+        return $this->maxi_lumi;
     }
 
-    public function setCreatdAt(\DateTimeInterface $creatd_at): self
+    public function setMaxiLumi(string $maxi_lumi): self
     {
-        $this->creatd_at = $creatd_at;
+        $this->maxi_lumi = $maxi_lumi;
 
         return $this;
     }

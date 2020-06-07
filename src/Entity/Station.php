@@ -64,7 +64,7 @@ class Station
 
     public function __construct()
     {
-        $this->date_heure = new \DateTime();
+        //$this->date_heure = new \DateTime();
     }
 
     public function getId(): ?int
