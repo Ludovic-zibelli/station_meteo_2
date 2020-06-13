@@ -129,13 +129,11 @@ class stationController extends AbstractController
      */
     public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax)
     {
-        //$getstation->getStation($request);
+        $getstation->getStation($request);
         $temp1 = $request->get('temp1');
-        $essai = 300;
+
         $minimax->getMinimaxi($request);
-        return $this->render('station/essai.html.twig', [
-            'essai' => $essai
-        ]);
+        return $this->render('station/essai.html.twig');
     }
 }
 

@@ -19,22 +19,20 @@ class MiniMaxiHRepository extends ServiceEntityRepository
         parent::__construct($registry, MiniMaxiH::class);
     }
 
-    // /**
-    //  * @return MiniMaxiH[] Returns an array of MiniMaxiH objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+      * @return MiniMaxiH[] Returns an array of MiniMaxiH objects
+      */
+
+    public function findByMini()
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(1)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?MiniMaxiH

@@ -3,6 +3,7 @@
 namespace App\Notification;
 
 use App\Entity\Station;
+use App\Repository\MiniMaxiHRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class GetStationNotification
@@ -27,11 +28,17 @@ class GetStationNotification
      */
     private $em;
 
-    function __construct(EntityManagerInterface $em)
+    /**
+     * @var MiniMaxiHRepository
+     */
+    private $repo;
+
+    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo)
     {
         $this->date = date("d.m.Y");
         $this->heure = date("G:i");
         $this->em = $em;
+        $this->repo = $repo;
 
     }
 
@@ -194,13 +201,10 @@ class GetStationNotification
             $this->addBdd();
         }
 
+        $this->minimaxi();
         //$this->addBdd();
         $this->realTimeGauges();
         $this->stationDirect();
-
-
-
-
 
 
 
@@ -333,6 +337,8 @@ class GetStationNotification
         fclose($gauges);
     }
 
+
+    //Enregistrement en base de donnée
     function addBdd()
     {
         $station = new Station();
@@ -349,11 +355,29 @@ class GetStationNotification
     }
 
 
-
-    function essai()
+    //Recuperation des mini maxi de la table minimaxih
+    function minimaxi()
     {
-        $fichier_sd = 'station_direct.txt';
-        $read = file($fichier_sd);
-        return $read[6];
+
+        $minimax = $this->repo->findByMini();
+
+        $this->mini_temp = $minimax[0]->getMiniTemp();
+        $this->maxi_temp = $minimax[0]->getMaxiTemp();
+        $this->mini_humi = $minimax[0]->getMiniHumi();
+        $this->maxi_humi = $minimax[0]->getMaxiHumi();
+        $this->mini_pres = $minimax[0]->getMiniPres();
+        $this->maxi_pres = $minimax[0]->getMaxiPres();
+        $this->mini_lumi = $minimax[0]->getMiniLumi();
+        $this->maxi_lumi = $minimax[0]->getMaxiLumi();
+        $this->mini_ptro = $minimax[0]->getMiniPtro();
+        $this->maxi_ptro = $minimax[0]->getMaxiPtro();
+        $this->mini_pluvio = $minimax[0]->getMiniPluvio();
+        $this->maxi_pluvio = $minimax[0]->getMaxiPluvio();
+        $this->mini_girou = $minimax[0]->getMiniGirou();
+        $this->maxi_girou = $minimax[0]->getMaxiGirou();
+        $this->mini_anemo = $minimax[0]->getMiniAnemo();
+        $this->maxi_anemo = $minimax[0]->getMaxiAnemo();
+
     }
+
 }
