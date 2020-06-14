@@ -8,14 +8,16 @@
             <h2>Historique des données Météo de la station</h2>
         </div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Températures</h5>
                 </div>
                 <div class="card-body">
                     <p class="card-text" >Historiques des températures sur 24H</p>
-                    <div id="div_chartT"></div>
+                    <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                        <div id="div_chartT"></div>
+                    </div>
                 </div>
             </div>
                 <div class="card">
@@ -24,7 +26,9 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">Historiques de la Pression atmosphérique sur 24H</p>
-                        <div id="div_chartP"></div>
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                            <div id="div_chartP"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="card">
@@ -33,7 +37,9 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">Historiques de l'humidité sur 24H</p>
-                        <div id="div_chartH"></div>
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                            <div id="div_chartH"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="card">
@@ -42,6 +48,7 @@
                     </div>
                     <div class="card-body">
                         <p class="card-text">Petit historique des Mini et Maxi de la station Météo J-2</p>
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
                         <table class="table table-bordered">
                             <thead>
                             <tr>
@@ -79,7 +86,9 @@
                             {% endfor %}
                             </tbody>
                         </table>
+                        </div>
                         <p>Historique des Mini Maxi depuis la mise en marche de la station Météo</p>
+                        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
                         <table class="table table-bordered">
                             <thead>
                             <tr>
@@ -102,30 +111,33 @@
                                     <td>Mini</td>
                                     <td>Maxi</td>
                                 </tr>
+                                {% for minimaxi in mna %}
                                 <tr class="table-active">
                                     <th scope="col">Date</th>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ minimaxi.DateMiniTemp|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMaxiTemp|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMiniPtro|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMaxiTemp|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMiniHumi|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMaxiHumi|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMiniPres|date("d/m/Y H:i") }}</td>
+                                    <td>{{ minimaxi.DateMaxiPres|date("d/m/Y H:i") }}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{{ minimaxi.minitemp }}</td>
+                                    <td>{{ minimaxi.maxitemp }}</td>
+                                    <td>{{ minimaxi.miniptro }}</td>
+                                    <td>{{ minimaxi.maxiptro }}</td>
+                                    <td>{{ minimaxi.minihumi }}</td>
+                                    <td>{{ minimaxi.maxihumi }}</td>
+                                    <td>{{ minimaxi.minipres }}</td>
+                                    <td>{{ minimaxi.maxipres }}</td>
                                 </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
                 <div class="card">

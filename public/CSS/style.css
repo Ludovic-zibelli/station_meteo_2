@@ -1,10 +1,42 @@
-#paysage
+@media (max-width: 768px)
 {
-	width: 100%;
-    height: 500px;
-    background-image:url("/images/paysage.jpg") ;
-    background-size: cover;
+	.carousel
+	{
+		display: none;
+	}
+
+	.logo_site
+	{
+		display: none;
+	}
+
+	.nav_dek
+	{
+		display: none;
+	}
+	#canvas_status
+	{
+		display: none;
+		visibility: hidden;
+	}
+
+
 }
+@media (min-width: 768px)
+{
+	.logo_site_mobile
+	{
+		display: none;
+	}
+
+	.nav_mobile
+	{
+		display: none;
+		visibility:hidden;
+	}
+
+}
+
 
 .donnee_meteo
 {
@@ -122,4 +154,11 @@ label
 .center_div{
 	margin: 0 auto;
 	width:80% /* value of your choice which suits your alignment */
+}
+body
+{
+	margin:0 auto;
+	width: 100%;
+	overflow-x: hidden;
+	padding-top: 100px;
 }

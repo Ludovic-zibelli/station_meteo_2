@@ -8,10 +8,10 @@
 			{{ message }}
 		</div>
 	{% endfor %}
-<div class="container">
+<div class="container-fluid">
 	<a href="{{ path ('admin.article')}}" class="">Retour</a>
 	<div class="row">
-		<div class="col-12">
+		<div class="col-md-12 col-sm-12 col-lg-12">
 			<h2 class="text-center titre">Gérer les categories</h2>
 			<table class="table table-striped">
 				<thead>
@@ -42,16 +42,16 @@
 <hr>
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-12">
+		<div class="col-md-12 col-sm-12 col-lg-12">
 			<h2 class="text-center titre">Ajouter une categorie</h2>
 		</div>
-		<div class="col-2">
+		<div class="col-md-2 col-sm-2 col-lg-2">
 			<p>Nouvelle categorie : </p>
 		</div>
-		<div class="col-6">
+		<div class="col-md-6 col-sm-6 col-lg-6">
 			{{ form_widget(form.category) }}
 		</div>
-		<div class="col-4">
+		<div class="col-md-4 col-sm-4 col-lg-4">
 			<button type="submit" class="btn btn-primary btn-block">Ajouter</button>
 		</div>
 	</div>

@@ -4,7 +4,7 @@
 
 {% block body %}
 
-<div class="container">
+<div class="container-fluid">
 		<a href="{{ path ('admin.article')}}" class="">Retour</a>
 		<div class="card">
 		<div class="card-body">
@@ -12,27 +12,27 @@
 		<form method="post" enctype="multipart/form-data">
 	{{ form_start(form)}}
 		<div class="row">
-			<div class="col-12 mt-10">
+			<div class="col-md-12 col-sm-12 col-lg-12">
 				<h6 class="card-subtitle mb-2 text-muted">Titre de l'article :</h6>
 				{{ form_widget(form.titre) }}
 			</div>
-			<div class="col-12 mt-10">
+			<div class="col-md-12 col-sm-12 col-lg-12">
 				<h6 class="card-subtitle mb-2 text-muted">Auteur de l'article :</h6>
 				{{ form_widget(form.auteur) }}
 			</div>
-			<div class="col-6 mt-10">
+			<div class="col-md-6 col-sm-6 col-lg-6">
 				<h6 class="card-subtitle mb-2 text-muted">Category de l'article :</h6>
 				{{ form_widget(form.category)}}
 			</div>
-			<div class="col-6 mt-10">
+			<div class="col-md-6 col-sm-6 col-lg-6">
 				<h6 class="card-subtitle mb-2 text-muted">Mettre en ligne :</h6>
 				{{ form_widget(form.online)}}
 			</div>
-			<div class="col-12 mt-10">
+			<div class="col-md-12 col-sm-12 col-lg-12">
 				<h6 class="card-subtitle mb-2 text-muted">Contenu de l'article :</h6>
 				{{ form_widget(form.content)}}
 			</div>
-			<div class="col-12 mt-10">
+			<div class="col-md-12 col-sm-12 col-lg-12">
 				{% if article.image %}
 					<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
 				{% else %}
@@ -44,7 +44,7 @@
 		</div>
 			<div class="row bouton_add_sauv">
 
-				<div class="col-12">
+				<div class="col-md-12 col-sm-12 col-lg-12">
 					<button type="submit" class="btn btn-primary btn-lg btn-block">Editer</button>
 				</div>
 			</div>

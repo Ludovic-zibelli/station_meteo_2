@@ -9,7 +9,9 @@ use App\Form\RechercheType;
 use App\Notification\ContactNotification;
 use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
+use App\Notification\MiniMaxiANotification;
 use App\Notification\MiniMaxiNotification;
+use App\Repository\MiniMaxiARepository;
 use App\Repository\MiniMaxiRepository;
 use App\Repository\StationRepository;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
@@ -70,7 +72,7 @@ class stationController extends AbstractController
      * @param StationRepository $stationrepo
      * @return Response
      */
-    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request, MiniMaxiRepository $minimaxirepo)
+    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request, MiniMaxiRepository $minimaxirepo, MiniMaxiARepository $mna)
     {
         $station = $stationrepo->findByGraph();
         $chartT = $graph->temperature($station);
@@ -92,11 +94,13 @@ class stationController extends AbstractController
             ]);
         }
         $minimaxi = $minimaxirepo->findMiniMax();
+        $archive_mn = $mna->findByMiniA();
         return $this->render('station/historique.html.twig', [
             'chartT' => $chartT,
             'chartP' => $chartP,
             'chartH' => $chartH,
             'minimaxi' => $minimaxi,
+            'mna' => $archive_mn,
             'form'   => $form->createView()
         ]);
     }
@@ -127,11 +131,11 @@ class stationController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax)
+    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax, MiniMaxiANotification $mna)
     {
         $getstation->getStation($request);
         $temp1 = $request->get('temp1');
-
+        //$mna->minimaxicompare();
         $minimax->getMinimaxi($request);
         return $this->render('station/essai.html.twig');
     }

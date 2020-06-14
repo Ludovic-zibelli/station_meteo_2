@@ -5,18 +5,19 @@
 {% block body %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12 col-sm-12 col-lg-12">
             <div id="div_chartTR"></div>
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
+        <div class="col-md-12 col-sm-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">Résultat de la recherche</h5>
                 </div>
                 <div class="card-body">
                     <p class="card-text">Nous avons trouvé {{ count}} résulats</p>
+                    <div class="table-responsive-sm table-responsive-md table-responsive-lg">
                     <table class="table table-striped">
                         <thead>
                         <tr>
@@ -39,6 +40,7 @@
                 {% endfor %}
                         </tbody>
                     </table>
+                    </div>
                     <a href="{{ path('historique') }}">Retour a la page Historique</a>
                 </div>
             </div>

@@ -4,12 +4,12 @@
 
 <div class="container-fluid">
 	<div class="row">
-			<div class="col-12 text-center">
+			<div class="col-md-12 col-sm-12 col-lg-12 text-center">
 			<div class="card" style="width: auto;">
 		  	<div class="card-body">
-		    <h5 class="card-title">Bienvenu sur la page web de ma station Météo</h5>
-		    <h6 class="card-subtitle mb-2 text-muted"></h6>
-		    <p class="card-text">elle ce situe a L'HÔPITAL en Moselle. La station météo a était crée avec un Arduino UNO plus de détails sur la page présentation. La station fait une acquisition des données et les envoi tout les 30 seconds vers le serveur pour les stocker dans une base de données. Ce site interroge la base et affiche presque toute les données soit en direct comme sur cette page soit sur la page Historique ou l'ont peut voir des graphique sur 24H et un moteur de recherche pour chercher des date plus précise. Le site ainsi que la Station Météo sont toujours en phase de développement donc a fil du temps il y aura encore des évolution comme le rajout de nouveau instrument comme un anémomètre et une girouette un pluviomètre et un détecteur d'orage.Pour toute les changement a venir toute les infos seront afficher dans l'encadrer INFO DU SITE ET DE LA STATION MÉTÉO toute idée ou remarque sont les bien venu alors n'hésiter pas laisser nous un message sur la page Contact.
+		    <h5 class="card-title">Bienvenu sur la page web de la station Météo</h5>
+		    <h6 class="card-subtitle mb-2 sm-2 lg-2 text-muted"></h6>
+		    <p class="card-text">La station ce situe a L'HÔPITAL en Moselle. La station météo a était crée avec un Arduino UNO plus de détails sur la page présentation. La station fait une acquisition des données et les envoi tout les 30 seconds vers le serveur pour les stocker dans une base de données. Ce site interroge la base et affiche presque toute les données soit en direct comme sur cette page soit sur la page Historique ou l'ont peut voir des graphique sur 24H et un moteur de recherche pour chercher des date plus précise. Le site ainsi que la Station Météo sont toujours en phase de développement donc a fil du temps il y aura encore des évolution comme le rajout de nouveau instrument comme un anémomètre et une girouette un pluviomètre et un détecteur d'orage.Pour toute les changement a venir toute les infos seront afficher dans l'encadrer INFO DU SITE ET DE LA STATION MÉTÉO toute idée ou remarque sont les bien venu alors n'hésiter pas laisser nous un message sur la page Contact.
 Bonne visite</p>
 		  </div> 
 		</div>
@@ -17,7 +17,7 @@ Bonne visite</p>
 	</div>
 	
 	<div class="row donnee_meteo">
-		<div class="col-12">
+		<div class="col-md-12 col-sm-12 col-lg-12">
 			<div class="card">
 			  <div class="card-header text-center">
 			    <h4>Données Météo</h4> 
@@ -30,24 +30,24 @@ Bonne visite</p>
 					</noscript>
 					<br>
 					<div class="row gauges_index">
-						<div class="col-2"></div>
-						<div class="col-8">
+						<div class="col-md-2 col-sm-2 col-lg-2"></div>
+						<div class="col-md-8 col-sm-8 col-lg-8">
 					    <canvas id="canvas_led" width="25" height="25"></canvas>&nbsp;&nbsp;&nbsp;
 					    <canvas id="canvas_status" width="550" height="25"></canvas>&nbsp;&nbsp;
 					    <canvas id="canvas_timer" width="70" height="25"></canvas>
 						</div>
-						<div class="col-2"></div>
+						<div class="col-md-2 col-sm-2 col-lg-2"></div>
 					</div>
 					<br>
   				<div class="row">
-    				<div class="gauge col-2 center-block" style=float:none;>
+    				<div class="gauge col-md-3 col-sm-3 col-lg-3 center-block" style=float:none;>
       					<div id="tip_0 ">
         					<canvas id="canvas_temp" class="gaugeSizeStd"></canvas>
       					</div>
       						<input id="rad_temp1" type="radio" name="rad_temp" value="out" checked onclick="gauges.doTemp(this);"><label id="lab_temp1" for="rad_temp1">Outside</label>
       						<input id="rad_temp2" type="radio" name="rad_temp" value="in" onclick="gauges.doTemp(this);"><label id="lab_temp2" for="rad_temp2">Inside</label>
     					</div>
-  					<div class="gauge col-2 center-block" style=float:none;>
+  					<div class="gauge col-md-3 col-sm-3 col-lg-3 center-block" style=float:none;>
       					<div id="tip_1">
         					<canvas id="canvas_dew" class="gaugeSizeStd"></canvas>
       					</div>
@@ -59,28 +59,23 @@ Bonne visite</p>
       						<br>
       						<input id="rad_dew5" type="radio" name="rad_dew" value="hum" onclick="gauges.doDew(this);"><label id="lab_dew5" for="rad_dew5">Humidex</label>
     					</div>
-    					<div class="gauge col-2 center-block" style=float:none;>
+    					<div class="gauge col-md-3 col-sm-3 col-lg-3 center-block" style=float:none;>
       						<div id="tip_4">
         						<canvas id="canvas_hum" class="gaugeSizeStd"></canvas>
       						</div>
       							<input id="rad_hum1" type="radio" name="rad_hum" value="out" checked onclick="gauges.doHum(this);"><label id="lab_hum1" for="rad_hum1">Outside</label>
       							<input id="rad_hum2" type="radio" name="rad_hum" value="in" onclick="gauges.doHum(this);"><label id="lab_hum2" for="rad_hum2">Inside</label>
     						</div>
-    					<div id="tip_5" class="gauge col-2 center-block" style=float:none;>
+    					<div id="tip_5" class="gauge col-md-3 col-sm-3 col-lg-3 center-block" style=float:none;>
       						<canvas id="canvas_baro" class="gaugeSizeStd"></canvas>
       					</div>
-      					<div id="tip_9" class="gauge col-2 center-block" style=float:none;>
-      						<canvas id="canvas_solar" class="gaugeSizeStd"></canvas>
-    					</div>
-    					<div id="tip_11" class="gauge col-2 center-block" style=float:none;>
-       						<canvas id="canvas_cloud" class="gaugeSizeStd"></canvas>
-    					</div>
+
     			</div>
   					
   						<h5 class="card-title text-center">Données Météo France</h5><br>
   					
   					<div class="row">		
-  						<div class="col-6 center-block" style=float:none;>
+  						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
   							<h6>Vigilance Météo en cours</h6><br>
 	  						<!-- Debut code vignette vigilance départementale  Météo-France -->
 							<iframe src="http://vigilance.meteofrance.com/vignette_vigi_dep.html?a=57&b="  width="426" height="91" frameborder="0">
@@ -88,21 +83,21 @@ Bonne visite</p>
 							</iframe>
 							<!-- FIN   -->
 						</div>
-						<div class="col-6 center-block" style=float:none;>
+						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
 							<h6>Prévisions Météo France</h6><br>
 							<script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/573360/type/VILLE_FRANCE/size/PAYSAGE_VIGNETTE' type='text/javascript'></script>
 						</div>
   					</div>
   						<h5 class="card-title text-center">Image satellite Météo</h5><br>
   					<div class="row">
-  						<div class="col-1"></div>
-  						<div class="col-5 center-block" style=float:none;>
+  						<div class="col-md-1 col-sm-1 col-lg-1"></div>
+  						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
   							<a href='http://fr.sat24.com/fr' target='sat24'><image src='http://api.sat24.com/animated/EU/visual/1/Central%20European%20Standard%20Time/4436851' width=280 height=280></image></a>
   						</div>
-  						<div class="col-5 center-block" style=float:none;>
+  						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
   							<a href='http://fr.sat24.com/fr' target='sat24'><image src='http://api.sat24.com/		crop?type=visual5hdcomplete&lat=49.1621&lon=6.7468&width=300&height=300&zoom=1.00&continent=eu' width=280 height=280></image></a>
   						</div>
-  						<div class="col-1"></div>
+  						<div class="col-md-1 col-sm-1 col-lg-1"></div>
   					</div>	
 			  </div>
 
@@ -110,11 +105,11 @@ Bonne visite</p>
 		</div>
 	</div>
 	<div class="row articles_home">
-		<div class="col-12">
+		<div class="col-md-12 col-sm-12 col-lg-12">
 			<h5 class="text-center">Articles</h5>
 		</div>
 			    	{% for article in articles %}
-			    		<div class="col-4">
+			    		<div class="col-md-4 col-sm-4 col-lg-4">
 			    			<div class="card">
 								{% if article.image %}
 									<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
@@ -135,7 +130,7 @@ Bonne visite</p>
 	</div>
 	{{ form_start(form) }}
 	<div class="row contact_home">
-		<div class="col-12">
+		<div class="col-md-12 col-sm-12 col-lg-12">
 			<div class="card">
 			  <div class="card-header">
 			    Contact
