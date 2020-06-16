@@ -10,26 +10,26 @@
         <div class="card-body">
         <h1 class="text-center card-title titre">Ajouter un nouvelle utilisateur</h1>
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6 col-sm-6 col-lg-6">
                 <h6 class="card-subtitle mb-2 text-muted">Nom</h6>
                 {{ form_widget(form.nom) }}
             </div>
-                <div class="col-6">
+                <div class="col-md-6 col-sm-6 col-lg-6">
                     <h6 class="card-subtitle mb-2 text-muted">Prenom</h6>
                     {{ form_widget(form.prenom) }}
                 </div>
-                <div class="col-12">
+                <div class="col-md-12 col-sm-12 col-lg-12">
                     <h6 class="card-subtitle mb-2 text-muted">E-mail</h6>
                     {{ form_widget(form.email) }}
                 </div>
-                <div class="col-12">
+                <div class="col-md-12 col-sm-12 col-lg-12">
                     <h6 class="card-subtitle mb-2 text-muted">Mot de passe</h6>
                     {{ form_widget(form.password) }}
                 </div>
 
             </div>
             <br>
-            <div class="col-12">
+            <div class="col-md-12 col-sm-12 col-lg-12">
                 <button class="btn btn-primary btn-block" type="submit">Enregistrer l'utilisateur</button>
             </div>
         </div>

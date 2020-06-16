@@ -11,6 +11,7 @@ use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
 use App\Notification\MiniMaxiANotification;
 use App\Notification\MiniMaxiNotification;
+use App\Repository\AlertMeteoRepository;
 use App\Repository\MiniMaxiARepository;
 use App\Repository\MiniMaxiRepository;
 use App\Repository\StationRepository;
@@ -43,13 +44,14 @@ class stationController extends AbstractController
 		
 	}
 
-	 /**
+    /**
      * @Route("/", name="home")
      * @param Request $request
-     * @param ArcticlesRepository $repotisory
+     * @param ContactNotification $notification
+     * @param AlertMeteoRepository $alerteRepo
      * @return Response
      */
-    public function home(Request $request, ContactNotification $notification)
+    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -61,8 +63,10 @@ class stationController extends AbstractController
             return $this->redirectToRoute('home');
         }
     	$articles = $this->repotisory->findLatest();
+        $alerte = $alerteRepo->findByAlerteTrue();
         return $this->render('station/index.html.twig', [
         	'articles' => $articles,
+            'alerte' => $alerte,
             'form' => $form->createView()
         ]);
     }

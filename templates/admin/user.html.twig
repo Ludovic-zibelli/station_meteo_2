@@ -29,38 +29,39 @@
             </div>
         </nav>
         <div class="row">
-            <div class="col-12">
-
-            <table class="table table-striped">
-            <thead>
-            <tr>
-                <td>Nom</td>
-                <td>Prenom</td>
-                <td>E-mail</td>
-                <td>Date d'enregistrement</td>
-                <td>Actions</td>
-            </tr>
-            </thead>
-                <tbody>
-                {% for user in user %}
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                    <table class="table table-striped">
+                    <thead>
                     <tr>
-                        <td>{{ user.nom }}</td>
-                        <td>{{ user.prenom }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.CreatedAt|date("d/m/Y") }}</td>
-                        <td>
-                            <a href="{{ path ('admin.user.edit', {id: user.id})}}" class="btn btn-primary">Editer</a>
-                            <form method="POST" action="{{ path ('admin.user.delete', {id: user.id})}}" style="display:inline-block">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id)}}">
-                                <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette utilisateur?')">Supprimer</button>
-                            </form>
-
-                        </td>
+                        <td>Nom</td>
+                        <td>Prenom</td>
+                        <td>E-mail</td>
+                        <td>Date d'enregistrement</td>
+                        <td>Actions</td>
                     </tr>
-            {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                        <tbody>
+                        {% for user in user %}
+                            <tr>
+                                <td>{{ user.nom }}</td>
+                                <td>{{ user.prenom }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.CreatedAt|date("d/m/Y") }}</td>
+                                <td>
+                                    <a href="{{ path ('admin.user.edit', {id: user.id})}}" class="btn btn-primary">Editer</a>
+                                    <form method="POST" action="{{ path ('admin.user.delete', {id: user.id})}}" style="display:inline-block">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id)}}">
+                                        <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette utilisateur?')">Supprimer</button>
+                                    </form>
+
+                                </td>
+                            </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

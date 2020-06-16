@@ -35,19 +35,19 @@
                 <h5 class="card-title text-center">Données en direct</h5>
                 <p class="text-center">Rafraîchissement des données dans <span id="compteur">30</span> seconde(s)...</p>
                 <div class="row text-center">
-                    <div class="col">
+                    <div class="col md lg sm">
 
                         <span id="online"></span>
                     </div>
                 </div>
                 <div class="row text-center">
-                    <div class="col">
+                    <div class="col md lg sm">
                         Heure du relevé: <span id="heure_releve"> </span> Date du relevé:<span id="date_releve"> </span>
                     </div>
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col">
+                    <div class="col-md-6 col-lg-6 col-sm-6">
                         <table id="donne_meteo" class="table table-hover">
                                 <tbody>
                                 <tr>
@@ -88,7 +88,7 @@
                                 </tbody>
                         </table>
                     </div>
-                    <div class="col">
+                    <div class="col-md-6 col-lg-6 col-sm-6">
                         <table class="table table-hover">
                             <tbody>
                                 <tr>
@@ -116,6 +116,71 @@
                 </div>
             </div>
         </div>
+        {{ form_start(form) }}
+        <div class="card  text-center">
+            <div class="card-header">
+                <h2>Gestion alerte Météo</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Alerte Météo Manuel</h5>
+                <p class="card-text">Création d'alerte météo en manuel en plus des alerte automatique</p>
+                {{ form_widget(form) }}
+                <button class="btn btn-primary btn-block" type="submit">Envoyer</button>
+                {{ form_end(form) }}
+                <br>
+                <h5 class="card-title">Historique des alertes Météo Auto/Manu</h5>
+                <p class="card-text">L'historique des 5 derniere alerte Météo</p>
+                <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Date de création</th>
+                            <th scope="col">Type d'alerte</th>
+                            <th scope="col">En ligne</th>
+                            <th scope="col">Niveau de vigilance</th>
+                            <th scope="col">Message d'alerte</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for alerte in alerterepo %}
+                        <tr>
+                            <td>{{ alerte.CreatdAt|date("d/m/Y H:i") }}</td>
+                            <td>
+                                {% if  alerte.type == true%}
+                                    Manuel
+                                {% else %}
+                                    Automatique
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if  alerte.online  == true %}
+                                    Alerte en ligne
+                                {% else %}
+                                    Alerte Hor ligne
+                                {% endif %}
+                            </td>
+                            <td>{{ alerte.level }}</td>
+                            <td>{{ alerte.message }}</td>
+                            <td>
+                                <a href="{{ path ('admin.alerte.edit', {id: alerte.id})}}" class="btn btn-primary">Editer</a>
+                                <form method="POST" action="{{ path ('admin.alerte.delete', {id: alerte.id})}}" style="display:inline-block">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ alerte.id)}}">
+                                    <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette alerte ?')">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer text-muted">
+                    <a href="#">Voir toute les alertes</a>
+                </div>
+            </div>
+        </div>
+
     </div>
     <script src="{{ asset('js/donnee_meteo.js') }}"></script>
     <script src="{{ asset('js/moment-with-locales.js') }}"></script>

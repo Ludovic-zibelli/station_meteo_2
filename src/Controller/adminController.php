@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 
+use App\Entity\AlertMeteo;
 use App\Entity\User;
+use App\Form\AlerteMeteoType;
 use App\Form\UserType;
+use App\Repository\AlertMeteoRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -51,11 +54,25 @@ class adminController extends AbstractController
      * @return Response
      */
 
-    public function admin()
+    public function admin(Request $request, AlertMeteoRepository $repo_alert)
     {
+        $alerte = new AlertMeteo();
+        $form = $this->createForm(AlerteMeteoType::class, $alerte);
+        $form->handleRequest($request);
         $heure = date("H:i");
+        $alertRepo = $repo_alert->findByAlerteAll();
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $alerte->setType(true);
+            $this->em->persist($alerte);
+            $this->em->flush();
+            $this->addFlash('success', 'Alerte Météo Manuel ajouter');
+            return $this->redirectToRoute('admin');
+        }
         return $this->render('admin/admin.html.twig',[
-            'heure' => $heure
+            'heure' => $heure,
+            'alerterepo' => $alertRepo,
+            'form' => $form->createView()
             ]);
     }
 
@@ -139,6 +156,48 @@ class adminController extends AbstractController
         }
 
         return $this->redirectToRoute('user');
+
+    }
+
+    /**
+     * @Route("/admin/alerteedit/{id}", name="admin.alerte.edit", methods="GET|POST")
+     * @param AlertMeteo $alerte
+     * @param Request $request
+     * @return Response
+     */
+    public function editAlerte(AlertMeteo $alerte, Request $request)
+    {
+        $form = $this->createForm(AlerteMeteoType::class, $alerte);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+
+            $this->em->flush();
+            $this->addFlash('success', 'Utilisateur modifer avec succés');
+            return $this->redirectToRoute('admin');
+        }
+        return $this->render('admin/alerteedit.html.twig',[
+            'form' => $form->createView()
+        ]);
+
+    }
+
+    /**
+     * @Route("/admin/alertedelete/{id}", name="admin.alerte.delete", methods="DELETE")
+     * @param AlertMeteo $alerte
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteAlerte(AlertMeteo $alerte, Request $request)
+    {
+        if($this->isCsrfTokenValid('delete'. $alerte->getId(), $request->get('_token')))
+        {
+            $this->em->remove($alerte);
+            $this->em->flush();
+            $this->addFlash('success', 'Alerte supprimer avec succés');
+        }
+
+        return $this->redirectToRoute('admin');
 
     }
 }
