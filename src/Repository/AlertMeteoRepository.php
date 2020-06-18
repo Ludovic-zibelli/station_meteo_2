@@ -50,7 +50,21 @@ class AlertMeteoRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return AlertMeteo[] Returns an array of AlertMeteo objects
+     */
 
+    public function findByAlerteAuto()
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.type = false')
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+
+            ;
+    }
     /*
     public function findOneBySomeField($value): ?AlertMeteo
     {

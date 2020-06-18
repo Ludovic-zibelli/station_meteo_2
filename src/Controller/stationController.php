@@ -6,6 +6,7 @@ use App\Entity\Contact;
 use App\Entity\Recherche;
 use App\Form\ContactType;
 use App\Form\RechercheType;
+use App\Notification\AlerteMeteoNotification;
 use App\Notification\ContactNotification;
 use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
@@ -135,10 +136,11 @@ class stationController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax, MiniMaxiANotification $mna)
+    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax, MiniMaxiANotification $mna, AlerteMeteoNotification $alert)
     {
         $getstation->getStation($request);
-        $temp1 = $request->get('temp1');
+        $temp1 = $request->get('temp2');
+        $alert->calculAlerteAuto($temp1);
         //$mna->minimaxicompare();
         $minimax->getMinimaxi($request);
         return $this->render('station/essai.html.twig');
