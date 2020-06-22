@@ -4,22 +4,26 @@
 
 {% block body %}
 
-	<div class='jumbotron'>
-		<h1>{{ article.titre }}</h1>
-	</div>
 
-	<div class="row">
-		<div class="container">
-			<div class="col-md-4 col-sm-4 col-lg-4">
-			</div>
-			<div class="col-md-8 col-sm-8 col-lg-8">
-				{{ article.content }}
+
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12 col-sm-12 col-lg-12">
+					<div class='jumbotron'>
+						<h1>{{ article.titre }}</h1>
+					</div>
+						{% if article.image %}
+							<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
+						{% else %}
+							<img src="{{ asset('/images/logo_meteo.png') }}" width=150 height=150 class=" " alt="{{ article.titre }}">
+						{% endif %}
+						<p class=" text-center">{{ article.content|raw  }}</p>
+						<p class="text-center">Auteur de l'article: {{ article.auteur }} | Date de création de l'article {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<p>Auteur de l'article: {{ article.auteur }} | Date de création de l'article .</p>
-	</div>
+
 	<div class="row">
 		<div class="col-md-12 col-sm-12 col-lg-12">
 			<div class="card">

@@ -23,10 +23,10 @@ class AlerteMeteoType extends AbstractType
             ->add('level', ChoiceType::class, [
                 'label' => 'Niveau de vigilance',
                 'choices' =>[
-                    'Vert' => 1,
-                    'Jaune' => 2,
-                    'Orange' => 3,
-                    'Rouge' => 4
+                    'Temperature' => 1,
+                    'Orage' => 2,
+                    'Neige' => 3,
+                    'Tempête' => 4
                 ]
             ])
             ->add('message')

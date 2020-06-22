@@ -24,11 +24,11 @@ class AlerteMeteoNotification
         $this->repo = $repo;
     }
 
-    public function calculAlerteAuto($temperature)
+    public function calculAlerteTempAuto($temperature)
     {
         $alert_auto = $this->repo->findByAlerteAuto();
         $alerteAuto = new AlertMeteo();
-        if($alert_auto[0]->getType() == false && $alert_auto[0]->getOnline() == false)
+        if($alert_auto[0]->getLevel() == 1 && $alert_auto[0]->getOnline() == false)
         {
             if ($temperature <= 3)
             {

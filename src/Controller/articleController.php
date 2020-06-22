@@ -61,6 +61,18 @@ class articleController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/articles", name="articles")
+     * @return Response
+     */
+    public function articles()
+    {
+        $articles = $this->repotisory->findAll();
+        return $this->render('article/articles.html.twig',[
+            'articles' => $articles
+        ]);
+    }
+
 
     /**
      * @Route("/adminarticle", name="admin.article")

@@ -4,6 +4,38 @@
 
 {% block body %}
 
-<h1 class="text-center">Présentation de la station Météo</h1>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card presentation">
+                <div class="card-body">
+                    <h1 class="text-center mb-10">Présentation de la station Météo</h1>
+                    <div class="text-center mt-10 pb-10">
+                        <img src="{{ asset('/images/arduino.png') }}" class="center-block" width="450" height="350"  alt="ardiono">
+                    </div>
+                    <p class="card-text">
+                        <p class="text-center">La station météo a été créé grâce à un <strong>Arduino</strong> Uno. Mais c'est quoi un Arduino ? Est surtout pourquoi ce choix ? <br></p>
+                            Étant passionné d’informatique et surtout d’électronique et tout ce qui tourne autour, il y a quelques années, je cherchais à faire des réalisations avec des microcontrôleurs c'est en surfant sur internet que j’ai découvert un petit circuit programmable avec un microcontrôleur (Atmega328) appelé Arduino.<br>
+                        <p class="text-center">Pour connaître en plus en détails l’Arduino cliquez sur ce <a href="https://fr.wikipedia.org/wiki/Arduino">lien Wiki</a>  et vous serez incollable.<br></p>
+                        <p class="text-center"> Pour ce qui est du choix de cette carte après avoir fait plusieurs montages en suivant different tuto sur internet qui était très intéressant pour découvrira son fonctionnement j’ai voulu aller plus loin et l’utiliser pour quelque chose “d’utile”. Un jour je cherchais une station météo connectée pour avoir la météo de chez moi directement sur mon téléphone via internet mais je trouvais pas ce que je veux, c'est à ce moment-là que je me suis dit et pourquoi pas la créer moi-même et j’ai décidé d’utiliser l’Arduino qui a beaucoup de possibilités d’utilisation. L’idée étant trouvée il fallait la mettre en œuvre et après plusieurs recherches sur internet j’ai trouvé la configuration pour la création de ma station météo.<br></p>
+                        <p class="text-center"> Le cahier des charges est simple récolter les données météos grâce à plusieurs capteurs connectés à l’Arduino dans le détail, je choisis un DHT11 pour l’humidité et aussi la température, un BMP180 pour la pression atmosphérique, mais aussi les températures, il est d’ailleurs plus précis que le DHT11 et enfin un capteur de lumière (qui a été remplacé par un capteur photovoltaïque depuis) le toutes et géré par l’Arduino, les données récolter sont traiter et envoyer via le shield ethernet vers le serveur toutes les 30 secondes.<br></p>
+                        <p class="text-center"> Qui dit station connectée dit application mobile où site web qui va afficher toutes les données, j’ai fait le choix du site web plus “simple” pour moi qui est novice en développement web.<br></p>
+                        <p class="text-center"> Le site a été développé en symfony 5 un framework PHP ce qui a permis de créer un site pratique, intuitive, sécurisée, et autonome.
+                        <p class="text-center"> Pourquoi autonome le site gère les alerte météo liée a la température lui-même pour l’instant, c'est la seule alerte, mais par la suite, il y en aura d’autres.<br></p>
+                        <p class="text-center"> Les données envoyées par l’Arduino sur le serveur sont traitées par le site pour générer des fichiers qui seront utiliser pour l’affichage dynamique toutes les 30 secondes du site, mais ils sont aussi stockés dans la base de données toutes les 30 minutes.<br></p>
+                        <p class="text-center"> Malheureusement elle et pas terminé, j’ai le projet futur de rajouter les capteurs qui manquent comme l'anémomètre, la girouette, le pluviomètre et enfin un détecteur d'éclairs pour la détection d’orages.<br></p>
+                        <p class="text-center"> Voilà la présentation et terminer en espérant que ca n'a pas était trop ennuient, je me doute bien que ce ne soit pas un sujet très excitant, mais j’ai voulu dans cette présentation partager mon aventure de débutant en électronique, programmation C et surtout en développement web qui a été pour moi une révélation. Au final le message, c'est aussi en persévérant que l’on arrive à ces fins.<br></p>
+                        <p class="text-center"> Hésitez pas à me laisser vos commentaires dans le parti contact du site.<br></p>
+                    <p class="text-center">Pour illustrer ci-dessous le schéma de la station qui vous montre ça structure</p>
+                    </p>
+                </div>
+                <img src="{{ asset('/images/shema_station.png') }}" class="card-img-top" alt="schema de la station">
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

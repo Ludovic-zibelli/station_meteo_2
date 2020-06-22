@@ -140,7 +140,7 @@ class stationController extends AbstractController
     {
         $getstation->getStation($request);
         $temp1 = $request->get('temp2');
-        $alert->calculAlerteAuto($temp1);
+        $alert->calculAlerteTempAuto($temp1);
         //$mna->minimaxicompare();
         $minimax->getMinimaxi($request);
         return $this->render('station/essai.html.twig');

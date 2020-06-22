@@ -19,15 +19,22 @@
             </div>
         </div>
     {% endif %}
-<div class="container-fluid">
+<div class="container-fluid index">
 	<div class="row">
 			<div class="col-md-12 col-sm-12 col-lg-12 text-center">
 			<div class="card" style="width: auto;">
 		  	<div class="card-body">
-		    <h5 class="card-title">Bienvenu sur la page web de la station Météo</h5>
+		    <h5 class="card-title">Bienvenu sur la page web de la station Météo de L'HÔPITAL(57)</h5>
 		    <h6 class="card-subtitle mb-2 sm-2 lg-2 text-muted"></h6>
-		    <p class="card-text">La station ce situe a L'HÔPITAL en Moselle. La station météo a était crée avec un Arduino UNO plus de détails sur la page présentation. La station fait une acquisition des données et les envoi tout les 30 seconds vers le serveur pour les stocker dans une base de données. Ce site interroge la base et affiche presque toute les données soit en direct comme sur cette page soit sur la page Historique ou l'ont peut voir des graphique sur 24H et un moteur de recherche pour chercher des date plus précise. Le site ainsi que la Station Météo sont toujours en phase de développement donc a fil du temps il y aura encore des évolution comme le rajout de nouveau instrument comme un anémomètre et une girouette un pluviomètre et un détecteur d'orage.Pour toute les changement a venir toute les infos seront afficher dans l'encadrer INFO DU SITE ET DE LA STATION MÉTÉO toute idée ou remarque sont les bien venu alors n'hésiter pas laisser nous un message sur la page Contact.
-Bonne visite</p>
+		    <p class="card-text">La station se situe à L'HÔPITAL en Moselle.<br>
+				La station météo a était crée avec un Arduino UNO pour plus de détails allez jeter un œil sur la page présentation.<br>
+				La station fait une acquisition des données et les envois tous les 30 seconds vers le serveur qui sera utiliser pour l'affichage en dynamique mes aussi pour les stocker toutes les 30 minutes dans une base de données.<br>
+				L'affichage des données en direct ce fait via des gauges en JavaScript qui est rafraichi toutes les 30 secondes.<br>
+				Il y a aussi la page Historique où l'on peut trouver des graphiques sur 24H très intéressant pour voir l'évolution dans le temps il y aussi un moteur de recherche pour chercher des données a des dates plus précise.<br>
+				Le site ainsi que la Station Météo sont toujours en phase de développement donc a fil du temps il y aura encore des évolutions avec l'ajout de nouveau capteur.<br>
+				Pour tous les changements à venir toutes les infos seront publier dans la section articles.<br>
+				Si vous avez des remarques ou des idées n'hésitez pas a envoyer un message grâce à l'encadrer Contact.<br>
+				Bonne visite</p>
 		  </div> 
 		</div>
 	</div>
@@ -136,7 +143,7 @@ Bonne visite</p>
 
 			    				<div class="card-body">
 			    					<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
-			    					<div class="card-text">{{ article.content }}</div>
+			    					<div class="card-text">{{ article.content|raw  }}</div>
 			    				</div>
 			    				<div class="card-footer">
 			    					<p>Auteur de l'article {{ article.auteur }}|Editer le {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
