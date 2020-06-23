@@ -12,6 +12,7 @@ use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
 use App\Notification\MiniMaxiANotification;
 use App\Notification\MiniMaxiNotification;
+use App\Notification\SaisonNotification;
 use App\Repository\AlertMeteoRepository;
 use App\Repository\MiniMaxiARepository;
 use App\Repository\MiniMaxiRepository;
@@ -52,7 +53,7 @@ class stationController extends AbstractController
      * @param AlertMeteoRepository $alerteRepo
      * @return Response
      */
-    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo)
+    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo, SaisonNotification $saison)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -65,9 +66,11 @@ class stationController extends AbstractController
         }
     	$articles = $this->repotisory->findLatest();
         $alerte = $alerteRepo->findByAlerteTrue();
+        $lumiere = $saison->AnimationLumiere();
         return $this->render('station/index.html.twig', [
         	'articles' => $articles,
             'alerte' => $alerte,
+            'lumiere' => $lumiere,
             'form' => $form->createView()
         ]);
     }
