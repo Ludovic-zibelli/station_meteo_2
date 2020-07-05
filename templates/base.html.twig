@@ -14,6 +14,7 @@
         	<link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
         	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+            <link rel="stylesheet" href="{{ asset('CSS/cookiealert.css')}}">
         {% endblock %}
     </head>
     <header>
@@ -87,13 +88,21 @@
         <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{{ asset('/images/paysage.jpg') }}" class="d-block w-100" alt="...">
+                    <img src="{{ asset('/images/paysage_2.jpg') }}" class="d-block w-100" alt="...">
                 </div>
             </div>
         </div>
 
     </header>
     <body>
+        <!-- START Bootstrap-Cookie-Alert -->
+        <div class="alert text-center cookiealert" role="alert">
+            <b>Aimez-vous les cookies?</b> &#x1F36A; Nous utilisons des cookies pour vous garantir la meilleure expérience sur notre site Web. <a href="https://cookiesandyou.com/" target="_blank">En savoir plus</a>
+
+            <button type="button" class="btn btn-primary btn-sm acceptcookies">
+                Je suis d'accord
+            </button>
+        </div>
         {% block body %}{% endblock %}
         {% block javascripts %}
         	
@@ -108,6 +117,9 @@
 				<script src="{{ asset('js/gauges.js') }}"></script>
   				<script src="{{ asset('js/RGraph.common.core.min.js') }}"></script>
   				<script src="{{ asset('js/RGraph.rose.min.js') }}"></script>
+                <!-- Include cookiealert script -->
+                <script src="{{ asset('js/cookiealert.js') }}"></script>
+
     </body>
         <footer class="mt-10 sm lg md">
         <br>
@@ -147,6 +159,7 @@
 
             </div>
         </div>
+
     </footer>
 </html>
 

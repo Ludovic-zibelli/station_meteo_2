@@ -7,6 +7,7 @@ use App\Entity\Recherche;
 use App\Form\ContactType;
 use App\Form\RechercheType;
 use App\Notification\AlerteMeteoNotification;
+use App\Notification\BddNotification;
 use App\Notification\ContactNotification;
 use App\Notification\GetStationNotification;
 use App\Notification\GrapheNotification;
@@ -67,10 +68,12 @@ class stationController extends AbstractController
     	$articles = $this->repotisory->findLatest();
         $alerte = $alerteRepo->findByAlerteTrue();
         $lumiere = $saison->AnimationLumiere();
+        $prevision = $saison->previsions();
         return $this->render('station/index.html.twig', [
         	'articles' => $articles,
             'alerte' => $alerte,
             'lumiere' => $lumiere,
+            'prevision' => $prevision,
             'form' => $form->createView()
         ]);
     }
@@ -148,6 +151,29 @@ class stationController extends AbstractController
         $minimax->getMinimaxi($request);
         return $this->render('station/essai.html.twig');
     }
+
+    /**
+     * @Route("getbddstation", name="getbddstation")
+     * @return Response
+     */
+    public function getBddstation(BddNotification $bdd)
+    {
+        $bdd->AddBddStation();
+        $a = "";
+        return $this->render('station/essai.html.twig');
+    }
+
+
+    /**
+     * @Route("getbddminimaxi", name="getbddminimaxi")
+     * @return Response
+     */
+    public function getBddminimaxi(BddNotification $bdd)
+    {
+        $bdd->AddBddMiniMaxi();
+        return $this->render('station/essai.html.twig');
+    }
+
 }
 
 

@@ -95,8 +95,31 @@
       					</div>
 
     			</div>
-				  <div class="row">
-						{{ lumiere }}
+				  <div class="row text-center">
+					  <div class="col-md-12 col-sm-12 col-lg-12">
+                          <div class="card">
+                              <div class="card-header">
+                                  Prévision de la station météo
+                              </div>
+                              <div class="card-body">
+								  <div class="row">
+									  <div class="col-md-6">
+										  <img src="{{ asset('/images/prevision/') }}{{ prevision.1 }}" width=70 height=70 class="text-center" alt="imga_prevision">
+									  </div>
+									  <div class="col-md-6">
+										  <blockquote class="blockquote mb-0">
+											  <p>{{ prevision.0 }}</p>
+										  </blockquote>
+									  </div>
+								  </div>
+                              </div>
+                          </div>
+					  </div>
+				  </div>
+				  <div class="row text-center">
+					  <div class="col-md-12 col-sm-12 col-lg-12">
+                      	<img src="{{ asset('/images/annimation/') }}{{ lumiere }}" width=100% height=auto class="anim_lumier text-center" alt="animation_lumiere">
+					  </div>
 				  </div>
   					
   						<h5 class="card-title text-center">Données Météo France</h5><br>
@@ -104,11 +127,10 @@
   					<div class="row">		
   						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
   							<h6>Vigilance Météo en cours</h6><br>
-	  						<!-- Debut code vignette vigilance départementale  Météo-France -->
-							<iframe src="http://vigilance.meteofrance.com/vignette_vigi_dep.html?a=57&b="  width="426" height="91" frameborder="0">
-							<p>Votre navigateur est incompatible avec les iframes.</p>
-							</iframe>
-							<!-- FIN   -->
+                            <!-- Debut code vignette vigilance départementale  Météo-France -->
+                            <iframe src="https://vigilance.meteofrance.fr/fr/widget-vigilance/vigilance-departement/57"  width="302" height="122" frameborder="0">
+                            </iframe>
+                            <!-- FIN   -->
 						</div>
 						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
 							<h6>Prévisions Météo France</h6><br>

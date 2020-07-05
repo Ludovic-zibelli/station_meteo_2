@@ -193,13 +193,6 @@ class GetStationNotification
         $this->girou = 0;
 
 
-        $this->compteur++;
-
-        if($this->compteur == 60)
-        {
-            $this->compteur = 0;
-            $this->addBdd();
-        }
 
         $this->minimaxi();
         //$this->addBdd();
@@ -216,18 +209,18 @@ class GetStationNotification
         //Creation fichier TEXT
         $monfichierSD = fopen('station_direct.txt', 'w+');
         fseek($monfichierSD, 0);
-        fputs($monfichierSD, $this->date . "\n");
-        fputs($monfichierSD, $this->heure . "\n");
-        fputs($monfichierSD, $this->temp1 . "\n");
-        fputs($monfichierSD, $this->humiditer . "\n");
-        fputs($monfichierSD, $this->temp2 . "\n");
-        fputs($monfichierSD, $this->pression_ajt . "\n");
-        fputs($monfichierSD, $this->lumiere . "\n");
-        fputs($monfichierSD, $this->pluvio . "\n");
-        fputs($monfichierSD, $this->anemo . "\n");
-        fputs($monfichierSD, $this->girou . "\n");
-        fputs($monfichierSD, $this->tension . "\n");
-        fputs($monfichierSD, $this->pt_rosee . "\n");
+        fputs($monfichierSD, $this->date . "\n");//0
+        fputs($monfichierSD, $this->heure . "\n");//1
+        fputs($monfichierSD, $this->temp1 . "\n");//2
+        fputs($monfichierSD, $this->humiditer . "\n");//3
+        fputs($monfichierSD, $this->temp2 . "\n");//4
+        fputs($monfichierSD, $this->pression_ajt . "\n");//5
+        fputs($monfichierSD, $this->lumiere . "\n");//6
+        fputs($monfichierSD, $this->pluvio . "\n");//7
+        fputs($monfichierSD, $this->anemo . "\n");//8
+        fputs($monfichierSD, $this->girou . "\n");//9
+        fputs($monfichierSD, $this->tension . "\n");//10
+        fputs($monfichierSD, $this->pt_rosee . "\n");//11
         fclose($monfichierSD);
 
 
@@ -338,21 +331,6 @@ class GetStationNotification
     }
 
 
-    //Enregistrement en base de donnée
-    function addBdd()
-    {
-        $station = new Station();
-        $station->setTemperature($this->temp2);
-        $station->setHumiditer($this->humiditer);
-        $station->setPression($this->pression_ajt);
-        $station->setLumiere($this->lumiere);
-        $station->setPointRosee($this->pt_rosee);
-        $station->setGirouette($this->girou);
-        $station->setAnemometre($this->anemo);
-        $station->setPluviometre($this->pluvio);
-        $this->em->persist($station);
-        $this->em->flush();
-    }
 
 
     //Recuperation des mini maxi de la table minimaxih
