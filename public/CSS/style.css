@@ -22,12 +22,22 @@
     .anim_lumier
     {
         visibility: hidden;
+        display: none;
     }
 	.arduino
 	{
 		width: 150px;
 		height: 150px;
 	}
+    .arduino
+    {
+        width: 100px;
+        height: 100px;
+    }
+    header
+    {
+        width: 100%;
+    }
 
 
 }
@@ -46,6 +56,10 @@
 
 }
 
+htlm
+{
+    width: auto;
+}
 
 .donnee_meteo
 {
@@ -175,8 +189,10 @@ body
 header
 {
     margin:0 auto;
+    overflow-x: hidden;
     width: 100%;
 }
+
 
 .presentation
 {
