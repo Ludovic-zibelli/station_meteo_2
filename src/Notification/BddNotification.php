@@ -35,7 +35,7 @@ class BddNotification
     {
         //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
         # Chemin vers fichier texte
-        $file ="station_direct.txt";
+        $file ="public/station_direct.txt";
         # On met dans la variable (tableau $read) le contenu du fichier
         $read=file($file);
         //tranformation nombre pression a virgule en entier pour variable prevision

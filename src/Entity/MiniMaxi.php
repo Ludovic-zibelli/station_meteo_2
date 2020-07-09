@@ -9,6 +9,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MiniMaxi
 {
+    public function __construct()
+    {
+        $this->creatd_at = new \DateTime();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
