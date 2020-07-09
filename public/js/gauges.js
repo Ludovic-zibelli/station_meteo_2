@@ -37,7 +37,7 @@ gauges = (function () {
             weatherProgram     : 0,                      // Set 0=Cumulus, 1=Weather Display, 2=VWS, 3=WeatherCat, 4=Meteobridge, 5=WView, 6=WeeWX, 7=WLCOM
             imgPathURL         : './images/',            // *** Change this to the relative path for your 'Trend' graph images
             oldGauges          : 'gauges.htm',           // *** Change this to the relative path for your 'old' gauges page.
-            realtimeInterval   : 30,                     // *** Download data interval, set to your realtime data update interval in seconds
+            realtimeInterval   : 15,                     // *** Download data interval, set to your realtime data update interval in seconds
             longPoll           : false,                  // if enabled, use long polling and PHP generated data !!only enable if you understand how this is implemented!!
             gaugeMobileScaling : 0.85,                   // scaling factor to apply when displaying the gauges mobile devices, set to 1 to disable (default 0.85)
             graphUpdateTime    : 15,                     // period of pop-up data graph refresh, in minutes (default 15)

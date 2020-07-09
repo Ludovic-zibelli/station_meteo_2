@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Recherche;
 use App\Entity\Station;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,50 +35,6 @@ class StationRepository extends ServiceEntityRepository
         ;
     }
     */
-    /**
-     * @return Station[] Returns an array of Station objects
-     */
-    public function findByGraph()
-    {
-        return $this->createQueryBuilder('s')
-            ->orderBy('s.id' , 'DESC')
-            ->setMaxResults(48)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Station[] Returns an array of Station objects
-     */
-    public function findSearch(Recherche $recherche)
-    {
-
-        $qery = $this->createQueryBuilder('s')
-         ->andWhere('s.date_heure > :dateheure')
-         ->setParameter('dateheure', $recherche->getDateDebut())
-         ->andWhere('s.date_heure < :datefin')
-         ->setParameter('datefin', $recherche->getDateFin());
-
-         return $qery
-             ->getQuery()
-             ->getResult();
-
-    }
-
-    public function getNb(Recherche $recherche)
-    {
-
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.date_heure > :dateheure')
-            ->setParameter('dateheure', $recherche->getDateDebut())
-            ->andWhere('l.date_heure < :datefin')
-            ->setParameter('datefin', $recherche->getDateFin())
-            ->select('COUNT(l.id)')
-            ->getQuery()
-            ->getSingleScalarResult();
-
-
-    }
 
     /*
     public function findOneBySomeField($value): ?Station

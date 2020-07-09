@@ -3,12 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User implements UserInterface
+class User
 {
     /**
      * @ORM\Id()
@@ -41,14 +40,6 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      */
     private $created_at;
-
-
-
-    public function __construct()
-    {
-
-        $this->created_at = new \DateTime();
-    }
 
     public function getId(): ?int
     {
@@ -113,32 +104,5 @@ class User implements UserInterface
         $this->created_at = $created_at;
 
         return $this;
-    }
-
-        /**
-     * @return array (Role|string)[] The user roles
-     */
-    public function getRoles()
-    {
-        return ['ROLE_ADMIN'];
-    }
-
-    /**
-     * @return string|null The salt
-     */
-    public function getSalt()
-    {
-        return null;
-    }
-
-    public function eraseCredentials()
-    {
-
-    }
-
-
-    public function getUsername()
-    {
-        return $this->getPrenom();
     }
 }

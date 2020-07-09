@@ -57,15 +57,9 @@ class Station
     private $pluviometre;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="integer")
      */
     private $point_rosee;
-
-
-    public function __construct()
-    {
-        $this->date_heure = new \DateTime();
-    }
 
     public function getId(): ?int
     {
@@ -168,17 +162,15 @@ class Station
         return $this;
     }
 
-    public function getPointRosee(): ?string
+    public function getPointRosee(): ?int
     {
         return $this->point_rosee;
     }
 
-    public function setPointRosee(string $point_rosee): self
+    public function setPointRosee(int $point_rosee): self
     {
         $this->point_rosee = $point_rosee;
 
         return $this;
     }
-
-
 }

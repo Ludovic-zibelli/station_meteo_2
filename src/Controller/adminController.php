@@ -3,12 +3,6 @@
 namespace App\Controller;
 
 
-use App\Entity\AlertMeteo;
-use App\Entity\User;
-use App\Form\AlerteMeteoType;
-use App\Form\UserType;
-use App\Repository\AlertMeteoRepository;
-use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +10,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ArcticlesRepository;
@@ -32,172 +25,150 @@ use App\Form\CategoryType;
 class adminController extends AbstractController
 {
 
-    /**
-     * @var User
-     */
-    private $user;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+	/**
+	*@var ArcticlesRepository
+	*/
+	private $repotisory;
 
-    public function __construct(UserRepository $user, EntityManagerInterface $em)
-    {
+	/**
+	*@var CategoryRepository
+	*/
+	private $repocat;
 
-        $this->user = $user;
-        $this->em = $em;
-    }
+	/**
+	*@var EntityManagerInterface
+	*/
+	private $em;
 
-    /**
-     * @Route("/admin", name="admin")
+
+	public function __construct(ArcticlesRepository $repotisory, CategoryRepository $repocat, EntityManagerInterface $em)
+	{
+		$this->repotisory = $repotisory;
+		$this->repocat = $repocat;
+		$this->em = $em;
+		
+		
+	}
+
+
+	/**
+     * @Route("/adminarticle", name="admin.article")
      * @param Request $request
      * @return Response
      */
-
-    public function admin(Request $request, AlertMeteoRepository $repo_alert)
-    {
-        $alerte = new AlertMeteo();
-        $form = $this->createForm(AlerteMeteoType::class, $alerte);
-        $form->handleRequest($request);
-        $heure = date("H:i");
-        $alertRepo = $repo_alert->findByAlerteAll();
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $alerte->setType(true);
-            $this->em->persist($alerte);
-            $this->em->flush();
-            $this->addFlash('success', 'Alerte Météo Manuel ajouter');
-            return $this->redirectToRoute('admin');
-        }
-        return $this->render('admin/admin.html.twig',[
-            'heure' => $heure,
-            'alerterepo' => $alertRepo,
-            'form' => $form->createView()
-            ]);
-    }
-
-    /**
-     * @Route("/admin/user", name="user")
-     * @param Request $request
-     * @return Response
-     */
-    public function user()
-    {
-        $user = $this->user->findAll();
-        return $this->render('admin/user.html.twig',[
-            'user' => $user
+	public function admin()
+	{
+		$articles = $this->repotisory->findAll();
+        return $this->render('admin/admin_article.html.twig',[
+        	'articles' => $articles
         ]);
-    }
+	}
 
-    /**
-     * @Route("/admin/adduser", name="admin.user.add")
+	/**
+     * @Route("/adminarticle/edit/{id}", name="admin.articles.edit", methods="GET|POST")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $passencod
+     * @param Arcticles $article
      * @return Response
      */
-    public function addUser(Request $request, UserPasswordEncoderInterface $passencod)
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $password = $passencod->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-            $this->em->persist($user);
-            $this->em->flush();
-            $this->addFlash('success', 'Utilisateur ajouter avec succés');
-            return $this->redirectToRoute('user');
-        }
-        return $this->render('admin/useradd.html.twig',[
-            'form' => $form->createView()
+	public function edit(Arcticles $article, Request $request)
+	{
+		
+		$form = $this->createForm(ArticleType::class, $article);
+		$form->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid())
+		{
+			$this->em->flush();
+			$this->addFlash('success', 'Article modifier avec succès');
+			return $this->redirectToRoute('admin.article');
+		}
+        return $this->render('admin/article_edit.html.twig',[
+        	'article' => $article,
+        	'form'    => $form->createView()
         ]);
-    }
+	}
 
-
-    /**
-     * @Route("/admin/useredit/{id}", name="admin.user.edit", methods="GET|POST")
-     * @param User $user
+	/**
+     * @Route("/adminarticle/add", name="admin.articles.add")
      * @param Request $request
-     * @param UserPasswordEncoderInterface $pass
+     * @param Arcticles $article
      * @return Response
      */
-    public function editUser(User $user, Request $request, UserPasswordEncoderInterface $pass)
-    {
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $passowrd = $pass->encodePassword($user, $user->getPassword());
-            $user->setPassword($passowrd);
-            $this->em->flush();
-            $this->addFlash('success', 'Utilisateur modifer avec succés');
-            return $this->redirectToRoute('user');
-        }
-        return $this->render('admin/useredit.html.twig',[
-           'form' => $form->createView()
-        ]);
+	public function add(Request $request)
+	{
+		$article = new Arcticles();
+		$form = $this->createForm(ArticleType::class, $article);
+		$form->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid())
+		{
+			$this->em->persist($article);
+			$this->em->flush();
+			$this->addFlash('success', 'Article crée avec succès');
+			return $this->redirectToRoute('admin.article');
+		}
+		return $this->render('admin/article_add.html.twig',[
+			'form' => $form->createView()
+		]);
+	}
 
-    }
-
-    /**
-     * @Route("/admin/userdelete/{id}", name="admin.user.delete", methods="DELETE")
-     * @param User $user
+	/**
+     * @Route("/adminarticle/category", name="admin.articles.category")
      * @param Request $request
+     * @param Category $category
      * @return Response
      */
-    public function deleteUser(User $user, Request $request)
-    {
-        if($this->isCsrfTokenValid('delete'. $user->getId(), $request->get('_token')))
-        {
-            $this->em->remove($user);
-            $this->em->flush();
-            $this->addFlash('success', 'Utilisateur supprimer avec succés');
-        }
+	public function category(Request $request)
+	{
+		$category = new Category();
+		
+		$form = $this->createForm(CategoryType::class, $category);
+		$form->handleRequest($request);
+		if($form->isSubmitted() && $form->isValid())
+		{
+			$this->em->persist($category);
+			$this->em->flush();
+			$this->addFlash('success', 'Categorie ajouter avec succès');
+			return $this->redirectToRoute('admin.articles.category');
+		}
+		$category_1 = $this->repocat->findAll();
+		return $this->render('admin/article_category.html.twig',[
+			'form' => $form->createView(),
+			'category' => $category_1
+		]);
+	}
 
-        return $this->redirectToRoute('user');
-
-    }
-
-    /**
-     * @Route("/admin/alerteedit/{id}", name="admin.alerte.edit", methods="GET|POST")
-     * @param AlertMeteo $alerte
+	/**
+     * @Route("/adminarticle/delete/{id}", name="admin.articles.delete", methods="DELETE")
      * @param Request $request
+     * @param Arcticles $article
      * @return Response
      */
-    public function editAlerte(AlertMeteo $alerte, Request $request)
-    {
-        $form = $this->createForm(AlerteMeteoType::class, $alerte);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
+	public function delete(Arcticles $article, Request $request)
+	{
+		if($this->isCsrfTokenValid('delete'. $article->getId(), $request->get('_token')))
+		{
+			$this->em->remove($article);
+			$this->em->flush();
+			$this->addFlash('success', 'Article supprimer avec succès');
+			
+		}
+		return $this->redirectToRoute('admin.article');	
+	}
 
-            $this->em->flush();
-            $this->addFlash('success', 'Utilisateur modifer avec succés');
-            return $this->redirectToRoute('admin');
-        }
-        return $this->render('admin/alerteedit.html.twig',[
-            'form' => $form->createView()
-        ]);
-
-    }
-
-    /**
-     * @Route("/admin/alertedelete/{id}", name="admin.alerte.delete", methods="DELETE")
-     * @param AlertMeteo $alerte
+	/**
+     * @Route("/adminarticle/deletecategory/{id}", name="admin.articles.deletecategory", methods="DELETE")
      * @param Request $request
+     * @param Arcticles $article
      * @return Response
      */
-    public function deleteAlerte(AlertMeteo $alerte, Request $request)
-    {
-        if($this->isCsrfTokenValid('delete'. $alerte->getId(), $request->get('_token')))
-        {
-            $this->em->remove($alerte);
-            $this->em->flush();
-            $this->addFlash('success', 'Alerte supprimer avec succés');
-        }
-
-        return $this->redirectToRoute('admin');
-
-    }
+	public function deleteCategory(Category $category, Request $request)
+	{
+		if($this->isCsrfTokenValid('delete'. $category->getId(), $request->get('_token')))
+		{
+			$this->em->remove($category);
+			$this->em->flush();
+			$this->addFlash('success', 'Categorie supprimer avec succès');
+			
+		}
+		return $this->redirectToRoute('admin.articles.category');	
+	}
 }

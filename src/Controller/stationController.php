@@ -2,23 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Contact;
-use App\Entity\Recherche;
-use App\Form\ContactType;
-use App\Form\RechercheType;
-use App\Notification\AlerteMeteoNotification;
-use App\Notification\BddNotification;
-use App\Notification\ContactNotification;
-use App\Notification\GetStationNotification;
-use App\Notification\GrapheNotification;
-use App\Notification\MiniMaxiANotification;
-use App\Notification\MiniMaxiNotification;
-use App\Notification\SaisonNotification;
-use App\Repository\AlertMeteoRepository;
-use App\Repository\MiniMaxiARepository;
-use App\Repository\MiniMaxiRepository;
-use App\Repository\StationRepository;
-use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,77 +30,41 @@ class stationController extends AbstractController
 		
 	}
 
-    /**
+	 /**
      * @Route("/", name="home")
      * @param Request $request
-     * @param ContactNotification $notification
-     * @param AlertMeteoRepository $alerteRepo
+     * @param ArcticlesRepository $repotisory
      * @return Response
      */
-    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo, SaisonNotification $saison)
+    public function home()
     {
-        $contact = new Contact();
-        $form = $this->createForm(ContactType::class, $contact);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $notification->notify($contact);
-            $this->addFlash('success', 'Votre message a bien été envoyer');
-            return $this->redirectToRoute('home');
-        }
     	$articles = $this->repotisory->findLatest();
-        $alerte = $alerteRepo->findByAlerteTrue();
-        $lumiere = $saison->AnimationLumiere();
-        $prevision = $saison->previsions();
         return $this->render('station/index.html.twig', [
-        	'articles' => $articles,
-            'alerte' => $alerte,
-            'lumiere' => $lumiere,
-            'prevision' => $prevision,
-            'form' => $form->createView()
+        	'articles' => $articles
         ]);
     }
 
-    /**
+     /**
      * @Route("/historique", name="historique")
-     * @param StationRepository $stationrepo
+     * @param Request $request
      * @return Response
      */
-    public function historique(StationRepository $stationrepo, GrapheNotification $graph, Request $request, MiniMaxiRepository $minimaxirepo, MiniMaxiARepository $mna)
+    public function historique()
     {
-        $station = $stationrepo->findByGraph();
-        $chartT = $graph->temperature($station);
-        $chartP = $graph->pression($station);
-        $chartH = $graph->humidite($station);
-        $recherche = new Recherche();
-        $form = $this->createForm(RechercheType::class, $recherche);
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $resultat = $stationrepo->findSearch($recherche);
-            $chartTR = $graph->temperature($resultat);
-            $count = $stationrepo->getNb($recherche);
-            return $this->render('station/Recherche.html.twig',[
-                'resultats' => $resultat,
-                'count' => $count,
-                'chartTR' => $chartTR
-
-            ]);
-        }
-        $minimaxi = $minimaxirepo->findMiniMax();
-        $archive_mn = $mna->findByMiniA();
-        return $this->render('station/historique.html.twig', [
-            'chartT' => $chartT,
-            'chartP' => $chartP,
-            'chartH' => $chartH,
-            'minimaxi' => $minimaxi,
-            'mna' => $archive_mn,
-            'form'   => $form->createView()
-        ]);
+        return $this->render('station/historique.html.twig');
     }
 
+        /**
+     * @Route("/admin", name="admin")
+     * @param Request $request
+     * @return Response
+     */
+    public function admin()
+    {
+        return $this->render('station/admin.html.twig');
+    }
 
-    /**
+            /**
      * @Route("/presentation", name="presentation")
      * @param Request $request
      * @return Response
@@ -136,44 +83,6 @@ class stationController extends AbstractController
     {
         return $this->render('station/mention_legales.html.twig');
     }
-
-    /**
-     * @Route("getstation", name="getstation")
-     * @param Request $request
-     * @return Response
-     */
-    public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax, MiniMaxiANotification $mna, AlerteMeteoNotification $alert)
-    {
-        $getstation->getStation($request);
-        $temp1 = $request->get('temp2');
-        $alert->calculAlerteTempAuto($temp1);
-        //$mna->minimaxicompare();
-        $minimax->getMinimaxi($request);
-        return $this->render('station/essai.html.twig');
-    }
-
-    /**
-     * @Route("getbddstation", name="getbddstation")
-     * @return Response
-     */
-    public function getBddstation(BddNotification $bdd)
-    {
-        $bdd->AddBddStation();
-        $a = "";
-        return $this->render('station/essai.html.twig');
-    }
-
-
-    /**
-     * @Route("getbddminimaxi", name="getbddminimaxi")
-     * @return Response
-     */
-    public function getBddminimaxi(BddNotification $bdd)
-    {
-        $bdd->AddBddMiniMaxi();
-        return $this->render('station/essai.html.twig');
-    }
-
 }
 
 
