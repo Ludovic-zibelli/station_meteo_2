@@ -177,6 +177,8 @@ class GetStationNotification
      */
     private $maxi_pluvio = 0;
 
+    private $bitvie ;
+
     function getStation($request)
     {
 
@@ -188,6 +190,7 @@ class GetStationNotification
         $this->tension = $request->get('tempinter');
         $this->pression_ajt = $request->get('pression') + 29.68;
         $this->pt_rosee = $this->ptRosee();
+        $this->bitvie = $request->get('bitvie');
         $this->pluvio = 0;
         $this->anemo = 0;
         $this->girou = 0;
@@ -221,6 +224,7 @@ class GetStationNotification
         fputs($monfichierSD, $this->girou . "\n");//9
         fputs($monfichierSD, $this->tension . "\n");//10
         fputs($monfichierSD, $this->pt_rosee . "\n");//11
+        fputs($monfichierSD, $this->bitvie . "\n");
         fclose($monfichierSD);
 
 
