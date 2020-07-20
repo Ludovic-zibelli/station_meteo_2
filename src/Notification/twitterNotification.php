@@ -3,7 +3,6 @@ namespace App\Notification;
 
 class twitterNotification
 {
-class Tweeter {
 
     const CONSUMER_KEY = 'zlSsLg5F6ea8UnL9DQPNBws6E';
     const SECRET_KEY = '3eL4eb6XG8XXzGMtvBi7mjC5kJMao36mH411gFdHEabGVWqSik';
@@ -11,7 +10,8 @@ class Tweeter {
     const SECRET_TOKEN = 'MOgKnHOoLlylLrcPZtMoPNZr4wdjmxeXEBn42e2ZOll5T';
 
     private $twitter;
-
+    private $date_heure;
+    private $temp2;
     public function __construct() {
         \Codebird\Codebird::setConsumerKey(self::CONSUMER_KEY, self::SECRET_KEY);
         $this->twitter = \Codebird\Codebird::getInstance();
@@ -47,5 +47,5 @@ class Tweeter {
         //Envoi sms
         header('location: https://smsapi.free-mobile.fr/sendmsg?user=26187808&pass=6nomO4k5CkPcPM&msg='. $message);
 
-    }
+
 }

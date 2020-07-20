@@ -75,6 +75,27 @@ class BddNotification
         $minimaxi->setMiniAnemo($minimaxih[0]->getMiniAnemo());
         $minimaxi->setMaxiAnemo($minimaxih[0]->getMaxiAnemo());
         $this->em->persist($minimaxi);
+        //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
+        # Chemin vers fichier texte
+        $file ="public/station_direct.txt";
+        # On met dans la variable (tableau $read) le contenu du fichier
+        $read=file($file);
+        $minimaxih[0]->setMiniTemp((float)$read[4]);
+        $minimaxih[0]->setMaxiTemp((float)$read[4]);
+        $minimaxih[0]->setMiniHumi((int)$read[3]);
+        $minimaxih[0]->setMaxiHumi((int)$read[3]);
+        $minimaxih[0]->setMiniPres((float)$read[5]);
+        $minimaxih[0]->setMaxiPres((float)$read[5]);
+        $minimaxih[0]->setMiniLumi((int)$read[6]);
+        $minimaxih[0]->setMaxiLumi((int)$read[6]);
+        $minimaxih[0]->setMiniPtro((float)$read[11]);
+        $minimaxih[0]->setMaxiPtro((float)$read[11]);
+        $minimaxih[0]->setMiniPluvio((int)0);
+        $minimaxih[0]->setMaxiPluvio((int)0);
+        $minimaxih[0]->setMiniGirou((int)0);
+        $minimaxih[0]->setMaxiGirou((int)0);
+        $minimaxih[0]->setMiniAnemo((int)0);
+        $minimaxih[0]->setMaxiAnemo((int)0);
         $this->em->flush();
 
     }
