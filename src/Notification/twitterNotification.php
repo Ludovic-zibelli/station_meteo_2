@@ -1,51 +1,25 @@
 <?php
 namespace App\Notification;
 
+use DG\Twitter\Twitter;
+
 class twitterNotification
 {
 
-    const CONSUMER_KEY = 'zlSsLg5F6ea8UnL9DQPNBws6E';
-    const SECRET_KEY = '3eL4eb6XG8XXzGMtvBi7mjC5kJMao36mH411gFdHEabGVWqSik';
-    const ACCES_TOKEN = '843750305011580928-Goy8tRhco44CMww2RFmyNxwhjXaIFmE';
-    const SECRET_TOKEN = 'MOgKnHOoLlylLrcPZtMoPNZr4wdjmxeXEBn42e2ZOll5T';
-
-    private $twitter;
-    private $date_heure;
-    private $temp2;
-    public function __construct() {
-        \Codebird\Codebird::setConsumerKey(self::CONSUMER_KEY, self::SECRET_KEY);
-        $this->twitter = \Codebird\Codebird::getInstance();
-        $this->twitter->setToken(self::ACCES_TOKEN, self::SECRET_TOKEN);
-    }
-
-    public function poster($message) {
-        $this->twitter->statuses_update('status='.$message);
-    }
-
-}
-    public function twitteAuto()
+    public function Twitter()
     {
-        //Creation d'une class pour l'envoie des tweete
-        //transformation date echo date("d/m/Y H:i:s", strtotime($date_heure));
-        $date = date("d/m/Y H:i:s", strtotime($date_heure));
-
-
-
-
-
-        //$tweeter = new Tweeter();
-        //$message1 = "Suite des RelevÃ©s Pression: {$pression}Hpa. Bonne journÃ©e ";
-        //$tweeter->poster($message1);
-
-
-        $tweeter = new Tweeter();
-        $message = "RelevÃ©s de la station mÃ©tÃ©o du {$date} Temperature: {$temp2}CÂ° Point de rosÃ©e: {$pt_rosee}CÂ° Humiditer:{$humiditer} % Pression: {$pression}Hpa. Bonne journÃ©e.";
-        $tweeter->poster($message);
-
-        //Creation Alerte SMS pour risque de vergla
-        //$sms = "ATTENTION RISQUE DE VERGLA. {$temp} CÂ°";
-        //Envoi sms
-        header('location: https://smsapi.free-mobile.fr/sendmsg?user=26187808&pass=6nomO4k5CkPcPM&msg='. $message);
-
+        $consumerKey = 'zlSsLg5F6ea8UnL9DQPNBws6E';
+        $consumerSecret = '3eL4eb6XG8XXzGMtvBi7mjC5kJMao36mH411gFdHEabGVWqSik';
+        $accessToken = '843750305011580928-Goy8tRhco44CMww2RFmyNxwhjXaIFmE';
+        $accessTokenSecret = 'MOgKnHOoLlylLrcPZtMoPNZr4wdjmxeXEBn42e2ZOll5T';
+        //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
+        # Chemin vers fichier texte
+        $file ="public/station_direct.txt";
+        # On met dans la variable (tableau $read) le contenu du fichier
+        $read=file($file);
+        $twitter = new Twitter($consumerKey, $consumerSecret, $accessToken, $accessTokenSecret);
+        $twitter->send('Relevés de la station météo du '.$read[0].'Température: '.$read[4].'C° Point de rosée: '.$read[11].'C° Humiditer:'.$read[3].' % Pression: '.$read[5].'Hpa. Bonne journée.');
+        //RelevÃ©s de la station mÃ©tÃ©o du {$date} Temperature: {$temp2}CÂ° Point de rosÃ©e: {$pt_rosee}CÂ° Humiditer:{$humiditer} % Pression: {$pression}Hpa. Bonne journÃ©e.
+    }
 
 }

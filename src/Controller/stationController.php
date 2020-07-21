@@ -14,6 +14,7 @@ use App\Notification\GrapheNotification;
 use App\Notification\MiniMaxiANotification;
 use App\Notification\MiniMaxiNotification;
 use App\Notification\SaisonNotification;
+use App\Notification\twitterNotification;
 use App\Repository\AlertMeteoRepository;
 use App\Repository\MiniMaxiARepository;
 use App\Repository\MiniMaxiRepository;
@@ -156,9 +157,10 @@ class stationController extends AbstractController
      * @Route("getbddstation", name="getbddstation")
      * @return Response
      */
-    public function getBddstation(BddNotification $bdd)
+    public function getBddstation(BddNotification $bdd, twitterNotification $twitter)
     {
-        $bdd->AddBddStation();
+        $twitter->Twitter();
+        //$bdd->AddBddStation();
         $a = "";
         return $this->render('station/essai.html.twig');
     }
@@ -171,6 +173,16 @@ class stationController extends AbstractController
     public function getBddminimaxi(BddNotification $bdd)
     {
         $bdd->AddBddMiniMaxi();
+        return $this->render('station/essai.html.twig');
+    }
+
+    /**
+     * @Route("test", name="test")
+     * @return Response
+     */
+    public function getTest(twitterNotification $twitter)
+    {
+        $twitter->Twitter();
         return $this->render('station/essai.html.twig');
     }
 

@@ -2,6 +2,9 @@
     "cmen/google-charts-bundle": {
         "version": "3.2.1"
     },
+    "dg/twitter-php": {
+        "version": "v4.1.2"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
