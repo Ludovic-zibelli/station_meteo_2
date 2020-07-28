@@ -76,6 +76,7 @@ function getAffichage(ligne)
         var b = a / 5 ;
         document.getElementById("taux_soleil").innerHTML = b;
         document.getElementById("taux").innerHTML = '<div class="progress-bar bg-info" role="progressbar" style="width: ' + b + '%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">' + b + '%</div>';
+        document.getElementById("bit_vie").innerHTML = ligne[12];
 
     }
 

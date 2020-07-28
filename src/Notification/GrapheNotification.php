@@ -22,6 +22,7 @@ class GrapheNotification
         }
         $chart->getData()->setArrayToDataTable($data);
         $chart->getOptions()->getHAxis()->setFormat('d/M/yy HH:mm');
+        $chart->getOptions()->setCurveType('function');
         $chart->getOptions()
             ->setHeight(400)
             ->setWidth('auto')
@@ -48,6 +49,8 @@ class GrapheNotification
         $chart->getOptions()->getHAxis()->setFormat('d/M/yy HH:mm');
         $chart->getOptions()->getHAxis()->getGridlines()->getUnits()->getHours()->setFormat('HH:mm');
         $chart->getOptions()->getHAxis()->getMinorGridlines()->getUnits()->getHours()->setFormat('HH:mm');
+        $chart->getOptions()->setCurveType('function');
+        $chart->getOptions()->getLegend()->setPosition('bottom');
         $chart->getOptions()
             ->setHeight(400)
             ->setWidth('auto')
