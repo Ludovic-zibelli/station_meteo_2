@@ -40,7 +40,7 @@ gauges = (function () {
             realtimeInterval   : 30,                     // *** Download data interval, set to your realtime data update interval in seconds
             longPoll           : false,                  // if enabled, use long polling and PHP generated data !!only enable if you understand how this is implemented!!
             gaugeMobileScaling : 0.85,                   // scaling factor to apply when displaying the gauges mobile devices, set to 1 to disable (default 0.85)
-            graphUpdateTime    : 15,                     // period of pop-up data graph refresh, in minutes (default 15)
+            graphUpdateTime    : 30,                     // period of pop-up data graph refresh, in minutes (default 15)
             stationTimeout     : 3,                      // period of no data change before we declare the station off-line, in minutes (default 3)
             pageUpdateLimit    : 20,                     // period after which the page stops automatically updating, in minutes (default 20),
                                                          // - set to 0 (zero) to disable this feature
@@ -63,7 +63,7 @@ gauges = (function () {
             showGaugeShadow    : true,                   // Show a drop shadow outside the gauges
             roundCloudbaseVal  : true,                   // Round the value shown on the cloud base gauge to make it easier to read
                                                          // The realtime files should be absolute paths, "/xxx.txt" refers to the public root of your web server
-            realTimeUrlLongPoll: 'realtimegauges-longpoll.php',     // *** ALL Users: If using long polling, change to your location of the PHP long poll realtime file ***
+            realTimeUrlLongPoll: 'src/realtimegauges-longpoll.php',     // *** ALL Users: If using long polling, change to your location of the PHP long poll realtime file ***
                                                                     // *** the supplied file is for Cumulus only
             realTimeUrlCumulus : 'realtimegauges.txt',     // *** Cumulus Users: Change to your location of the realtime file ***
             realTimeUrlWD      : 'customclientraw.txt',    // *** WD Users: Change to your location of the ccr file ***

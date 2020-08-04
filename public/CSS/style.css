@@ -61,6 +61,11 @@ htlm
     width: auto;
 }
 
+.carousel
+{
+	margin-bottom: 20px;
+}
+
 .donnee_meteo
 {
 	margin-top: 10px;
