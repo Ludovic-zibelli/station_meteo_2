@@ -218,3 +218,8 @@ header
 	border-radius: 10px;
 	margin-bottom: 20px;
 }
+
+.card_articles
+{
+	height: 700px;
+}

@@ -159,7 +159,7 @@
 		</div>
 			    	{% for article in articles %}
 			    		<div class="col-md-4 col-sm-4 col-lg-4">
-			    			<div class="card">
+			    			<div class="card card_articles">
 								{% if article.image %}
 									<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
 								{% else %}
@@ -168,7 +168,8 @@
 
 			    				<div class="card-body">
 			    					<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
-			    					<div class="card-text">{{ article.content|raw  }}</div>
+			    					<div class="card-text">{{ article.content|striptags|slice(0, 100)|raw  }}</div>
+									<p class="card-text"><small class="text-muted"><a href="{{ path('article.show', {id: article.id}) }}">Lire la suite</a></small></p>
 			    				</div>
 			    				<div class="card-footer">
 			    					<p>Auteur de l'article {{ article.auteur }}|Editer le {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
