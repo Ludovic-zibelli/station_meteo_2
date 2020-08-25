@@ -17,11 +17,17 @@ class AlerteMeteoNotification
      */
     private $repo;
 
-    public function __construct(EntityManagerInterface $em, AlertMeteoRepository $repo)
+    /**
+     * @var twitterNotification
+     */
+    private $twitter_notif;
+
+    public function __construct(EntityManagerInterface $em, AlertMeteoRepository $repo, twitterNotification $twitter_notif)
     {
 
         $this->em = $em;
         $this->repo = $repo;
+        $this->twitter_notif = $twitter_notif;
     }
 
     public function calculAlerteTempAuto($temperature)
@@ -49,5 +55,20 @@ class AlerteMeteoNotification
 
         }
 
+    }
+
+    public function alerteTwitter()
+    {
+        $alerte_repo = $this->repo->findByAlerteAuto();
+        $date = $alerte_repo[0]->getCreatdAt();
+        $date_string = $date->format('d/m/Y à H:i:s');
+        $message = $date_string. ' : "' .$alerte_repo[0]->getMessage(). '"';
+        $this->twitter_notif->alerteMeteoTwitter($message);
+
+        //if($alerte_repo[0]->getOnline() == 1)
+        //{
+            //$message = 'Alerte Météo declenche le $alerte_repo[0]->getCreatdAt() :$alerte_repo[0]->getMessage()';
+            //$this->twitter_notif->alerteMeteoTwitter($message);
+        //}
     }
 }

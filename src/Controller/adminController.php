@@ -7,6 +7,7 @@ use App\Entity\AlertMeteo;
 use App\Entity\User;
 use App\Form\AlerteMeteoType;
 use App\Form\UserType;
+use App\Notification\AlerteMeteoNotification;
 use App\Repository\AlertMeteoRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -54,7 +55,7 @@ class adminController extends AbstractController
      * @return Response
      */
 
-    public function admin(Request $request, AlertMeteoRepository $repo_alert)
+    public function admin(Request $request, AlertMeteoRepository $repo_alert, AlerteMeteoNotification $notif)
     {
         $alerte = new AlertMeteo();
         $form = $this->createForm(AlerteMeteoType::class, $alerte);
@@ -67,6 +68,7 @@ class adminController extends AbstractController
             $this->em->persist($alerte);
             $this->em->flush();
             $this->addFlash('success', 'Alerte Météo Manuel ajouter');
+            $notif->alerteTwitter();
             return $this->redirectToRoute('admin');
         }
         return $this->render('admin/admin.html.twig',[

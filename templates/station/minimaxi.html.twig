@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Mini/Maxi de la station météo{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="card text-center">
+        <div class="card-header">
+            <h5 class="card-title">Historique des Minis est des Maxis de la station</h5>
+        </div>
+        <div class="card-body center-block">
+            <p class="card-text">Historique des Minis et Maxis de la station Météo</p>
+                {{ form_start(form) }}
+                <div class="form-row justify-content-center align-items-center minimaxsearch">
+                    <div class="col">
+                        <p> <strong>Filter par date:</strong> </p>
+                    </div>
+                    <div class="col">
+                        {{ form_widget(form.date) }}
+                    </div>
+                    <div class="col">
+                        {{ form_widget(form.date_interval) }}
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary btn-sm btn-block">Recherher</button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col" colspan="2">Température</th>
+                        <th scope="col" colspan="2">Point de rosée</th>
+                        <th scope="col" colspan="2">Humidité</th>
+                        <th scope="col" colspan="2">Pression </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>Mini</td>
+                        <td>Maxi</td>
+                        <td>Mini</td>
+                        <td>Maxi</td>
+                        <td>Mini</td>
+                        <td>Maxi</td>
+                        <td>Mini</td>
+                        <td>Maxi</td>
+                    </tr>
+                    {% for mima in minimaxi %}
+                        <tr>
+                            <td>{{ mima.creatdat|date("d/m/Y H:i") }}</td>
+                            <td>{{ mima.minitemp }} C°</td>
+                            <td>{{ mima.maxitemp }} C°</td>
+                            <td>{{ mima.miniptro }} C°</td>
+                            <td>{{ mima.maxiptro }} C°</td>
+                            <td>{{ mima.minihumi }} %</td>
+                            <td>{{ mima.maxihumi }} %</td>
+                            <td>{{ mima.minipres }} Hpa</td>
+                            <td>{{ mima.maxipres }} Hpa</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="pagination justify-content-center">
+                            {{ knp_pagination_render(minimaxi) }}
+                        </div>
+                    </div>
+                </div>
+
+                <p class="card-text"><a href="{{ path('historique') }}">Retour a la page historique</a></p>
+            </div>
+          </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+
+
+
+    <script src="{{ asset ('pickadate/picker.js')}}"></script>
+    <script src="{{ asset ('pickadate/picker.date.js')}}"></script>
+    <script src="{{ asset ('pickadate/legacy.js')}}"></script>
+
+
+    <script type="text/javascript">
+
+    var $input = $( '.js-pickadate-booking' ).pickadate({
+            format: 'd mmmm yyyy',
+            formatSubmit: 'yyyy-mm-dd',
+            hiddenName: true,
+            container: '#container',
+            selectMonths: true,
+            selectYears: 2,
+            firstDay: 1,
+            min: Date.now(),
+            disable: [2, 7, [2019,4,1], [2019,10,1],[2019,11,25], [2020,4,1], [2020,10,1],[2020,11,25], [2021,4,1], [2021,10,1],[2021,11,25], [2022,4,1], [2022,10,1],[2022,11,25] ],
+            monthsFull: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+            weekdaysShort: ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            today: 'Aujourd\'hui',
+            clear: 'Effacer',
+            close: 'Fermer',
+        });
+    </script>
+
+{% endblock %}

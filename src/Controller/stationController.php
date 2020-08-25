@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\MinimaxiSearch;
 use App\Entity\Recherche;
 use App\Form\ContactType;
+use App\Form\MinimaxiType;
 use App\Form\RechercheType;
 use App\Notification\AlerteMeteoNotification;
 use App\Notification\BddNotification;
@@ -14,6 +16,7 @@ use App\Notification\GrapheNotification;
 use App\Notification\MiniMaxiANotification;
 use App\Notification\MiniMaxiNotification;
 use App\Notification\SaisonNotification;
+use App\Notification\smsNotification;
 use App\Notification\twitterNotification;
 use App\Repository\AlertMeteoRepository;
 use App\Repository\MiniMaxiARepository;
@@ -22,6 +25,8 @@ use App\Repository\StationRepository;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,6 +35,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ArcticlesRepository;
+use Th3Mouk\FreeMobileSMSNotif\Client;
 
 
 class stationController extends AbstractController
@@ -178,12 +184,39 @@ class stationController extends AbstractController
 
     /**
      * @Route("test", name="test")
+     * @param smsNotification $sms
      * @return Response
      */
-    public function getTest(twitterNotification $twitter)
+    public function getTest(smsNotification $sms)
     {
-        $twitter->Twitter();
+
+        $sms->alerteSms();
+
+
+        //$essai = 'salut';
+        //$twitter->alerteMeteoTwitter();
         return $this->render('station/essai.html.twig');
+    }
+
+    /**
+     * @Route("/minimaxihisto", name="minimaxihisto")
+     * @param Request $request
+     * @return Response
+     */
+    public function minimaxihisto(MiniMaxiRepository $minimaxi, PaginatorInterface $paginator, Request $request)
+    {
+        $search = new MinimaxiSearch();
+        $form = $this->createForm(MinimaxiType::class, $search);
+        $form->handleRequest($request);
+        $mima = $paginator->paginate($minimaxi->findAllMiniMaxiDesc($search),
+            $request->query->getInt('page', 1), /*page number*/
+            20 /*limit per page*/
+        );
+
+        return $this->render('station/minimaxi.html.twig', [
+            'minimaxi' => $mima,
+            'form' => $form->createView()
+        ]);
     }
 
 }
