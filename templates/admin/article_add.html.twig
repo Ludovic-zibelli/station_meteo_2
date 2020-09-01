@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un article{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+<div class="container">
+	<a href="{{ path ('admin.article')}}" class="">Retour</a>
+	{% for message in app.flashes('success')%}
+		<div class="alert alert-success">
+			{{ message }}
+		</div>
+	{% endfor %}
+	<h2 class="text-center titre">Ajouter un article</h2>
+	<div class="row mt-10">
+		<div class="col-6">
+			<label>Titre de l'article :</label>
+			{{ form_widget(form.titre) }}
+		</div>
+		<div class="col-6">
+			<label>Auteur de l'article :</label>
+			{{ form_widget(form.auteur) }}
+		</div>
+		<div class="col-6">
+			<label>Category de l'article :</label>
+			{{ form_widget(form.category)}}
+		</div>
+		<div class="col-6">
+			<label>Mettre en ligne :</label>
+			{{ form_widget(form.online)}}
+		</div>
+		<div class="col-12">
+			<label>Contenu de l'article : </label>
+			{{ form_widget(form.content)}}
+		</div>
+		<div class="col-12">
+			<label>Ajouter une image :</label>
+			{{ form_widget(form.image)}}
+		</div>
+	</div>
+		<div class="row bouton_add_sauv">
+			<div class="col-4"></div>
+			<div class="col-4"></div>
+			<div class="col-4">
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Sauvegarder</button>
+			</div>
+		</div>
+</div>
+
+{{ form_end(form) }}
+{% endblock %}

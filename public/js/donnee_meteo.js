@@ -45,7 +45,7 @@ getDonnee();
 function getDonnee()
     { /* Recupère liens dans fichier .txt*/
 
-        var url = 'http://meteospit.fr/station_direct.txt';
+        var url = 'public/station_direct.txt';
         var donnee = getXMLHttpRequest(); /* Instance XMLHttpRequest*/
         donnee.open("GET", "station_direct.txt", false);
         //donnee.overrideMimeType('text/xml');

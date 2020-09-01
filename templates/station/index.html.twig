@@ -168,7 +168,7 @@
 
 			    				<div class="card-body">
 			    					<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
-			    					<div class="card-text">{{ article.content|striptags|slice(0, 100)|raw  }}</div>
+			    					<div class="card-text">{{ article.content|striptags|slice(0, 300)|raw  }}</div>
 									<p class="card-text"><small class="text-muted"><a href="{{ path('article.show', {id: article.id}) }}">Lire la suite</a></small></p>
 			    				</div>
 			    				<div class="card-footer">

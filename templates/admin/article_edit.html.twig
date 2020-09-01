@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edition de l'article{% endblock %}
+
+{% block body %}
+
+<div class="container">
+	<a href="{{ path ('admin.article')}}" class="">Retour</a>
+	<h2 class="text-center titre">Editer un article</h2>
+{{ form_start(form)}}
+	<div class="row">
+		<div class="col-6">
+			<label>Titre de l'article :</label>
+			{{ form_widget(form.titre) }}
+		</div>
+		<div class="col-6">
+			<label>Auteur de l'article :</label>
+			{{ form_widget(form.auteur) }}
+		</div>
+		<div class="col-6">
+			<label>Category de l'article :</label>
+			{{ form_widget(form.category)}}
+		</div>
+		<div class="col-6">
+			<label>Mettre en ligne :</label>
+			{{ form_widget(form.online)}}
+		</div>
+		<div class="col-12">
+			<label>Contenu de l'article : </label>
+			{{ form_widget(form.content)}}
+		</div>
+		<div class="col-12">
+			<label>Ajouter une image :</label>
+			{{ form_widget(form.image)}}
+		</div>
+	</div>
+		<div class="row bouton_add_sauv">
+			<div class="col-4"></div>
+			<div class="col-4"></div>
+			<div class="col-4">
+				<button type="submit" class="btn btn-primary btn-lg btn-block">Editer</button>
+			</div>
+		</div>
+</div>
+
+{{ form_end(form)}}
+
+{% endblock %}
