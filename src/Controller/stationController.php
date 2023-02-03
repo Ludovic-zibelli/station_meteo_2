@@ -18,8 +18,10 @@ use App\Notification\MiniMaxiNotification;
 use App\Notification\SaisonNotification;
 use App\Notification\smsNotification;
 use App\Notification\twitterNotification;
+use App\Notification\CallApiService;
 use App\Repository\AlertMeteoRepository;
 use App\Repository\MiniMaxiARepository;
+use App\Repository\MiniMaxiHRepository;
 use App\Repository\MiniMaxiRepository;
 use App\Repository\StationRepository;
 use CMEN\GoogleChartsBundle\GoogleCharts\Charts\LineChart;
@@ -35,6 +37,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Repository\ArcticlesRepository;
+use Symfony\Component\VarDumper\VarDumper;
 use Th3Mouk\FreeMobileSMSNotif\Client;
 
 
@@ -61,7 +64,7 @@ class stationController extends AbstractController
      * @param AlertMeteoRepository $alerteRepo
      * @return Response
      */
-    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo, SaisonNotification $saison)
+    public function home(Request $request, ContactNotification $notification, AlertMeteoRepository $alerteRepo, SaisonNotification $saison, MiniMaxiHRepository $HRepository)
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -72,6 +75,7 @@ class stationController extends AbstractController
             $this->addFlash('success', 'Votre message a bien été envoyer');
             return $this->redirectToRoute('home');
         }
+        $minimax = $HRepository->findAll();
     	$articles = $this->repotisory->findLatest();
         $alerte = $alerteRepo->findByAlerteTrue();
         $lumiere = $saison->AnimationLumiere();
@@ -81,6 +85,7 @@ class stationController extends AbstractController
             'alerte' => $alerte,
             'lumiere' => $lumiere,
             'prevision' => $prevision,
+            'minimaxi' => $minimax,
             'form' => $form->createView()
         ]);
     }
@@ -96,6 +101,7 @@ class stationController extends AbstractController
         $chartT = $graph->temperature($station);
         $chartP = $graph->pression($station);
         $chartH = $graph->humidite($station);
+        $chartA = $graph->anemo($station);
         $recherche = new Recherche();
         $form = $this->createForm(RechercheType::class, $recherche);
         $form->handleRequest($request);
@@ -117,6 +123,7 @@ class stationController extends AbstractController
             'chartT' => $chartT,
             'chartP' => $chartP,
             'chartH' => $chartH,
+            'chartA' => $chartA,
             'minimaxi' => $minimaxi,
             'mna' => $archive_mn,
             'form'   => $form->createView()
@@ -217,6 +224,19 @@ class stationController extends AbstractController
             'minimaxi' => $mima,
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/json", name="json")
+     * @param CallApiService $CallApiService
+     * @return Response
+     */
+    public function index(CallApiService $callApiService): Response
+    {
+        $standing = $callApiService->getResultVigilances();
+        dd($standing["records"][1]["fields"]["daterun"]);
+        return new Response($standing["records"][1]["fields"]);
+ 
     }
 
 }

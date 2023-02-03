@@ -5,6 +5,9 @@ namespace App\Notification;
 use App\Entity\Station;
 use App\Repository\MiniMaxiHRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class GetStationNotification
 {
@@ -33,12 +36,18 @@ class GetStationNotification
      */
     private $repo;
 
-    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo)
+
+    private $callApiService;
+
+
+
+    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, HttpClientInterface $client, CallApiService $callApiService)
     {
         $this->date = date("d.m.Y");
         $this->heure = date("G:i");
         $this->em = $em;
         $this->repo = $repo;
+        $this->callApiService = $callApiService;
 
     }
 
@@ -179,6 +188,51 @@ class GetStationNotification
 
     private $bitvie ;
 
+    /**
+     * @var
+     */
+    private $anemo_lastest;
+
+    /**
+     * @var
+     */
+    private $girou_lastest;
+
+    /**
+     * @var string 
+     */
+    private $couleurVigilance;
+
+     /**
+     * @var string 
+     */
+    private $Vigilance;
+
+     /**
+     * @var datetime
+     */
+    private $VigilanceDatedebut;
+
+    /**
+     * @var datetime
+     */
+    private $VigilanceDatefin;
+
+     /**
+     * @var 
+     */
+    private $nbrEclaire10;
+
+    /**
+    * @var 
+    */
+    private $nbrEclaire50;
+
+    /**
+    * @var 
+    */
+    private $nbrEclaire1;
+    
     function getStation($request)
     {
 
@@ -191,24 +245,62 @@ class GetStationNotification
         $this->pression_ajt = $request->get('pression') + 29.68;
         $this->pt_rosee = $this->ptRosee();
         $this->bitvie = $request->get('bitvie');
-        $this->pluvio = 0;
-        $this->anemo = 0;
-        $this->girou = 0;
+        $this->pluvio = $request->get('pluvio');
+        $this->anemo = $request->get('anemo');
+        $this->girou = $request->get('girou');
+        //Recuperation des infos API vigilance métèo france
+        $resulVigi = $this->callApiService->getResultVigilances();
+        $this->couleurVigilance = $resulVigi["records"][1]["fields"]["couleur"];
 
-
+        if($resulVigi["records"][1]["fields"]["risque_valeur0"] == null)
+        {
+            $this->Vigilance = "aucun alerte";
+        }
+        else
+        {
+            $this->Vigilance = $resulVigi["records"][1]["fields"]["risque_valeur0"];
+        }
+        
+        $this->VigilanceDatedebut = $resulVigi["records"][1]["fields"]["daterun"];
+        $this->VigilanceDatefin = $resulVigi["records"][1]["fields"]["dateprevue"];
+        //Recuperation des infOS API des eclaires
+        //Rayon 10 kms
+        $resulOrages10 = $this->callApiService->getResultOrages();
+        $this->nbrEclaire10 = $resulOrages10["total_strikes"];
+        //Rayon 50 kms
+        $resulOrages50 = $this->callApiService->getResultOrages50();
+        $this->nbrEclaire50 = $resulOrages50["total_strikes"];
+        //Rayon 1 km
+        $resulOrages1 = $this->callApiService->getResultOrages1();
+        $this->nbrEclaire1 = $resulOrages1["total_strikes"];
 
         $this->minimaxi();
         //$this->addBdd();
         $this->realTimeGauges();
         $this->stationDirect();
+        $this->jsonAction();
 
 
 
     }
+
+    //Recuperation des derniere mesure
+    function lastest()
+    {
+        //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
+        # Chemin vers fichier texte
+        $file ="station_direct.txt";
+        # On met dans la variable (tableau $read) le contenu du fichier
+        $read=file($file);
+        //tranformation nombre pression a virgule en entier pour variable prevision
+        $this->anemo_lastest = $read[8];
+        $this->girou_lastest = $read[9];
+    }
+
     //Modification du fichier station_direct.txt
     function stationDirect()
     {
-
+        $this->lastest();
         //Creation fichier TEXT
         $monfichierSD = fopen('station_direct.txt', 'w+');
         fseek($monfichierSD, 0);
@@ -224,10 +316,42 @@ class GetStationNotification
         fputs($monfichierSD, $this->girou . "\n");//9
         fputs($monfichierSD, $this->tension . "\n");//10
         fputs($monfichierSD, $this->pt_rosee . "\n");//11
-        fputs($monfichierSD, $this->bitvie . "\n");
+        fputs($monfichierSD, $this->bitvie . "\n");//12
         fclose($monfichierSD);
 
 
+    }
+
+    //Fichier JSON modification du fichier stationdirect.json 
+    public function jsonAction()
+    {
+       
+        $data = [
+                'temp1' => $this->temp1,
+                'temp2' => $this->temp2,   
+                'humiditer' => $this->humiditer,
+                'pression' => $this->pression_ajt,
+                'lumiere' => $this->lumiere,
+                'pluvio' => $this->pluvio,
+                'anemo' => $this->anemo,
+                'girou' => $this->girou,
+                'tension' => $this->tension,
+                'ptrose' => $this->pt_rosee,
+                'date' => $this->date,
+                'heure' => $this->heure,
+                'couleurVigi' => $this->couleurVigilance,
+                'vigilance' => $this->Vigilance,
+                'nbreclaires10' => $this->nbrEclaire10,
+                'nbreclaires50' => $this->nbrEclaire50,
+                'nbreclaires1' => $this->nbrEclaire1,
+                'vigidebut' => $this->VigilanceDatedebut,
+                'vigifin' => $this->VigilanceDatefin
+
+            ];
+        
+        $json = json_encode($data);
+        file_put_contents("stationdirect.json", $json); 
+        //return new JsonResponse($data);
     }
 
 
@@ -271,18 +395,18 @@ class GetStationNotification
         fputs($gauges, '"heatindex":"'.$this->mini_ptro .'",'. "\n");//index de chaleur
         fputs($gauges, '"heatindexTH":"'.$this->mini_ptro .'",'. "\n");//index de chaleur
         fputs($gauges, '"humidex":"'.$this->humiditer .'",'. "\n");//Humiditer
-        fputs($gauges, '"wlatest":"'.$this->anemo .'",'. "\n");//Vent
+        fputs($gauges, '"wlatest":"'.$this->anemo_lastest .'",'. "\n");//Vent
         fputs($gauges, '"wspeed":"'.$this->anemo.'",'. "\n");//Vitesse du vent
-        fputs($gauges, '"wgust":"'.$this->anemo.'",'. "\n");//Rafale de vent
-        fputs($gauges, '"wgustTM":"'.$this->anemo.'",'. "\n");//Rafale de vent
-        fputs($gauges, '"bearing":"'.$this->pression_ajt.'",'. "\n");//Palier
-        fputs($gauges, '"avgbearing":"'.$this->pression_ajt.'",'. "\n");//Palier
+        fputs($gauges, '"wgust":"'.$this->maxi_anemo.'",'. "\n");//Rafale de vent
+        fputs($gauges, '"wgustTM":"'.$this->mini_anemo.'",'. "\n");//Rafale de vent
+        fputs($gauges, '"bearing":"'.$this->girou.'",'. "\n");//Girouette
+        fputs($gauges, '"avgbearing":"'.$this->girou_lastest.'",'. "\n");//Girouette
         fputs($gauges, '"press":"'.$this->pression_ajt.'",'. "\n");//Pression atmo
         fputs($gauges, '"pressTL":"'.$this->mini_pres.'",'. "\n");//Mini pression atmo
         fputs($gauges, '"pressTH":"'.$this->maxi_pres.'",'. "\n");//Maxi pression atmo
         fputs($gauges, '"pressL":"'.$this->mini_pres.'",'. "\n");//Pression atmo mini
         fputs($gauges, '"pressH":"'.$this->maxi_pres.'",'. "\n");//Pression atmo maxi
-        fputs($gauges, '"rfall":"0.5",'. "\n");//Pluvio
+        fputs($gauges, '"rfall":"'.$this->pluvio.'",'. "\n");//Pluvio
         fputs($gauges, '"rrate":"0.0",'. "\n");//Pluvio
         fputs($gauges, '"rrateTM":"0",'. "\n");//??
         fputs($gauges, '"hum":"'.$this->humiditer .'",'. "\n");//Humiditer

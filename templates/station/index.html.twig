@@ -93,8 +93,77 @@
     					<div id="tip_5" class="gauge col-md-3 col-sm-3 col-lg-3 center-block" style=float:none;>
       						<canvas id="canvas_baro" class="gaugeSizeStd"></canvas>
       					</div>
-
     			</div>
+				  <div class="row">
+					  <div class="col-md-3 col-sm-3 col-lg-3">
+						  <div id="tip_2" class="gauge">
+							  <canvas id="canvas_rain" class="gaugeSizeStd"></canvas>
+						  </div>
+					  </div>
+					  	<div id="tip_6" class="gauge col-md-3 col-sm-3 col-lg-3 center-block">
+					  		<canvas id="canvas_wind" class="gaugeSizeStd"></canvas>
+				  		</div>
+				  		<div id="tip_7" class="gauge col-md-3 col-sm-3 col-lg-3 center-block">
+				  			<canvas id="canvas_dir" class="gaugeSizeStd"></canvas>
+			  			</div>
+					  <div class="col-md-3 col-sm-3 col-lg-3">
+						  <div id="tip_10" class="gauge">
+							  <canvas id="canvas_rose" class="gaugeSizeStd"></canvas>
+						  </div>
+					  </div>
+			</div>
+				  <br>
+				  <div class="row">
+					  <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+						  <div class="card">
+							  <div class="card-header">
+								  Minimales est maximales du jour
+							  </div>
+							  <div class="card-body">
+								  <table class="table table-bordered">
+									  <thead>
+									  <tr>
+										  <th scope="col" colspan="2">Température</th>
+										  <th scope="col" colspan="2">Point de rosée</th>
+										  <th scope="col" colspan="2">Humidité</th>
+										  <th scope="col" colspan="2">Pression </th>
+										  <th scope="col" colspan="2">Vitesse du vent </th>
+									  </tr>
+									  </thead>
+									  <tbody>
+									  <tr>
+										  <td>Mini</td>
+										  <td>Maxi</td>
+										  <td>Mini</td>
+										  <td>Maxi</td>
+										  <td>Mini</td>
+										  <td>Maxi</td>
+										  <td>Mini</td>
+										  <td>Maxi</td>
+										  <td>Mini</td>
+										  <td>Maxi</td>
+									  </tr>
+									  {% for mima in minimaxi %}
+										  <tr>
+											  <td>{{ mima.minitemp }} C°</td>
+											  <td>{{ mima.maxitemp }} C°</td>
+											  <td>{{ mima.miniptro }} C°</td>
+											  <td>{{ mima.maxiptro }} C°</td>
+											  <td>{{ mima.minihumi }} %</td>
+											  <td>{{ mima.maxihumi }} %</td>
+											  <td>{{ mima.minipres }} Hpa</td>
+											  <td>{{ mima.maxipres }} Hpa</td>
+											  <td>{{ mima.minianemo }} Km/h</td>
+											  <td>{{ mima.maxianemo }} Km/h</td>
+										  </tr>
+									  {% endfor %}
+									  </tbody>
+								  </table>
+							  </div>
+						  </div>
+					  </div>
+
+				  </div>
 				  <div class="row text-center">
 					  <div class="col-md-12 col-sm-12 col-lg-12">
                           <div class="card">
@@ -141,13 +210,14 @@
   					<div class="row">
   						<div class="col-md-1 col-sm-1 col-lg-1"></div>
   						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
-  							<a href='http://fr.sat24.com/fr' target='sat24'><image src='http://api.sat24.com/animated/EU/visual/1/Central%20European%20Standard%20Time/4436851' width=280 height=280></image></a>
+  							<a href='http://fr.sat24.com/fr' target='sat24'><img src='http://api.sat24.com/animated/EU/visual/1/Central%20European%20Standard%20Time/4436851' width=280 height=280></img></a>
   						</div>
   						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
-  							<a href='http://fr.sat24.com/fr' target='sat24'><image src='http://api.sat24.com/		crop?type=visual5hdcomplete&lat=49.1621&lon=6.7468&width=300&height=300&zoom=1.00&continent=eu' width=280 height=280></image></a>
+  							<a href='http://fr.sat24.com/fr' target='sat24'><img src='http://api.sat24.com/crop?type=visual5hdcomplete&lat=49.1621&lon=6.7468&width=300&height=300&zoom=1.00&continent=eu' width=280 height=280></img></a>
   						</div>
   						<div class="col-md-1 col-sm-1 col-lg-1"></div>
-  					</div>	
+  					</div>
+
 			  </div>
 
 			</div>

@@ -96,9 +96,9 @@ class MiniMaxiNotification
         $this->tension = $request->get('tempinter');
         $this->pression_ajt = $request->get('pression') + 29.68;
         $this->pt_rosee = $this->ptRosee();
-        $this->pluvio = 0;
-        $this->anemo = 0;
-        $this->girou = 0;
+        $this->pluvio = $request->get('pluvio');
+        $this->anemo = $request->get('anemo');
+        $this->girou = $request->get('girou');
 
         $bdd = $this->repo->findByMini();
 
@@ -166,13 +166,45 @@ class MiniMaxiNotification
             //$this->maxi_ptro = $this->pt_rosee;
         }
 
-        //PAs encore présent sur la station
-        $this->mini_anemo = 0;
-        $this->maxi_anemo = 0;
-        $this->mini_girou = 0;
-        $this->maxi_girou = 0;
-        $this->mini_pluvio = 0;
-        $this->maxi_pluvio = 0;
+        //Controle mini maxi anemo
+        if ($this->anemo < $bdd[0]->getMiniAnemo())
+        {
+            $bdd[0]->setMiniAnemo($this->anemo);
+            //$this->mini_ptro = $this->pt_rosee;
+        }
+
+        if ($this->anemo > $bdd[0]->getMaxiAnemo())
+        {
+            $bdd[0]->setMaxiAnemo($this->anemo);
+            //$this->maxi_ptro = $this->pt_rosee;
+        }
+
+        //Controle mini maxi girou
+        if ($this->girou < $bdd[0]->getMiniGirou())
+        {
+            $bdd[0]->setMiniGirou($this->girou);
+            //$this->mini_ptro = $this->pt_rosee;
+        }
+
+        if ($this->girou > $bdd[0]->getMaxiGirou())
+        {
+            $bdd[0]->setMaxiGirou($this->girou);
+            //$this->maxi_ptro = $this->pt_rosee;
+        }
+
+        //Controle mini maxi pluviometre
+        if ($this->pluvio < $bdd[0]->getMiniPluvio())
+        {
+            $bdd[0]->setMiniPluvio($this->pluvio);
+            //$this->mini_ptro = $this->pt_rosee;
+        }
+
+        if ($this->pluvio > $bdd[0]->getMaxiPluvio())
+        {
+            $bdd[0]->setMaxiPluvio($this->pluvio);
+            //$this->maxi_ptro = $this->pt_rosee;
+        }
+
 
         $this->em->flush();
 

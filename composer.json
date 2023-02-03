@@ -6,14 +6,23 @@
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-iconv": "*",
+        "api-platform/core": "^2.5",
         "cmen/google-charts-bundle": "^3.2",
         "dg/twitter-php": "^4.1",
+        "doctrine/annotations": "^1.0",
+        "doctrine/doctrine-bundle": "^2.0",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.12",
+        "doctrine/cache": "^1.12 ",
         "friendsofsymfony/ckeditor-bundle": "^2.2",
         "knplabs/knp-paginator-bundle": "^5.3",
         "liip/imagine-bundle": "^2.3",
+        "nelmio/cors-bundle": "^2.2",
+        "phpdocumentor/reflection-docblock": "^5.3",
         "rohnstock/pickadate": "^3.5",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "5.0.*",
+        "symfony/cache": "5.0.*",
         "symfony/console": "5.0.*",
         "symfony/dotenv": "5.0.*",
         "symfony/expression-language": "5.0.*",
@@ -25,32 +34,44 @@
         "symfony/mailer": "5.0.*",
         "symfony/monolog-bundle": "^3.1",
         "symfony/notifier": "5.0.*",
-        "symfony/orm-pack": "*",
         "symfony/process": "5.0.*",
+        "symfony/property-access": "5.0.*",
+        "symfony/property-info": "5.0.*",
+        "symfony/proxy-manager-bridge": "5.0.*",
         "symfony/security-bundle": "5.0.*",
-        "symfony/serializer-pack": "*",
+        "symfony/serializer": "5.0.*",
         "symfony/string": "5.0.*",
         "symfony/swiftmailer-bundle": "^3.4",
         "symfony/translation": "5.0.*",
-        "symfony/twig-pack": "*",
+        "symfony/twig-bundle": "5.0.*",
         "symfony/validator": "5.0.*",
         "symfony/web-link": "5.0.*",
         "symfony/yaml": "5.0.*",
         "th3mouk/free-mobile-sms-cli": "1.0",
+        "twig/extra-bundle": "^2.12|^3.0",
+        "twig/twig": "^2.12|^3.0",
         "vich/uploader-bundle": "^1.13"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
-        "symfony/debug-pack": "*",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "5.0.*",
+        "symfony/css-selector": "5.0.*",
+        "symfony/debug-bundle": "5.0.*",
         "symfony/maker-bundle": "^1.0",
-        "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*"
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/stopwatch": "5.0.*",
+        "symfony/web-profiler-bundle": "5.0.*"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "ocramius/package-versions": true,
+            "symfony/flex": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -74,7 +95,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "ckeditor:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

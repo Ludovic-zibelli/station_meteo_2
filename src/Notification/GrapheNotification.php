@@ -79,4 +79,24 @@ class GrapheNotification
             ->setAxes(['y' => ['Humidite' => ['label' => 'Humidité (%)']]]);
         return $chart;
     }
+
+    public function anemo($station)
+    {
+        $chart = new \CMEN\GoogleChartsBundle\GoogleCharts\Charts\Material\LineChart();
+        $data = [['Date', 'Vitesse (Km/H)']];
+        foreach($station as $station_2)
+        {
+            $data[] = array(
+                $station_2->getDateHeure(), $station_2->getAnemometre()
+            );
+        }
+        $chart->getData()->setArrayToDataTable($data);
+        $chart->getOptions()->getHAxis()->setFormat('d/M/yy HH:mm');
+        $chart->getOptions()
+            ->setHeight(400)
+            ->setWidth('auto')
+            ->setSeries([['axis' => 'Vitesse ']])
+            ->setAxes(['y' => ['Vitesse' => ['label' => 'Vitesse (Km/H)']]]);
+        return $chart;
+    }
 }

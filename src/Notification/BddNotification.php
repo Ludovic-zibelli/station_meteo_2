@@ -45,9 +45,9 @@ class BddNotification
         $station->setPression((float)$read[5]);
         $station->setLumiere((int)$read[6]);
         $station->setPointRosee((float)$read[11]);
-        $station->setGirouette((int)0);
-        $station->setPluviometre((int)0);
-        $station->setAnemometre((int)0);
+        $station->setGirouette((int)$read[9]);
+        $station->setPluviometre((int)$read[7]);
+        $station->setAnemometre((float)$read[8]);
         $this->em->persist($station);
         $this->em->flush();
     }
