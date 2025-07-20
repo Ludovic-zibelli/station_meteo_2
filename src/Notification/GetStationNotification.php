@@ -4,6 +4,7 @@ namespace App\Notification;
 
 use App\Entity\Station;
 use App\Repository\MiniMaxiHRepository;
+use App\Repository\StationDirectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,18 +37,23 @@ class GetStationNotification
      */
     private $repo;
 
+    /**
+     * @var StationDirectRepository
+     */
+    private $sd;
 
     private $callApiService;
 
 
 
-    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, HttpClientInterface $client, CallApiService $callApiService)
+    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, HttpClientInterface $client, CallApiService $callApiService, StationDirectRepository $sd)
     {
         $this->date = date("d.m.Y");
         $this->heure = date("G:i");
         $this->em = $em;
         $this->repo = $repo;
         $this->callApiService = $callApiService;
+        $this->sd = $sd;
 
     }
 
@@ -252,14 +258,14 @@ class GetStationNotification
         $resulVigi = $this->callApiService->getResultVigilances();
         $this->couleurVigilance = $resulVigi["records"][1]["fields"]["couleur"];
 
-        if($resulVigi["records"][1]["fields"]["risque_valeur0"] == null)
-        {
-            $this->Vigilance = "aucun alerte";
-        }
-        else
-        {
-            $this->Vigilance = $resulVigi["records"][1]["fields"]["risque_valeur0"];
-        }
+        //if($resulVigi["records"][1]["fields"]["risque_valeur0"] == null)
+        //{
+         //   $this->Vigilance = "aucun alerte";
+        //}
+        //else
+        //{
+           // $this->Vigilance = $resulVigi["records"][1]["fields"]["risque_valeur0"];
+        //}
         
         $this->VigilanceDatedebut = $resulVigi["records"][1]["fields"]["daterun"];
         $this->VigilanceDatefin = $resulVigi["records"][1]["fields"]["dateprevue"];
@@ -279,6 +285,7 @@ class GetStationNotification
         $this->realTimeGauges();
         $this->stationDirect();
         $this->jsonAction();
+        $this->stationDirectBDD();
 
 
 
@@ -352,6 +359,30 @@ class GetStationNotification
         $json = json_encode($data);
         file_put_contents("stationdirect.json", $json); 
         //return new JsonResponse($data);
+    }
+
+    //Station direct BDD pour l'api
+    function stationDirectBDD()
+    {
+        $resultat = $this->sd->findByMini();
+        $resultat[0]->setDateheure(new \DateTime());
+        $resultat[0]->setTempdh22($this->temp1);
+        $resultat[0]->setTempbmp280($this->temp2);
+        $resultat[0]->setHumidite($this->humiditer);
+        $resultat[0]->setPression($this->pression);
+        $resultat[0]->setLumiere($this->lumiere);
+        $resultat[0]->setAnemometre($this->anemo);
+        $resultat[0]->setGirouette($this->girou);
+        $resultat[0]->setPluviometre($this->pluvio);
+        $resultat[0]->setPointRose($this->pt_rosee);
+        $resultat[0]->setEclaire1km($this->nbrEclaire1);
+        $resultat[0]->setEclaire10km($this->nbrEclaire10);
+        $resultat[0]->setEclaire50km($this->nbrEclaire50);
+        $resultat[0]->setAlertemeteofrance($this->Vigilance);
+        $resultat[0]->setCouleurmeteofrance($this->couleurVigilance);
+        //$resultat[0]->setDatedebutmeteofrance($this->VigilanceDatedebut);
+        //$resultat[0]->setDatefinmeteofrance($this->VigilanceDatefin);
+        $this->em->flush();
     }
 
 

@@ -61,6 +61,21 @@ class Station
      */
     private $point_rosee;
 
+    /**
+     * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="station", cascade={"persist", "remove"})
+     */
+    private $idStationMeteo;
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    private $tpsvie;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ghost;
+
 
     public function __construct()
     {
@@ -176,6 +191,42 @@ class Station
     public function setPointRosee(string $point_rosee): self
     {
         $this->point_rosee = $point_rosee;
+
+        return $this;
+    }
+
+    public function getidStationMeteo(): ?StationMeteos
+    {
+        return $this->idStationMeteo;
+    }
+
+    public function setidStationMeteo(?StationMeteos $StationMeteo): self
+    {
+        $this->idStationMeteo = $StationMeteo;
+
+        return $this;
+    }
+
+    public function getTpsvie(): ?string
+    {
+        return $this->tpsvie;
+    }
+
+    public function setTpsvie(string $tpsvie): self
+    {
+        $this->tpsvie = $tpsvie;
+
+        return $this;
+    }
+
+    public function getGhost(): ?int
+    {
+        return $this->ghost;
+    }
+
+    public function setGhost(int $ghost): self
+    {
+        $this->ghost = $ghost;
 
         return $this;
     }

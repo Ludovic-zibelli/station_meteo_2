@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une nouvelle station météo{% endblock %}
+
+{% block body %}
+<div class="container">
+            <a href="{{ path ('gestionstation')}}" class="">Retour</a>
+    <div class="card">
+        <div class="container-fluid">
+                <h1 class="text-center">Ajouter une nouvelle station météo</h1>
+        </div>
+        {{ form_start(form) }}
+        
+    </div>
+    <div class="col-md-12 col-sm-12 col-lg-12">
+        <button class="btn btn-primary btn-block" type="submit">Ajouter la nouvelle station</button>
+    </div>
+    {{ form_end(form)}}
+</div>
+
+{% endblock %}

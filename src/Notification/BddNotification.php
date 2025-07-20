@@ -75,6 +75,8 @@ class BddNotification
         $minimaxi->setMiniAnemo($minimaxih[0]->getMiniAnemo());
         $minimaxi->setMaxiAnemo($minimaxih[0]->getMaxiAnemo());
         $this->em->persist($minimaxi);
+
+        //Remise des valeurs par defaut pour meuilleur corelation  
         //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
         # Chemin vers fichier texte
         $file ="public/station_direct.txt";

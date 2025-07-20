@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord du site{% endblock %}
+
+{% block body %}
+
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Tableau de bord du site</h1>
+    <a href="{{ path ('gestionstation')}}" class="">Retour</a>
+
+</nav>
+</div>
+<div class="card card_admin">
+    <div class="card-header text-center">
+        <h2>Modification de la stations météos</h2>
+    </div>
+</div>
+{{ form_start(form) }}
+        
+</div>
+<div class="col-md-12 col-sm-12 col-lg-12">
+    <button class="btn btn-primary btn-block" type="submit">Ajouter la nouvelle station</button>
+</div>
+{{ form_end(form)}}
+{% endblock %}

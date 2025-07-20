@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20240208175946 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE station DROP FOREIGN KEY FK_9F39F8B140FC9F8A');
+        $this->addSql('DROP INDEX UNIQ_9F39F8B140FC9F8A ON station');
+        $this->addSql('ALTER TABLE station CHANGE station_meteo_id id_station_meteo_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE station ADD CONSTRAINT FK_9F39F8B1A376CA5B FOREIGN KEY (id_station_meteo_id) REFERENCES station_meteos (id)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_9F39F8B1A376CA5B ON station (id_station_meteo_id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE station DROP FOREIGN KEY FK_9F39F8B1A376CA5B');
+        $this->addSql('DROP INDEX UNIQ_9F39F8B1A376CA5B ON station');
+        $this->addSql('ALTER TABLE station CHANGE id_station_meteo_id station_meteo_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE station ADD CONSTRAINT FK_9F39F8B140FC9F8A FOREIGN KEY (station_meteo_id) REFERENCES station_meteos (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_9F39F8B140FC9F8A ON station (station_meteo_id)');
+    }
+}

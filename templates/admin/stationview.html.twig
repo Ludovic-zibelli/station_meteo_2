@@ -1,0 +1,356 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord du site{% endblock %}
+
+{% block body %}
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Tableau de bord du site</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('gestionstation') }}">Retour<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('addstation') }}">Ajouter une station <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                </li>
+            </ul>
+        </div>
+        <span class="navbar-text">
+            Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+        </span>
+    </nav>
+
+    <div class="card card_admin">
+        <div class="card-header text-center">
+            <h2>Information de la stations météos</h2>
+        </div>
+    </div>
+</div>
+<div class="jumbotron">
+    <div class="container-fluid">
+        <div class="row">
+        <div class="col">
+            <h3 class="text-center">Prorietaire</h3>
+            <table class="table table-striped">
+            <tr>
+                    <td><b>Nom :</b> {{stationmeteo.user.nom}}</td>
+                    <td><b>Prenom :</b> {{stationmeteo.user.prenom}}</td>
+            </tr>
+            <tr>
+                    <td><b>E-mail :</b> {{stationmeteo.user.email}}</td>
+                    <td><b>Date d'inscription :</b> {{ stationmeteo.user.CreatedAt|date("d/m/Y") }}</td>
+            </tr>
+            
+            </table>
+        </div>
+        <div class="col">
+            <h3 class="text-center">Info station météo</h3>
+                <table class="table table-striped">
+                <tr>
+                        <td><b>Date d'ajout :</b> {{ stationmeteo.datecreation|date("d/m/Y") }}</td>
+                        <td><b>Ville de localisation la station :</b> {{stationmeteo.ville}}</td>
+                    
+                </tr>
+                <tr>
+                        <td><b>Code postal:</b> {{stationmeteo.codepostal}}</td>
+                        <td><b>DIY :</b> {{ stationmeteo.diy}}</td>
+                        
+                </tr>
+                    <tr>
+                        <td><b>Latitude :</b> {{ stationmeteo.gpslatitude}}</td>
+                        <td><b>Longitude :</b> {{ stationmeteo.gpslongitude}}</td>
+                </tr>
+                <tr>
+                        <td><b>Description :</b></td>
+                        <td>{{ stationmeteo.description}}</td>
+                </tr>
+                </table>
+        </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                    <h5>Photo de la station</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if stationmeteo.lienphoto %}
+							<img src="{{ vich_uploader_asset(stationmeteo, 'filePhoto') }}"  width=100% height=auto alt="Image Station">
+						{% else %}
+							<img src="{{ asset('/images/logo_meteo.png') }}" width=150 height=150 class=" " alt="Image Station">
+						{% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                    <h5>MAP</h5>
+                    </div>
+                    <div class="card-body">
+                    <h5 class="card-title">Special title treatment</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+</div>     
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header text-center">
+            <h3>Données de la station de {{stationmeteo.user.prenom}}</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                            <tbody>
+                              <tr>
+                                <td><b>BMP280</b></td>
+                                <td>{{stationmeteo.stationdirect.tempbmp280}}C°</td>
+                                <td><b>DHT22</b></td>
+                                <td>{{stationmeteo.stationdirect.tempdh22}}C°</td>
+                              </tr>
+                              <tr>
+                                <td><b>Humidité</b></td>
+                                <td>{{stationmeteo.stationdirect.humidite}}%</td>
+                                <td><b>Pression</b></td>
+                                <td>{{stationmeteo.stationdirect.pression}}hpa</td>
+                              </tr>
+                              <tr>
+                                <td><b>Lumiére</b></td>
+                                <td>{{stationmeteo.stationdirect.lumiere}}Lux</td>
+                                <td><b>Anemometre</b></td>
+                                <td>{{stationmeteo.stationdirect.anemometre}}Km/h</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="card">
+                    <div class="card-body">
+                        <table class="table">
+                           
+                            <tbody>
+                                <tr>
+                                    <td><b>Girouette</b></td>
+                                    <td>{{stationmeteo.stationdirect.girouette}}°</td>
+                                    <td><b>Pluviometre</b></td>
+                                    <td>{{stationmeteo.stationdirect.pluviometre}}ml</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Point de rose</b></td>
+                                    <td>{{stationmeteo.stationdirect.pointrose}}C°</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <h3 class="text-center">Etat de la station</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2">Modules</th>
+                        <th colspan="2">Capteurs</th>
+                    </tr>
+                    </thead>
+                <tbody>
+                <tr>
+                     <td><b>BMP280 :</b> </td>
+                     <td>
+                        {% if stationmeteo.etatstationmeteo.modulebmp280 == 1 %}
+                            <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.modulebmp280 == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                     </td>
+                     <td><b>DHT22 :</b></td>
+                     <td>
+                        {% if stationmeteo.etatstationmeteo.capteurdht22 == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.capteurdht22 == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>DHT22 :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.moduledht22 == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.moduledht22 == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                    <td><b>BMP280 :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.capteurbmp280 == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.capteurbmp280 == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Anemometre :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.moduleanemo == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.moduleanemo == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                    <td><b>Pluviometre :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.capteurpluvio == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.capteurpluvio == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                 </tr>
+                 <tr>
+                    <td><b>Girouette :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.modulegirou == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.modulegirou == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                    <td><b>Girouette :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.capteurgirou == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.capteurgirou == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                 </tr>
+                 <tr>
+                    <td><b>Pluviometre :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.modulepluvio == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.modulepluvio == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                    <td><b>Anemometre :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.capteuranemo == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.capteuranemo == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                 </tr>
+                 <tr>
+                    <td><b>Tension :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.moduletension == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.moduletension == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                 </tr>
+                 <tr>
+                    <td><b>Bit de vie :</b></td>
+                    <td>
+                        {% if stationmeteo.etatstationmeteo.modulebitvie == 1 %}
+                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                        {% endif %}
+                        {% if stationmeteo.etatstationmeteo.modulebitvie == 0 %}
+                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                        {% endif %}
+                    </td>
+                 </tr>
+                </tbody>
+             </table>
+        </div>
+        <div class="col">
+            <h3 class="text-center">Logs de la station</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Capteurs</th>
+                        <th>Date</th>
+                        <th>Logs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>BMP280</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdatebmp280|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.logbmp280}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>DHT22</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdatedht22|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdht22}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Girouette</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdategirou|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.loggirou}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Anemometre</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdateanemo|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.loganemo}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Pluviometre</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdatepluvio|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.logpluvio}}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Tension</b></td>
+                        <td>{{ stationmeteo.etatstationmeteo.logdatetension|date("d/m/Y") }}</td>
+                        <td>{{ stationmeteo.etatstationmeteo.logtension}}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}

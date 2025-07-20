@@ -24,11 +24,12 @@ use App\Repository\ArcticlesRepository;
 use App\Repository\CategoryRepository;
 use App\Entity\Arcticles;
 use App\Entity\Category;
+use App\Entity\Station;
+use App\Entity\StationMeteos;
 use App\Form\ArticleType;
 use App\Form\CategoryType;
-
-
-
+use App\Form\StationMeteosType;
+use App\Repository\StationMeteosRepository;
 
 class adminController extends AbstractController
 {
@@ -41,12 +42,19 @@ class adminController extends AbstractController
      * @var EntityManagerInterface
      */
     private $em;
+    /**
+     * @var stationmeteo
+     */
+    private $stationmeteo;
+   
 
-    public function __construct(UserRepository $user, EntityManagerInterface $em)
+    public function __construct(UserRepository $user, EntityManagerInterface $em, StationMeteosRepository $stationmeteo)
     {
 
         $this->user = $user;
         $this->em = $em;
+        $this->stationmeteo = $stationmeteo;
+        
     }
 
     /**
@@ -90,6 +98,7 @@ class adminController extends AbstractController
             'user' => $user
         ]);
     }
+
 
     /**
      * @Route("/admin/adduser", name="admin.user.add")
@@ -159,6 +168,98 @@ class adminController extends AbstractController
 
         return $this->redirectToRoute('user');
 
+    }
+
+    /**
+     * @Route("/admin/gestionstation", name="gestionstation")
+     * @param Request $request
+     * @return Response
+     */
+    public function gestionStations()
+    {
+        $stationmeteo = $this->stationmeteo->findAll();
+        
+        return $this->render('admin/gestion_station.html.twig',[
+            'station' => $stationmeteo
+            ]);
+    }
+
+    /**
+     * @Route("/admin/addstation", name="addstation")
+     * @param Request $request
+     * @return Response
+     */
+    public function addStations(Request $request)
+    {
+        
+        $station = new StationMeteos();
+        $form = $this->createForm(StationMeteosType :: class, $station);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $this->em->persist($station);
+            $this->em->flush();
+            $this->addFlash('success', 'Station ajouter avec succes');
+            return $this->redirectToRoute('gestionstation');
+        }
+        return $this->render('admin/station_add.html.twig',[
+            'form'=> $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/stationedit/{id}", name="admin.stationmeteos.edit", methods="GET|POST")
+     * @param StationMeteos $stationMeteos
+     * @param Request $request
+     * @return Response
+     */
+    public function editStation(StationMeteos $stationMeteos, Request $request)
+    {
+        $form = $this->createForm(StationMeteosType::class, $stationMeteos);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $this->em->flush();
+            $this->addFlash('success', 'Station modifer avec succés');
+            return $this->redirectToRoute('gestionstation');
+        }
+        return $this->render('admin/stationmeteosedit.html.twig',[
+            'stationmeteos' => $stationMeteos,
+            'form' => $form->createView()
+        ]);
+
+    }
+
+    /**
+     * @Route("/admin/stationdelete/{id}", name="admin.stationmeteo.delete", methods="DELETE")
+     * @param StationMeteos $stationMeteos
+     * @param Request $request
+     * @return Response
+     */
+    public function deleteStation(StationMeteos $stationMeteos, Request $request)
+    {
+        if($this->isCsrfTokenValid('delete'. $stationMeteos->getId(), $request->get('_token')))
+        {
+            $this->em->remove($stationMeteos);
+            $this->em->flush();
+            $this->addFlash('success', 'Utilisateur supprimer avec succés');
+        }
+
+        return $this->redirectToRoute('gestionstation');
+
+    }
+
+    /**
+     * @Route("/stationmeteo/{id}", name="station.show")
+     * @param Request $request
+     * @return Response
+     */
+    public function showStation($id)
+    {
+        $stationmeteo = $this->stationmeteo->find($id);
+        return $this->render('admin/stationview.html.twig',[
+            'stationmeteo' => $stationmeteo
+        ]);
     }
 
     /**

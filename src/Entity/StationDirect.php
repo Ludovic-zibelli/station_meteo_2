@@ -34,7 +34,7 @@ class StationDirect
     private $tempbmp280;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
     private $humidite;
 
@@ -64,9 +64,64 @@ class StationDirect
     private $pluviometre;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="string")
      */
     private $point_rose;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $Eclaire1km;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $Eclaire10km;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $Eclaire50km;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $alertemeteofrance;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $couleurmeteofrance;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datedebutmeteofrance;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $datefinmeteofrance;
+
+    /**
+     * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="stationDirect", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $station;
+
+  
+
+    /**
+     * @ORM\Column(type="bigint")
+     */
+    private $tpsvie;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ghost;
+
+   
 
     public function getId(): ?int
     {
@@ -109,12 +164,12 @@ class StationDirect
         return $this;
     }
 
-    public function getHumidite(): ?float
+    public function getHumidite(): ?int
     {
         return $this->humidite;
     }
 
-    public function setHumidite(float $humidite): self
+    public function setHumidite(int $humidite): self
     {
         $this->humidite = $humidite;
 
@@ -181,14 +236,134 @@ class StationDirect
         return $this;
     }
 
-    public function getPointRose(): ?float
+    public function getPointRose(): ?string
     {
         return $this->point_rose;
     }
 
-    public function setPointRose(float $point_rose): self
+    public function setPointRose(string $point_rose): self
     {
         $this->point_rose = $point_rose;
+
+        return $this;
+    }
+
+    public function getEclaire1km(): ?int
+    {
+        return $this->Eclaire1km;
+    }
+
+    public function setEclaire1km(int $Eclaire1km): self
+    {
+        $this->Eclaire1km = $Eclaire1km;
+
+        return $this;
+    }
+
+    public function getEclaire10km(): ?int
+    {
+        return $this->Eclaire10km;
+    }
+
+    public function setEclaire10km(int $Eclaire10km): self
+    {
+        $this->Eclaire10km = $Eclaire10km;
+
+        return $this;
+    }
+
+    public function getEclaire50km(): ?int
+    {
+        return $this->Eclaire50km;
+    }
+
+    public function setEclaire50km(int $Eclaire50km): self
+    {
+        $this->Eclaire50km = $Eclaire50km;
+
+        return $this;
+    }
+
+    public function getAlertemeteofrance(): ?string
+    {
+        return $this->alertemeteofrance;
+    }
+
+    public function setAlertemeteofrance(?string $alertemeteofrance): self
+    {
+        $this->alertemeteofrance = $alertemeteofrance;
+
+        return $this;
+    }
+
+    public function getCouleurmeteofrance(): ?string
+    {
+        return $this->couleurmeteofrance;
+    }
+
+    public function setCouleurmeteofrance(string $couleurmeteofrance): self
+    {
+        $this->couleurmeteofrance = $couleurmeteofrance;
+
+        return $this;
+    }
+
+    public function getDatedebutmeteofrance(): ?\DateTimeInterface
+    {
+        return $this->datedebutmeteofrance;
+    }
+
+    public function setDatedebutmeteofrance(?\DateTimeInterface $datedebutmeteofrance): self
+    {
+        $this->datedebutmeteofrance = $datedebutmeteofrance;
+
+        return $this;
+    }
+
+    public function getDatefinmeteofrance(): ?\DateTimeInterface
+    {
+        return $this->datefinmeteofrance;
+    }
+
+    public function setDatefinmeteofrance(?\DateTimeInterface $datefinmeteofrance): self
+    {
+        $this->datefinmeteofrance = $datefinmeteofrance;
+
+        return $this;
+    }
+
+    public function getStationMeteos(): ?StationMeteos
+    {
+        return $this->station;
+    }
+
+    public function setStationMeteos(StationMeteos $station): self
+    {
+        $this->station = $station;
+
+        return $this;
+    }
+
+    public function getTpsvie(): ?string
+    {
+        return $this->tpsvie;
+    }
+
+    public function setTpsvie(string $tpsvie): self
+    {
+        $this->tpsvie = $tpsvie;
+
+        return $this;
+    }
+
+    public function getGhost(): ?int
+    {
+        return $this->ghost;
+    }
+
+    public function setGhost(int $ghost): self
+    {
+        $this->ghost = $ghost;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -42,12 +44,18 @@ class User implements UserInterface
      */
     private $created_at;
 
+    /**
+     * @ORM\OneToMany(targetEntity=StationMeteos::class, mappedBy="user")
+     */
+    private $stationMeteos;
+
 
 
     public function __construct()
     {
 
         $this->created_at = new \DateTime();
+        $this->stationMeteos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,10 +143,44 @@ class User implements UserInterface
     {
 
     }
-
-
+ 
     public function getUsername()
     {
         return $this->getPrenom();
     }
+
+    /**
+     * @return Collection<int, StationMeteos>
+     */
+    public function getStationMeteos(): Collection
+    {
+        return $this->stationMeteos;
+    }
+
+    public function addStationMeteo(StationMeteos $stationMeteo): self
+    {
+        if (!$this->stationMeteos->contains($stationMeteo)) {
+            $this->stationMeteos[] = $stationMeteo;
+            $stationMeteo->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStationMeteo(StationMeteos $stationMeteo): self
+    {
+        if ($this->stationMeteos->removeElement($stationMeteo)) {
+            // set the owning side to null (unless already changed)
+            if ($stationMeteo->getUser() === $this) {
+                $stationMeteo->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(){
+        return $this->getEmail(); // Remplacer champ par une propriété "string" de l'entité
+    }
+    
 }

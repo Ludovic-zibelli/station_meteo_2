@@ -127,6 +127,7 @@
                 gtag('js', new Date());
 
                 gtag('config', 'UA-96232538-1');
+              
             </script>
 
 
@@ -142,10 +143,11 @@
 
             </div>
             <div class="col-md-4 col-lg-4 col-sm-4">
-                
-                
-                <p><i class="far fa-copyright"></i>2020 Station Météo</p>
-                <p>Réaliser par ZIBELLI Ludovic</p>
+                <ul>
+                    <li><p><i class="far fa-copyright"></i>2020-<span id="year"></span></p></li>
+                    <li><p>Station Météo</p></li>
+                    <li><p>Réaliser par ZIBELLI Ludovic</p></li>
+                </ul>
             </div>
             <div class="col-md-4 col-lg-4 col-sm-4">
             	<ul>
@@ -157,7 +159,7 @@
                         {% endif %}
                         </li>
             		<li><a class="nav-link" href="{{ path('mentionlegales') }}">Mention legales</a></li>
-            		<li><p><strong>Version du site 2.0</strong></p></li>
+            		<li><p><strong>Version du site 1.2</strong></p></li>
             		<li><p>Derniere mise a jours 27 avril 2020</p></li>
             	</ul>
                
@@ -172,4 +174,10 @@
 
     </footer>
 </html>
-
+<script>
+  //Année en cours 
+    var ladate=new Date()
+    var date= ladate.getFullYear();
+    var date2= 2023 
+    document.getElementById("year").innerHTML = date2;
+</script>

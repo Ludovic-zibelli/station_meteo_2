@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord du site{% endblock %}
+
+{% block body %}
+    <?php header('Access-Control-Allow-Origin: *'); ?>
+    <div class="container-fluid">
+        <h1 class="text-center">Tableau de bord du site</h1>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('admin') }}">Accueil admin<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('addstation') }}">Ajouter une station <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+      Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+    </span>
+       </div>
+        </nav>
+        <div class="card card_admin">
+            <div class="card-header text-center">
+                <h2>Gestion des stations météos</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-lg-12">
+                <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+                    <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td>ID Station</td>
+                        <td>Date d'ajout</td>
+                        <td>Ville</td>
+                        <td>Prorietaire</td>
+                        <td>Status</td>
+                        <td>Online</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                        <tbody>
+                        {% for station in station %}
+                            <tr>
+                                <td><a href="{{ path('station.show', {id: station.id}) }}">{{ station.id}}</a></td>
+                                <td>{{ station.datecreation|date("d/m/Y") }}</td>
+                                <td>{{ station.ville }}</td>
+                                <td>{{ station.user.nom }}/{{station.user.email}}</td>
+                                <td>{{ station.stationdirect.tpsvie}}</td>
+                                <td>
+                                    {% if  station.stationdirect.ghost == 1 %}
+                                    <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+                                    {% endif %}
+                                    {% if  station.stationdirect.ghost == 0 %}
+                                        <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ path ('admin.stationmeteos.edit', {id: station.id})}}" class="btn btn-primary">Editer</a>
+                                    <form method="POST" action="{{ path ('admin.stationmeteo.delete', {id: station.id})}}" style="display:inline-block">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ station.id)}}">
+                                        <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette utilisateur?')">Supprimer</button>
+                                    </form>
+                                </td>
+                               
+                            </tr>
+                    {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
