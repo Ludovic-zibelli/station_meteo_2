@@ -1,0 +1,209 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Alertes Meteo{% endblock %}
+
+{% block body %}
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Alertes Meteo</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('admin') }}">Retour<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+  Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+</span>
+</div>
+</nav>
+</br>
+<div class="card  text-center">
+    <div class="card-header">
+        <h2>Vigilance meteo france</h2>
+    </div>
+    <div class="card-body">
+        {% for vigi in vigilance %}
+        {% set niveau = {
+            1: "Vert",
+            2: "Jaune",
+            3: "Orange",
+            4: "Rouge"
+        } %}
+        {% set phenomenes = {
+            1: "Vent",
+            2: "Pluie",
+            3: "Orages",
+            4: "Crues",
+            5: "Neige / Verglas",
+            6: "Canicule",
+            7: "Grand froid",
+            8: "Avalanches",
+            9: "Vagues submersion"
+        } %}
+        <h4>Imformation de Météo France mise a jour le {{vigi.updatedate|date("d/m/Y H:i")}}</h4>
+        <p>{{vigi.bloctitle}}</p>
+
+        <p class="card-text" style="color: {{ vigi.riskcolor }}">Vigilance <strong>{{ niveau[vigi.riskcode] ?? 'Niveau inconnu' }}</strong> </p>
+    
+        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Departement</th>
+                    <th scope="col">Debut de la vigilance</th>
+                    <th scope="col">Fin de la vigilance</th>
+                    <th scope="col">Couleur de la vigilance</th>
+                    <th scope="col">Phenoménes</th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{vigi.domaineid}} {{vigi.domainename}}</td>
+                    <td>
+                        {% if  vigi.starttime == null %}
+                            
+                        {% else %}
+                            {{vigi.starttime|date("d/m/Y H:i")}}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if  vigi.endtime == null %}
+                            
+                        {% else %}
+                            {{vigi.endtime|date("d/m/Y H:i")}}
+                        {% endif %}
+                    <td>
+                        <p class="card-text" style="color: {{ vigi.riskcolor }}"><strong>{{ niveau[vigi.riskcode] ?? 'Niveau inconnu' }}</strong> </p>
+                    </td>
+                    <td>{{ phenomenes[vigi.hazardcode] ?? 'Phénomène inconnu' }}</td>
+                    
+                </tr>
+                
+                </tbody>
+            </table>
+        </div>
+        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Text vigilance</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <p>{{vigi.text1}}</p>
+                        <p>{{vigi.text2}}</p>
+                        <p>{{vigi.text3}}</p>
+                        <p>{{vigi.text4}}</p>
+                        <p>{{vigi.text21}}</p>
+                        <p>{{vigi.text22}}</p>
+                        <p>{{vigi.text23}}</p>
+                        <p>{{vigi.text24}}</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        {% endfor %}
+    </div>
+</div>    
+{{ form_start(form) }}
+<div class="card  text-center">
+    <div class="card-header">
+        <h2>Gestion des alertes automatique de la Station Météo</h2>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Alerte Météo Manuel</h5>
+        <p class="card-text">Création d'alerte météo en manuel en plus des alertes automatique</p>
+        {{ form_widget(form) }}
+        <button class="btn btn-primary btn-block" type="submit">Envoyer</button>
+        {{ form_end(form) }}
+        <br>
+        <h5 class="card-title">Historique des alertes Météo Auto/Manu</h5>
+        <p class="card-text">L'historique des 5 dernières alertes Météo</p>
+        <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Date de création</th>
+                    <th scope="col">Type d'alerte</th>
+                    <th scope="col">En ligne</th>
+                    <th scope="col">Niveau de vigilance</th>
+                    <th scope="col">Code Phénoméne</th>
+                    <th scope="col">Origine</th>
+                    <th scope="col">Message d'alerte</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for alerte in alerterepo %}
+                <tr>
+                    <td>{{ alerte.CreatdAt|date("d/m/Y H:i") }}</td>
+                    <td>
+                        {% if  alerte.type == true%}
+                            Manuel
+                        {% else %}
+                            Automatique
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if  alerte.online  == true %}
+                            Alerte en ligne
+                        {% else %}
+                            Alerte Hor ligne
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% set niveau = {
+                            1: "Vert",
+                            2: "Jaune",
+                            3: "Orange",
+                            4: "Rouge"
+                        } %}
+                        {{ niveau[alerte.level] ?? 'Niveau inconnu' }}
+                    </td>
+                    <td>
+                        {% set phenomenes = {
+                            1: "Vent",
+                            2: "Pluie",
+                            3: "Orages",
+                            4: "Crues",
+                            5: "Neige / Verglas",
+                            6: "Canicule",
+                            7: "Grand froid",
+                            8: "Avalanches",
+                            9: "Vagues submersion"
+                        } %}
+                        {{ phenomenes[alerte.codephenomene] ?? 'Phénomène inconnu' }}  
+                    </td>
+                    <td>{{ alerte.origine }}</td>
+                    <td>{{ alerte.message }}</td>
+                    <td>
+                        <a href="{{ path ('admin.alerte.edit', {id: alerte.id})}}" class="btn btn-primary">Editer</a>
+                        <form method="POST" action="{{ path ('admin.alerte.delete', {id: alerte.id})}}" style="display:inline-block">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ alerte.id)}}">
+                            <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette alerte ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted">
+            <a href="#">Voir toute les alertes</a>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

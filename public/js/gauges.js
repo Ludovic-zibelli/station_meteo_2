@@ -37,10 +37,10 @@ gauges = (function () {
             weatherProgram     : 0,                      // Set 0=Cumulus, 1=Weather Display, 2=VWS, 3=WeatherCat, 4=Meteobridge, 5=WView, 6=WeeWX, 7=WLCOM
             imgPathURL         : './images/',            // *** Change this to the relative path for your 'Trend' graph images
             oldGauges          : 'gauges.htm',           // *** Change this to the relative path for your 'old' gauges page.
-            realtimeInterval   : 30,                     // *** Download data interval, set to your realtime data update interval in seconds
+            realtimeInterval   : 60,                     // *** Download data interval, set to your realtime data update interval in seconds
             longPoll           : false,                  // if enabled, use long polling and PHP generated data !!only enable if you understand how this is implemented!!
             gaugeMobileScaling : 0.85,                   // scaling factor to apply when displaying the gauges mobile devices, set to 1 to disable (default 0.85)
-            graphUpdateTime    : 30,                     // period of pop-up data graph refresh, in minutes (default 15)
+            graphUpdateTime    : 60,                     // period of pop-up data graph refresh, in minutes (default 15)
             stationTimeout     : 3,                      // period of no data change before we declare the station off-line, in minutes (default 3)
             pageUpdateLimit    : 20,                     // period after which the page stops automatically updating, in minutes (default 20),
                                                          // - set to 0 (zero) to disable this feature
@@ -4353,3 +4353,110 @@ ddimgtooltip = {
 String.prototype.trim = String.prototype.trim || function trim() {
     return this.replace(/^\s+|\s+$/g, '');
 };
+
+
+// Fonction de mise à jour des jauges en temps réel avec l'ID de la station
+function updateRealtimeGauges(stationId = 2) { // Par défaut, stationId = 2
+    fetch('/update-realtime-gauges', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stationId }), // Utilise l'ID de la station
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status} ${response.statusText}`);
+        }
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            throw new Error('La réponse n\'est pas un JSON valide. Type de contenu : ' + contentType);
+        }
+    })
+    .then(data => {
+        console.log('Données mises à jour pour les jauges :', data);
+        // Mettre à jour les jauges ici avec les données reçues
+        if (data.status === 'success') {
+            // Exemple : Mettre à jour une jauge spécifique
+            if (window.gauges) {
+                gauges.temp.setValue(data.temp); // Exemple pour une jauge de température
+                gauges.hum.setValue(data.humidity); // Exemple pour une jauge d'humidité
+            }
+        } else {
+            console.error('Erreur lors de la mise à jour des jauges :', data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Erreur lors de la mise à jour des jauges en temps réel :', error);
+    });
+}
+
+// Appeler la fonction toutes les 30 secondes avec l'ID de la station sélectionnée ou par défaut
+setInterval(() => {
+    const stationSelect = document.getElementById('stationSelect');
+    const stationId = stationSelect ? stationSelect.value || 2 : 2; // Utilise 2 si aucune station n'est sélectionnée
+    updateRealtimeGauges(stationId);
+}, 30000);
+
+ // Récupère l'ID de la station affichée depuis Twig, sinon 2 par défaut
+var stationId = typeof Station !== 'undefined' && Station.id ? Station.id : 2;
+
+// Si tu utilises Twig directement dans le JS :
+//var stationId = {{ Station.id is defined ? Station.id : 2 }};
+
+function parseNumber(val) {
+    // Remplace la virgule par un point et convertit en float
+    return parseFloat((val + '').replace(',', '.'));
+}
+
+function getArrow(trend) {
+    if (trend === "up") return "⬆️";
+    if (trend === "down") return "⬇️";
+    return "➡️";
+}
+// Fonction de mise à jour du tableau
+function updateMinimaxTable() {
+    fetch('/api/minimax/' + stationId, {
+        headers: {
+            'X-API-KEY': '2878ece33344e4f6d9e1105c0362f0671d9432fb4d997023acb734f4c6e6793a',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        let tbody = document.getElementById('minimax-tbody');
+        tbody.innerHTML = '';
+        data.forEach(mima => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${parseNumber(mima.miniTemp).toFixed(1)}°C</td>
+                    <td>${parseNumber(mima.maxiTemp).toFixed(1)}°C</td>
+                    <td>${getArrow(mima.trendMiniTemp)}</td>
+             
+                    <td>${parseNumber(mima.miniPtro).toFixed(1)}°C</td>
+                    <td>${parseNumber(mima.maxiPtro).toFixed(1)}°C</td>
+                    <td>${getArrow(mima.trendMiniPtro)}</td>
+                
+                    <td>${parseNumber(mima.miniHumi).toFixed(1)}%</td>
+                    <td>${parseNumber(mima.maxiHumi).toFixed(1)}%</td>
+                    <td>${getArrow(mima.trendMiniHumi)}</td>
+                
+                    <td>${parseNumber(mima.miniPres).toFixed(1)} hPa</td>
+                    <td>${parseNumber(mima.maxiPres).toFixed(1)} hPa</td>
+                    <td>${getArrow(mima.trendMiniPres)}</td>
+              
+                    <td>${parseNumber(mima.miniAnemo).toFixed(1)} Km/h</td>
+                    <td>${parseNumber(mima.maxiAnemo).toFixed(1)} Km/h</td>
+                    <td>${getArrow(mima.trendMiniAnemo)}</td>
+                </tr>
+            `;
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateMinimaxTable();
+    setInterval(updateMinimaxTable, 60000);
+});

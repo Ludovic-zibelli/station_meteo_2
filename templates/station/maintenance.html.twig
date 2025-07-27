@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Maintenance en cours{% endblock %}
+
+{% block body %}
+<style>
+    #navbarText {
+        display: none !important;
+    }
+</style>
+
+<div class="text-center">
+    <img src="{{ asset('/images/maintenance.png') }}"  class="img-fluid" alt="maintenance">
+</div>
+
+{% endblock %}

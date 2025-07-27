@@ -3,19 +3,79 @@
 {% block title %}Ajouter une nouvelle station météo{% endblock %}
 
 {% block body %}
-<div class="container">
-            <a href="{{ path ('gestionstation')}}" class="">Retour</a>
-    <div class="card">
-        <div class="container-fluid">
-                <h1 class="text-center">Ajouter une nouvelle station météo</h1>
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Tableau de bord du site</h1>
+    <a href="{{ path ('gestionstation')}}" class="">Retour</a>
+
+</nav>
+
+<div class="card">
+    <div class="card-header text-center">
+      <h3>Ajouter une nouvelle station météo</h3>
+    </div>
+    <div class="card-body">
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Ville :</h6>
+            {{ form_widget(form.ville) }}
         </div>
-        {{ form_start(form) }}
-        
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Code postal :</h6>
+            {{ form_widget(form.codepostal) }}
+        </div>   
     </div>
-    <div class="col-md-12 col-sm-12 col-lg-12">
-        <button class="btn btn-primary btn-block" type="submit">Ajouter la nouvelle station</button>
+</br>
+    <div class="row">
+        <div class="col">
+            <h5 class="text-center">Localisation GPS</h5>
+        </div>
     </div>
+    <div class="row">
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Latitude :</h6>
+            {{ form_widget(form.gps_latitude) }}
+        </div>
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Longitude :</h6>
+            {{ form_widget(form.gps_longitude) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">User associer :</h6>
+            {{ form_widget(form.user) }}
+        </div>
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">DIY :</h6>
+            {{ form_widget(form.diy) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Description :</h6>
+            {{ form_widget(form.description) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h6 class="card-subtitle mb-2 text-muted">Photo :</h6>
+            {{ form_widget(form.filePhoto) }}
+        </div>
+    </div>
+</br>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-primary btn-block" type="submit">Ajouter la nouvelle station</button>
+        </div>
+    </div>
+
     {{ form_end(form)}}
+    </div>
+</div>
+
+
 </div>
 
 {% endblock %}

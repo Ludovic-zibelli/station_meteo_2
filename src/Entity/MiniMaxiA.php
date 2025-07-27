@@ -176,6 +176,12 @@ class MiniMaxiA
      */
     private $date_maxi_pluvio;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\StationMeteos" , inversedBy="miniMaxiA")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $stationMeteos;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -562,6 +568,18 @@ class MiniMaxiA
     {
         $this->date_maxi_pluvio = $date_maxi_pluvio;
 
+        return $this;
+    }
+
+    
+    public function getStationMeteos()
+    {
+        return $this->stationMeteos;
+    }
+
+    public function setStationMeteos($stationMeteos): self
+    {
+        $this->stationMeteos = $stationMeteos;
         return $this;
     }
 }

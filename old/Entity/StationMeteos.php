@@ -1,0 +1,9 @@
+@ApiResource(
+    itemOperations={
+        "get",
+        "put"
+    },
+    collectionOperations={
+        "get"
+    }
+)

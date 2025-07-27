@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\StationMeteos;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MiniMaxiRepository")
@@ -105,6 +106,12 @@ class MiniMaxi
      * @ORM\Column(type="datetime")
      */
     private $creatd_at;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\StationMeteos", inversedBy="miniMaxis")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $stationMeteos;
 
     public function getId(): ?int
     {
@@ -311,6 +318,18 @@ class MiniMaxi
     public function setCreatdAt(\DateTimeInterface $creatd_at): self
     {
         $this->creatd_at = $creatd_at;
+
+        return $this;
+    }
+
+    public function getStationMeteos(): ?StationMeteos
+    {
+        return $this->stationMeteos;
+    }
+
+    public function setStationMeteos(?StationMeteos $stationMeteos): self
+    {
+        $this->stationMeteos = $stationMeteos;
 
         return $this;
     }

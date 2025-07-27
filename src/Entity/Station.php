@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StationRepository")
@@ -62,11 +64,6 @@ class Station
     private $point_rosee;
 
     /**
-     * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="station", cascade={"persist", "remove"})
-     */
-    private $idStationMeteo;
-
-    /**
      * @ORM\Column(type="bigint")
      */
     private $tpsvie;
@@ -76,10 +73,15 @@ class Station
      */
     private $ghost;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=StationMeteos::class, inversedBy="stations")
+     * @ORM\JoinColumn(name="station_meteos_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    private $stationMeteos;
 
     public function __construct()
     {
-        $this->date_heure = new \DateTime();
+        // Initialisation si nécessaire
     }
 
     public function getId(): ?int
@@ -195,18 +197,6 @@ class Station
         return $this;
     }
 
-    public function getidStationMeteo(): ?StationMeteos
-    {
-        return $this->idStationMeteo;
-    }
-
-    public function setidStationMeteo(?StationMeteos $StationMeteo): self
-    {
-        $this->idStationMeteo = $StationMeteo;
-
-        return $this;
-    }
-
     public function getTpsvie(): ?string
     {
         return $this->tpsvie;
@@ -231,5 +221,15 @@ class Station
         return $this;
     }
 
+    public function getStationMeteos(): ?StationMeteos
+    {
+        return $this->stationMeteos;
+    }
 
+    public function setStationMeteos(?StationMeteos $stationMeteos): self
+    {
+        $this->stationMeteos = $stationMeteos;
+
+        return $this;
+    }
 }

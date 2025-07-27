@@ -5,6 +5,7 @@ namespace App\Notification;
 use App\Entity\Station;
 use App\Repository\MiniMaxiHRepository;
 use App\Repository\StationDirectRepository;
+use App\Repository\StationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -42,11 +43,16 @@ class GetStationNotification
      */
     private $sd;
 
+    /**
+     * @var StationRepository
+     */
+    private $station;
+
     private $callApiService;
 
 
 
-    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, HttpClientInterface $client, CallApiService $callApiService, StationDirectRepository $sd)
+    function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, HttpClientInterface $client, CallApiService $callApiService, StationDirectRepository $sd, StationRepository $station)
     {
         $this->date = date("d.m.Y");
         $this->heure = date("G:i");
@@ -54,6 +60,7 @@ class GetStationNotification
         $this->repo = $repo;
         $this->callApiService = $callApiService;
         $this->sd = $sd;
+        $this->station = $station;
 
     }
 
@@ -239,6 +246,74 @@ class GetStationNotification
     */
     private $nbrEclaire1;
     
+    //Si donnée de la station meteo trasite par l'API et par le protocole HTTP
+    function getStationDirect(): array
+        {
+            $this->lastest();
+
+            // Récupère la dernière entrée de StationDirect
+            $repostationdirect = $this->sd->findBy([], ['id' => 'DESC'], 1);
+
+            if (empty($repostationdirect)) {
+                throw new \Exception('Aucune donnée trouvée dans StationDirect.');
+            }
+
+            $stationDirect = $repostationdirect[0];
+
+            // Prépare les données
+            $stationData = [
+                'temp1' => $stationDirect->getTempbmp280(),
+                'temp2' => $stationDirect->getTempdh22(),
+                'humiditer' => $stationDirect->getHumidite(),
+                'pression' => $stationDirect->getPression(),
+                'pression_ajt' => $this->calculateAdjustedPressure($stationDirect->getPression()),
+                'lumiere' => $stationDirect->getLumiere(),
+                'pt_rosee' => $stationDirect->getPointRose(),
+                'bitvie' => $stationDirect->getTpsvie(),
+                'anemo' => $stationDirect->getAnemometre(),
+                'girou' => $stationDirect->getGirouette(),
+            ];
+
+            // Appels à d'autres méthodes
+            $this->minimaxi();
+            $this->realTimeGauges();
+            $this->jsonAction();
+
+            return $stationData;
+        }
+
+    //Ajustement de la pression    
+    private function calculateAdjustedPressure(float $pression): float
+    {
+        return $pression + 29.68;
+    }
+    
+    /*function getStationDirect()
+    {
+        $this->lastest();
+        $repostationdirect = $this->sd->findAll();
+        //dd($repostationdirect);
+        $data = $repostationdirect[0]->getStationMeteos();
+        $this->temp1 = $repostationdirect[0]->getTempbmp280();
+        $this->temp2 = $repostationdirect[0]->getTempdh22();
+        $this->humiditer = $repostationdirect[0]->getHumidite();
+        $this->pression = $repostationdirect[0]->getPression();
+        $this->lumiere = $repostationdirect[0]->getLumiere();
+        //$this->tension = $repostationdirect[0]->getTempbmp280();
+        $this->pression_ajt = $repostationdirect[0]->getPression() + 29.68;
+        $this->pt_rosee = $repostationdirect[0]->getPointRose();
+        $this->bitvie = $repostationdirect[0]->getTpsvie();
+        $this->anemo = $repostationdirect[0]->getAnemometre();
+        $this->girou = $repostationdirect[0]->getGirouette();
+        
+
+        $this->minimaxi();
+        $this->realTimeGauges();
+        $this->jsonAction();
+    }
+    */
+
+    //Recuperation des donnees de la station methose get envoyer par le protocole HTTP de la station ancienne vesion
     function getStation($request)
     {
 
@@ -294,16 +369,12 @@ class GetStationNotification
     //Recuperation des derniere mesure
     function lastest()
     {
-        //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
-        # Chemin vers fichier texte
-        $file ="station_direct.txt";
-        # On met dans la variable (tableau $read) le contenu du fichier
-        $read=file($file);
-        //tranformation nombre pression a virgule en entier pour variable prevision
-        $this->anemo_lastest = $read[8];
-        $this->girou_lastest = $read[9];
+        $lastest = $this->station->findByDEC();
+        $this->anemo_lastest = $lastest[0]->getAnemometre();
+        $this->girou_lastest = $lastest[0]->getGirouette();
     }
 
+    // Section à modifier ou supprimer 
     //Modification du fichier station_direct.txt
     function stationDirect()
     {
@@ -385,6 +456,8 @@ class GetStationNotification
         $this->em->flush();
     }
 
+
+    // Fin de section a revoir 
 
     //Calcul du point de rosee
     function ptRosee()

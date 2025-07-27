@@ -15,13 +15,26 @@
         	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
             <link rel="stylesheet" href="{{ asset('CSS/cookiealert.css')}}">
+            <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+            <link rel="stylesheet" href="{{ asset('CSS/weather-icons.min.css') }}" />
+            <link rel="stylesheet" href="{{ asset('CSS/weather-icons-wind.min.css') }}" />
+
         {% endblock %}
     </head>
     <header>
         <nav class="nav_dek navbar fixed-top navbar-expand-lg  navbar-dark bg-dark">
+                {% set logo = 'logo_meteo_head.png' %}
+                {% if saison == 'hiver' %}
+                    {% set logo = 'logo_meteo_head5.png' %}
+                {% elseif saison == 'ete' %}
+                    {% set logo = 'logo_meteo_head3.png' %}
+                {% elseif saison == 'printemps' %}
+                    {% set logo = 'logo_meteo_head2.png' %}
+                {% elseif saison == 'automne' %}
+                    {% set logo = 'logo_meteo_head4.png' %}
+                {% endif %}
                 <a class="navbar-brand" href="{{ path('home') }}">
-                <img src="{{ asset('/images/logo_meteo_head.png') }}" width="260" height="100" class="logo_site align-left rounded float-left" alt="Station Meteo">
-
+                <img src="{{ asset('/images/' ~ logo) }}" width="260" height="100" class="logo_site align-left rounded float-left" alt="Station Meteo">
             </a>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav ml-auto">
@@ -109,7 +122,8 @@
         {% endblock %}
         <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
         
-			<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
   				<script src="{{ asset('js/steelseries_tween.min.js') }}"></script>
@@ -153,14 +167,15 @@
             	<ul>
             		<li>
                         {% if app.user %}
+                            <a class="nav-link" href="{{ path('admin') }}">Tableau de bord</a>
                             <a class="nav-link" href="{{ path('logout') }}">Se déconecter({{ app.user.prenom }})</a>
                         {% else %}
                             <a class="nav-link" href="{{ path('login') }}">Connexion</a>
                         {% endif %}
                         </li>
             		<li><a class="nav-link" href="{{ path('mentionlegales') }}">Mention legales</a></li>
-            		<li><p><strong>Version du site 1.2</strong></p></li>
-            		<li><p>Derniere mise a jours 27 avril 2020</p></li>
+            		<li><p><strong>Version du site 2.0</strong></p></li>
+            		<li><p>Derniere mise a jours 19 juillet 2025</p></li>
             	</ul>
                
                 
@@ -178,6 +193,6 @@
   //Année en cours 
     var ladate=new Date()
     var date= ladate.getFullYear();
-    var date2= 2023 
-    document.getElementById("year").innerHTML = date2;
+    var date2= 2025 
+    document.getElementById("year").innerHTML = date;
 </script>

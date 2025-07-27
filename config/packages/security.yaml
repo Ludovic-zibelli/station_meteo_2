@@ -14,6 +14,13 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern:   ^/api
+            stateless: true
+            provider: in_database
+            guard:
+                authenticators:
+                    - App\Security\ApiKeyAuthenticator
         main:
             anonymous: true
             provider: in_database
@@ -21,9 +28,14 @@ security:
                 login_path: login
                 check_path: login
                 default_target_path: /
+            json_login:
+                check_path: /api/login
             logout:
                 path: logout
                 target: /
+      
+
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/profile, roles: ROLE_USER }

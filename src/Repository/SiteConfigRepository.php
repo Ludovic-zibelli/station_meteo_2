@@ -2,32 +2,32 @@
 
 namespace App\Repository;
 
-use App\Entity\AlertMeteoFrance;
+use App\Entity\SiteConfig;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<AlertMeteoFrance>
+ * @extends ServiceEntityRepository<SiteConfig>
  *
- * @method AlertMeteoFrance|null find($id, $lockMode = null, $lockVersion = null)
- * @method AlertMeteoFrance|null findOneBy(array $criteria, array $orderBy = null)
- * @method AlertMeteoFrance[]    findAll()
- * @method AlertMeteoFrance[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SiteConfig|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SiteConfig|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SiteConfig[]    findAll()
+ * @method SiteConfig[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AlertMeteoFranceRepository extends ServiceEntityRepository
+class SiteConfigRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, AlertMeteoFrance::class);
+        parent::__construct($registry, SiteConfig::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(AlertMeteoFrance $entity, bool $flush = true): void
+    public function add(SiteConfig $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -39,7 +39,7 @@ class AlertMeteoFranceRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(AlertMeteoFrance $entity, bool $flush = true): void
+    public function remove(SiteConfig $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -48,15 +48,15 @@ class AlertMeteoFranceRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return AlertMeteoFrance[] Returns an array of AlertMeteoFrance objects
+    //  * @return SiteConfig[] Returns an array of SiteConfig objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -65,10 +65,10 @@ class AlertMeteoFranceRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AlertMeteoFrance
+    public function findOneBySomeField($value): ?SiteConfig
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

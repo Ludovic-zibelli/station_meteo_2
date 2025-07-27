@@ -6,20 +6,23 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\StationMeteosRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping\Embedded;
+use Doctrine\Common\Collections\Collection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-
 
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=StationMeteosRepository::class)
  * @Vich\Uploadable
+ * @ApiResource(
+ * 
+ *   
+ * )
  */
-class StationMeteos
+
+
+ class StationMeteos
 {
     /**
      * @ORM\Id
@@ -58,14 +61,10 @@ class StationMeteos
      */
     private $lien_photo;
 
-    
     /**
-     * NOTE: This is not a mapped field of entity metadata, just a simple property.
-     * @var File|null
-     * 
      * @Vich\UploadableField(mapping="stations_images", fileNameProperty="lien_photo")
      */
-    private $filePhoto;
+    private ?File $filePhoto = null;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -88,32 +87,51 @@ class StationMeteos
     private $user;
 
     /**
-     * @ORM\OneToOne(targetEntity=StationDirect::class, mappedBy="station", cascade={"persist", "remove"})
-     */
-    private $stationDirect;
-
-    /**
-     * @ORM\OneToOne(targetEntity=Station::class, mappedBy="idStationMeteo", cascade={"persist", "remove"})
-     */
-    private $station;
-
-    /**
-     * @ORM\OneToOne(targetEntity=EtatStationMeteo::class, mappedBy="station_meteo", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=EtatStationMeteo::class, mappedBy="stationMeteo", cascade={"persist", "remove"})
      */
     private $etatStationMeteo;
 
     /**
-     * @ORM\Embedded(class="Vich\UploaderBundle\Entity\File")
-     *
-     * @var EmbeddedFile
+     * @ORM\OneToMany(targetEntity=Station::class, mappedBy="stationMeteos", cascade={"persist", "remove"})
+     * 
      */
-    private $photo;
+    private $stations;
+
+    /**
+     * @ORM\Embedded(class="Vich\UploaderBundle\Entity\File")
+     */
+    private EmbeddedFile $photo;
+
+    /**
+     * @ORM\OneToOne(targetEntity=StationDirect::class, mappedBy="stationMeteos", cascade={"persist", "remove"})
+     */
+    private ?StationDirect $stationDirect = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MiniMaxi", mappedBy="stationMeteos", orphanRemoval=true, fetch="EAGER")
+     */
+    private $miniMaxis;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MiniMaxiH", mappedBy="stationMeteos", orphanRemoval=true, fetch="EAGER")
+     */
+    private $miniMaxiHs;
+
+    
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MiniMaxiA", mappedBy="stationMeteos", orphanRemoval=true, fetch="EAGER")
+     */
+    private $miniMaxiA;
+
 
     public function __construct()
     {
-        //$this->user = new ArrayCollection();
+        $this->miniMaxiHs = new ArrayCollection();
+        $this->miniMaxis = new ArrayCollection();
+        $this->stations = new ArrayCollection();
         $this->date_creation = new \DateTime();
-        $this->photo = new Embedded();
+        $this->photo = new EmbeddedFile();
+        //$this->stationDirect = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,17 +199,30 @@ class StationMeteos
         return $this;
     }
 
-  
-  
-    public function getLienPhoto(): ?String
+    public function getLienPhoto(): ?string
     {
         return $this->lien_photo;
     }
 
-
     public function setLienPhoto(?string $lien_photo): self
     {
-        $this->lien_photo  = $lien_photo ;
+        $this->lien_photo = $lien_photo;
+
+        return $this;
+    }
+
+    public function getFilePhoto(): ?File
+    {
+        return $this->filePhoto;
+    }
+
+    public function setFilePhoto(?File $filePhoto): self
+    {
+        $this->filePhoto = $filePhoto;
+
+        if ($filePhoto) {
+            $this->date_creation = new \DateTimeImmutable();
+        }
 
         return $this;
     }
@@ -244,45 +275,6 @@ class StationMeteos
         return $this;
     }
 
-    public function getStationDirect(): ?StationDirect
-    {
-        return $this->stationDirect;
-    }
-
-    public function setStationDirect(StationDirect $stationDirect): self
-    {
-        // set the owning side of the relation if necessary
-        if ($stationDirect->getStationMeteos() !== $this) {
-            $stationDirect->setStationMeteos($this);
-        }
-
-        $this->stationDirect = $stationDirect;
-
-        return $this;
-    }
-
-    public function getStation(): ?Station
-    {
-        return $this->station;
-    }
-
-    public function setStation(?Station $station): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($station === null && $this->station !== null) {
-            $this->station->setidStationMeteo(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($station !== null && $station->getidStationMeteo() !== $this) {
-            $station->setidStationMeteo($this);
-        }
-
-        $this->station = $station;
-
-        return $this;
-    }
-
     public function getEtatStationMeteo(): ?EtatStationMeteo
     {
         return $this->etatStationMeteo;
@@ -290,12 +282,10 @@ class StationMeteos
 
     public function setEtatStationMeteo(?EtatStationMeteo $etatStationMeteo): self
     {
-        // unset the owning side of the relation if necessary
         if ($etatStationMeteo === null && $this->etatStationMeteo !== null) {
             $this->etatStationMeteo->setStationMeteo(null);
         }
 
-        // set the owning side of the relation if necessary
         if ($etatStationMeteo !== null && $etatStationMeteo->getStationMeteo() !== $this) {
             $etatStationMeteo->setStationMeteo($this);
         }
@@ -305,49 +295,141 @@ class StationMeteos
         return $this;
     }
 
-        /**
-     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
-     * of 'UploadedFile' is injected into this setter to trigger the  update. If this
-     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
-     * must be able to accept an instance of 'File' as the bundle will inject one here
-     * during Doctrine hydration.
-     *
-     * @param File|null $filePhoto
-     * 
-     */
-    public function setFilePhoto(?File $filePhoto = null)
+    public function getStations(): Collection
     {
-        $this->filePhoto  = $filePhoto ;
+        return $this->stations;
+    }
 
-        if (null !== $filePhoto ) {
-            // It is required that at least one field changes if you are using doctrine
-            // otherwise the event listeners won't be called and the file is lost
-            $this->date_creation = new \DateTimeImmutable();
+    public function addStation(Station $station): self
+    {
+        if (!$this->stations->contains($station)) {
+            $this->stations[] = $station;
+            $station->setStationMeteos($this);
         }
+
+        return $this;
     }
 
-
-    /**
-     * @return File|null
-     * 
-     */
-    public function getFilePhoto(): ?File
+    public function removeStation(Station $station): self
     {
-        return $this->filePhoto;
+        if ($this->stations->removeElement($station)) {
+            // Set the owning side to null (unless already changed)
+            if ($station->getStationMeteos() === $this) {
+                $station->setStationMeteos(null);
+            }
+        }
+
+        return $this;
     }
 
-    
-    public function setPhoto(EmbeddedFile $photo): void
-    {
-        $this->photo = $photo;
-    }
-
-    public function getPhoto(): ?EmbeddedFile
+    public function getPhoto(): EmbeddedFile
     {
         return $this->photo;
     }
-    
 
-   
-  
+    public function setPhoto(EmbeddedFile $photo): self
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getStationDirect(): ?StationDirect
+    {
+        return $this->stationDirect;
+    }
+
+    public function setStationDirect(?StationDirect $stationDirect): self
+    {
+        $this->stationDirect = $stationDirect;
+
+        // Assurez-vous que l'autre côté de la relation est correctement défini
+        if ($stationDirect !== null && $stationDirect->getStationMeteos() !== $this) {
+            $stationDirect->setStationMeteos($this);
+        }
+
+        return $this;
+    }
+
+    
+    public function getMiniMaxis(): Collection
+    {
+        return $this->miniMaxis;
+    }
+
+    public function addMiniMaxi(MiniMaxi $miniMaxi): self
+    {
+        if (!$this->miniMaxis->contains($miniMaxi)) {
+            $this->miniMaxis[] = $miniMaxi;
+            $miniMaxi->setStationMeteos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMiniMaxi(MiniMaxi $miniMaxi): self
+    {
+        if ($this->miniMaxis->removeElement($miniMaxi)) {
+            // set the owning side to null (unless already changed)
+            if ($miniMaxi->getStationMeteos() === $this) {
+                $miniMaxi->setStationMeteos(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMiniMaxiHs(): Collection
+    {
+        return $this->miniMaxiHs;
+    }
+
+    public function addMiniMaxiH(MiniMaxiH $miniMaxiH): self
+    {
+        if (!$this->miniMaxiHs->contains($miniMaxiH)) {
+            $this->miniMaxiHs[] = $miniMaxiH;
+            $miniMaxiH->setStationMeteos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMiniMaxiH(MiniMaxiH $miniMaxiH): self
+    {
+        if ($this->miniMaxiHs->removeElement($miniMaxiH)) {
+            // set the owning side to null (unless already changed)
+            if ($miniMaxiH->getStationMeteos() === $this) {
+                $miniMaxiH->setStationMeteos(null);
+            }
+        }
+
+        return $this;
+    }
+
+        public function getMiniMaxiA(): Collection
+    {
+        return $this->miniMaxiA;
+    }
+
+    public function addMiniMaxiA(MiniMaxiA $miniMaxiA): self
+    {
+        if (!$this->miniMaxiA->contains($miniMaxiA)) {
+            $this->miniMaxiA[] = $miniMaxiA;
+            $miniMaxiA->setStationMeteos($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMiniMaxiA(MiniMaxiA $miniMaxiA): self
+    {
+        if ($this->miniMaxiA->removeElement($miniMaxiA)) {
+            // set the owning side to null (unless already changed)
+            if ($miniMaxiA->getStationMeteos() === $this) {
+                $miniMaxiA->setStationMeteos(null);
+            }
+        }
+
+        return $this;
+    }
 }

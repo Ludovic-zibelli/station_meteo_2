@@ -58,7 +58,13 @@
                 </tr>
                 <tr>
                         <td><b>Code postal:</b> {{stationmeteo.codepostal}}</td>
-                        <td><b>DIY :</b> {{ stationmeteo.diy}}</td>
+                        <td><b>DIY :</b> 
+                            {% if stationmeteo.diy %}
+                                Oui
+                            {% else %}
+                                Non
+                            {% endif %}
+                        </td>
                         
                 </tr>
                     <tr>
@@ -95,9 +101,8 @@
                     <h5>MAP</h5>
                     </div>
                     <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                        {{ render_map('carte', map) }}
+                        <div id="map"></div>
                     </div>
                 </div>
             </div>
@@ -118,21 +123,21 @@
                             <tbody>
                               <tr>
                                 <td><b>BMP280</b></td>
-                                <td>{{stationmeteo.stationdirect.tempbmp280}}C°</td>
+                                <td>{{stationmeteo.stationdirect.tempbmp280}} C°</td>
                                 <td><b>DHT22</b></td>
-                                <td>{{stationmeteo.stationdirect.tempdh22}}C°</td>
+                                <td>{{stationmeteo.stationdirect.tempdh22}} C°</td>
                               </tr>
                               <tr>
                                 <td><b>Humidité</b></td>
-                                <td>{{stationmeteo.stationdirect.humidite}}%</td>
+                                <td>{{stationmeteo.stationdirect.humidite}} %</td>
                                 <td><b>Pression</b></td>
-                                <td>{{stationmeteo.stationdirect.pression}}hpa</td>
+                                <td>{{stationmeteo.stationdirect.pression}} hpa</td>
                               </tr>
                               <tr>
                                 <td><b>Lumiére</b></td>
-                                <td>{{stationmeteo.stationdirect.lumiere}}Lux</td>
+                                <td>{{stationmeteo.stationdirect.lumiere}} Lux</td>
                                 <td><b>Anemometre</b></td>
-                                <td>{{stationmeteo.stationdirect.anemometre}}Km/h</td>
+                                <td>{{stationmeteo.stationdirect.anemometre}} Km/h</td>
                               </tr>
                             </tbody>
                           </table>
@@ -147,14 +152,14 @@
                             <tbody>
                                 <tr>
                                     <td><b>Girouette</b></td>
-                                    <td>{{stationmeteo.stationdirect.girouette}}°</td>
+                                    <td>{{stationmeteo.stationdirect.girouette}} °</td>
                                     <td><b>Pluviometre</b></td>
-                                    <td>{{stationmeteo.stationdirect.pluviometre}}ml</td>
+                                    <td>{{stationmeteo.stationdirect.pluviometre}} ml</td>
                                 </tr>
                                 <tr>
                                     <td><b>Point de rose</b></td>
-                                    <td>{{stationmeteo.stationdirect.pointrose}}C°</td>
-                                    <td></td>
+                                    <td>{{stationmeteo.stationdirect.pointrose}} C°</td>
+                                    <td><b>Temperature ressenti</b></td>
                                     <td></td>
                                 </tr>
                             </tbody>
@@ -348,8 +353,22 @@
             </table>
     </div>
 </div>
+<link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
+<script src="//unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="//unpkg.com/vue2-leaflet"></script>
+<script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
+</script>  
 
+{% block javascripts %}
+
+	
+{% endblock %}
 
 
 

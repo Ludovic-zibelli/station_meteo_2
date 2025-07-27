@@ -48,6 +48,18 @@ class StationRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+       /**
+     * @return Station[] Returns an array of Station objects
+     */
+    public function findByDEC()
+    {
+        return $this->createQueryBuilder('s')
+            ->orderBy('s.id' , 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Station[] Returns an array of Station objects
      */
@@ -81,6 +93,38 @@ class StationRepository extends ServiceEntityRepository
 
     }
 
+    
+    /**
+     * @param int $stationId
+     * @return Station[] Returns an array of StationDirect objects filtered by station_id
+     */
+    public function findByStationId(int $stationId)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.stationMeteos = :stationId')
+            ->setParameter('stationId', $stationId)
+            ->orderBy('s.id', 'DESC')
+            ->setMaxResults(1) // Limite à un seul résultat
+            ->getQuery()
+            ->getOneOrNullResult(); // Retourne un seul résultat ou null
+            
+        ;
+    }
+
+    /**
+     * @param int $stationId
+     * @return Station[] Returns an array of Station objects for the given station ID
+     */
+    public function findByGraphForStation(int $stationId)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.stationMeteos = :stationId')
+            ->setParameter('stationId', $stationId)
+            ->orderBy('s.id', 'DESC')
+            ->setMaxResults(48)
+            ->getQuery()
+            ->getResult();
+    }
     /*
     public function findOneBySomeField($value): ?Station
     {

@@ -19,20 +19,34 @@ class StationDirectRepository extends ServiceEntityRepository
         parent::__construct($registry, StationDirect::class);
     }
 
-        /**
-      * @return StationDirect[] Returns an array of MiniMaxiH objects
-      */
+    /**
+     * @return StationDirect[] Returns an array of MiniMaxiH objects
+     */
+    public function findByMini()
+    {
+        return $this->createQueryBuilder('m')
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
-      public function findByMini()
-      {
-          return $this->createQueryBuilder('m')
-              ->orderBy('m.id', 'DESC')
-              ->setMaxResults(1)
-              ->getQuery()
-              ->getResult()
-          ;
-      }
-  
+    /**
+     * @param int $stationId
+     * @return StationDirect[] Returns an array of StationDirect objects filtered by station_id
+     */
+    public function findByStationId(int $stationId)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.station_id = :stationId')
+            ->setParameter('stationId', $stationId)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return StationDirect[] Returns an array of StationDirect objects
     //  */

@@ -1,0 +1,1 @@
+use ApiPlatform\Metadata\ApiProperty;

@@ -36,9 +36,11 @@ class MiniMaxiRepository extends ServiceEntityRepository
     /**
      * @return MiniMaxi[]
      */
-    public function findAllMiniMaxiDesc(MinimaxiSearch $search)
+    public function findAllMiniMaxiDesc(MinimaxiSearch $search, int $stationId)
     {
-        $query = $this->createQueryBuilder('m');
+         $query = $this->createQueryBuilder('m')
+            ->andWhere('m.stationMeteos = :stationId')
+            ->setParameter('stationId', $stationId);
 
         if($search->getDate())
         {
@@ -61,6 +63,21 @@ class MiniMaxiRepository extends ServiceEntityRepository
             ->getResult();
 
 
+    }
+
+    /**
+     * @param int $stationId
+     * @return MiniMaxi[]
+     */
+    public function findMiniMaxForStation(int $stationId)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.stationMeteos = :stationId')
+            ->setParameter('stationId', $stationId)
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(2)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

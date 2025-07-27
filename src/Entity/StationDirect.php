@@ -4,11 +4,33 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Annotation\ApiProperty;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StationDirectRepository")
- * @ApiResource 
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/stationdirect"
+ *         }
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/stationdirect/{id}"
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/stationdirect/{id}"
+ *         }
+ *     }
+ * )
  */
+
 class StationDirect
 {
     /**
@@ -20,11 +42,13 @@ class StationDirect
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $dateheure;
 
     /**
      * @ORM\Column(type="float")
+     * 
      */
     private $tempdh22;
 
@@ -104,14 +128,6 @@ class StationDirect
     private $datefinmeteofrance;
 
     /**
-     * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="stationDirect", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $station;
-
-  
-
-    /**
      * @ORM\Column(type="bigint")
      */
     private $tpsvie;
@@ -121,7 +137,24 @@ class StationDirect
      */
     private $ghost;
 
-   
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * 
+     * 
+     */
+    private ?int $station_id = null;
+
+    /**
+     * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="stationDirect", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="station_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     * 
+     */
+    private ?StationMeteos $stationMeteos = null;
+    
+
+    public function __construct() {
+        //$this->station = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -332,18 +365,6 @@ class StationDirect
         return $this;
     }
 
-    public function getStationMeteos(): ?StationMeteos
-    {
-        return $this->station;
-    }
-
-    public function setStationMeteos(StationMeteos $station): self
-    {
-        $this->station = $station;
-
-        return $this;
-    }
-
     public function getTpsvie(): ?string
     {
         return $this->tpsvie;
@@ -364,6 +385,35 @@ class StationDirect
     public function setGhost(int $ghost): self
     {
         $this->ghost = $ghost;
+
+        return $this;
+    }
+
+    public function getStationId(): ?int
+    {
+        return $this->station_id;
+    }
+
+    public function setStationId(?int $station_id): self
+    {
+        $this->station_id = $station_id;
+
+        return $this;
+    }
+
+    public function getStationMeteos(): ?StationMeteos
+    {
+        return $this->stationMeteos;
+    }
+
+    public function setStationMeteos(?StationMeteos $stationMeteos): self
+    {
+        $this->stationMeteos = $stationMeteos;
+
+        // Assurez-vous que l'autre côté de la relation est correctement défini
+        if ($stationMeteos !== null && $stationMeteos->getStationDirect() !== $this) {
+            $stationMeteos->setStationDirect($this);
+        }
 
         return $this;
     }

@@ -65,6 +65,16 @@ class AlertMeteoRepository extends ServiceEntityRepository
 
             ;
     }
+
+    public function findByType($type)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.type = :type')
+            ->setParameter('type', $type)
+            ->orderBy('a.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
     /*
     public function findOneBySomeField($value): ?AlertMeteo
     {

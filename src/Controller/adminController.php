@@ -30,6 +30,19 @@ use App\Form\ArticleType;
 use App\Form\CategoryType;
 use App\Form\StationMeteosType;
 use App\Repository\StationMeteosRepository;
+use MapUx\Builder\MapBuilder;
+use MapUx\Model\Marker;
+use MapUx\Model\Popup;
+use MapUx\Model\Icon;
+use App\Controller\TripleZoomMap;
+use App\Entity\Orages;
+use App\Repository\StationDirectRepository;
+use App\Repository\VigilanceMeteofranceRepository;
+use App\Notification\CallApiService;
+use App\Notification\OragesNotification;
+use App\Notification\VigilanceMeteoFranceNotification;
+use App\Repository\OragesRepository;
+use App\Repository\SiteConfigRepository;
 
 class adminController extends AbstractController
 {
@@ -63,26 +76,23 @@ class adminController extends AbstractController
      * @return Response
      */
 
-    public function admin(Request $request, AlertMeteoRepository $repo_alert, AlerteMeteoNotification $notif)
+    public function admin(Request $request, AlertMeteoRepository $repo_alert, AlerteMeteoNotification $notif, VigilanceMeteofranceRepository $vigilance, OragesRepository $orages, SiteConfigRepository $siteConfig)
     {
-        $alerte = new AlertMeteo();
-        $form = $this->createForm(AlerteMeteoType::class, $alerte);
-        $form->handleRequest($request);
-        $heure = date("H:i");
-        $alertRepo = $repo_alert->findByAlerteAll();
-        if($form->isSubmitted() && $form->isValid())
-        {
-            $alerte->setType(true);
-            $this->em->persist($alerte);
-            $this->em->flush();
-            $this->addFlash('success', 'Alerte Météo Manuel ajouter');
-            $notif->alerteTwitter();
-            return $this->redirectToRoute('admin');
-        }
+        $session = $request->getSession();
+        $maintenance = $siteConfig->findOneBy([]);
+        $alertRepo = $repo_alert->findByAlerteTrue();
+        $vigilance = $vigilance->findAll();
+        $orages = $orages->findAll();
         return $this->render('admin/admin.html.twig',[
-            'heure' => $heure,
+            
             'alerterepo' => $alertRepo,
-            'form' => $form->createView()
+            'vigilance' => $vigilance,
+            'orages' => $orages,
+            'maintenance' => $maintenance->getMaintenance(),
+            'date_time_main' => $maintenance->getDateTimeMain(),
+            'view_station' => $maintenance->getViewStation(),
+            'date_time_view' => $maintenance->getDateTimeView(),
+            
             ]);
     }
 
@@ -178,7 +188,7 @@ class adminController extends AbstractController
     public function gestionStations()
     {
         $stationmeteo = $this->stationmeteo->findAll();
-        
+        //dd($stationmeteo);
         return $this->render('admin/gestion_station.html.twig',[
             'station' => $stationmeteo
             ]);
@@ -256,9 +266,18 @@ class adminController extends AbstractController
      */
     public function showStation($id)
     {
+        $mapBuilder = new MapBuilder();
+        $map = $mapBuilder->createMap(44.00, -0.57, 10);
+        $marker = new Marker();
+        $icon = new Icon('red');
+        $marker->setIcon($icon);
+        $map->addMarker($marker);
+
+     
         $stationmeteo = $this->stationmeteo->find($id);
         return $this->render('admin/stationview.html.twig',[
-            'stationmeteo' => $stationmeteo
+            'stationmeteo' => $stationmeteo,
+            'map' => $map
         ]);
     }
 
@@ -303,4 +322,182 @@ class adminController extends AbstractController
         return $this->redirectToRoute('admin');
 
     }
+
+    //Page alertes meteo
+        /**
+     * @Route("/admin/alertemeteo", name="alertemeteo")
+     * @param Request $request
+     * @return Response
+     */
+    public function alerteMeteo(Request $request, AlertMeteoRepository $repo_alert, AlerteMeteoNotification $notif, VigilanceMeteofranceRepository $vigilance)
+    {
+        
+        $alerte = new AlertMeteo();
+        $form = $this->createForm(AlerteMeteoType::class, $alerte);
+        $form->handleRequest($request);
+        $heure = date("H:i");
+        $alertRepo = $repo_alert->findByAlerteAll();
+        $vigilance = $vigilance->findAll();
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $alerte->setType(true);
+            $this->em->persist($alerte);
+            $this->em->flush();
+            $this->addFlash('success', 'Alerte Météo Manuel ajouter');
+            $notif->alerteTwitter();
+            return $this->redirectToRoute('admin');
+        }
+        return $this->render('admin/alerte_meteo.html.twig',[
+            'heure' => $heure,
+            'alerterepo' => $alertRepo,
+            'vigilance' => $vigilance,
+            'form' => $form->createView()
+            ]);
+        
+    }
+
+    
+    //Acce a la page gestion API
+    /**
+     * @Route("/admin/apigestion", name="admin.apigestion")
+     * @param Request $request
+     * @return Response
+     */
+    public function apiGestion(VigilanceMeteofranceRepository $vigilance, StationDirectRepository $stationDirect, OragesRepository $orages)
+    {
+       
+        $vigilance2 = $vigilance->findAll();
+        $stationDirect = $stationDirect->findAll();
+        $orages = $orages->findAll();
+        $jsonPath = $this->getParameter('kernel.project_dir').'/public/meteo.json';
+        $jsonData = file_get_contents($jsonPath);
+        $meteo = json_decode($jsonData, true);
+        return $this->render('admin/gestion_api.html.twig',[
+            'vigilance' => $vigilance2,
+            'meteo' => $meteo,
+            'stationDirect' => $stationDirect,
+            'orages' => $orages
+        ]);
+
+    }
+
+        //Acce a la page gestion API
+    /**
+     * @Route("/admin/refrechmf", name="admin.refrechmf")
+     * @param Request $request
+     * @return Response
+     */
+    public function refrechMf(VigilanceMeteoFranceNotification $vigilance)
+    {
+        try {
+            $vigilance->getVigilanceMeteoFrance();
+            $this->addFlash('success', 'Vigilance Météo France actualisée avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'actualisation : ' . $e->getMessage());
+        }
+        //$vigilance->getVigilanceMeteoFrance();
+        //$this->addFlash('success', 'Vigilance Météo France actualiser');
+        return $this->redirectToRoute('admin.apigestion');
+   
+    }
+
+    //Acce a la page gestion API
+    /**
+     * @Route("/admin/refrechorages", name="admin.refrechorages")
+     * @param Request $request
+     * @return Response
+     */
+    public function refrechOrages(OragesNotification $orages)
+    {
+        try {
+            $orages->getOragesData();
+            $this->addFlash('success', 'Vigilance Météo France actualisée avec succès.');
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Une erreur est survenue lors de l\'actualisation : ' . $e->getMessage());
+        }
+       
+        return $this->redirectToRoute('admin.apigestion');
+   
+    }
+
+      /**
+     * @Route("/admin/refrechmc", name="admin.refrechmc")
+     * @param Request $request
+     * @return Response
+     */
+    public function refrechMC(CallApiService $getmeteo)
+    {
+        $getmeteo->getApiMeteoConcept();
+        $this->addFlash('success', 'Météo Concept actualiser');
+        return $this->redirectToRoute('admin.apigestion');
+   
+    }
+
+    
+    //Acce a la page gestion API
+    /**
+     * @Route("/admin/infobdd", name="admin.infobdd")
+     * @param Request $request
+     * @return Response
+     */
+    public function infoBDD()
+    {
+       
+        $connection = $this->em->getConnection();
+        // Récupérer la taille de la base
+        $sqlSize = "SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) AS taille FROM information_schema.tables WHERE table_schema = 'station_meteo_2'";
+        $stmtSize = $connection->executeQuery($sqlSize);
+        $tailleBase = $stmtSize->fetchOne();
+
+        $tables = [
+            'station',
+            'alert_meteo',
+            'arcticles',
+            'commentaires',
+            'station_meteos',
+            'mini_maxi',
+            'user'
+        ];
+        
+        $rowCounts = [];
+        foreach ($tables as $table) {
+            $sql = "SELECT COUNT(*) FROM $table";
+            $stmt = $connection->executeQuery($sql);
+            $rowCounts[$table] = $stmt->fetchOne();
+        }
+        
+        return $this->render('admin/infobdd.html.twig', [
+            'tailleBase' => $tailleBase,
+            'rowCounts' => $rowCounts
+        ]);
+        
+    }
+
+    /**
+     * @Route("/admin/maintenance", name="admin.maintenance", methods={"POST"})
+    */
+    // Exemple d'action pour activer la maintenance
+    public function toggleMaintenance(SiteConfigRepository $siteConfig)
+    {
+        $config = $siteConfig->findOneBy([]);
+        $config->setMaintenance(!$config->getMaintenance());
+        $config->setDateTimeMain(new \DateTime());
+        $this->em->flush();
+        return $this->redirectToRoute('admin');
+    }
+
+    
+    /**
+     * @Route("/admin/view", name="admin.view", methods={"POST"})
+    */
+    // Idem pour viewStation
+    public function toggleViewStation(SiteConfigRepository $siteConfig)
+    {
+        $config = $siteConfig->findOneBy([]);
+        $config->setViewStation(!$config->getViewStation());
+        $config->setDateTimeView(new \DateTime());
+        $this->em->flush();
+        return $this->redirectToRoute('admin');
+    }
+
 }

@@ -22,9 +22,23 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller/'
-        tags: ['controller.service_arguments']
-
+    
+    cache.geocoder:
+      class: Symfony\Component\Cache\Psr16Cache
+      arguments: ['@nucleos_maps.cache.pool']
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\DataPersister\MesureDataPersister:
+        decorates: 'api_platform.doctrine.orm.data_persister'
+        arguments:
+            $decorated: '@App\DataPersister\MesureDataPersister.inner'
+            $miniMaxiNotification: '@App\Notification\MiniMaxiNotification'
+            $miniMaxiANotification: '@App\Notification\MiniMaxiANotification'
+            $alerteMeteo: '@App\Notification\AlerteMeteoNotification'
+            $vigilanceRepo: '@App\Repository\VigilanceMeteofranceRepository'
+            $orages: '@App\Repository\OragesRepository'
+
+    
+    App\Twig\AppExtension:
+        tags: ['twig.extension']

@@ -1,0 +1,13 @@
+# config/packages/nucleos_maps.yaml
+
+bazinga_geocoder:
+  providers:
+    nominatim:
+        factory: Bazinga\GeocoderBundle\ProviderFactory\NominatimFactory
+        cache: 'cache.geocoder' # PSR16 Cache pool
+        cache_lifetime: 3600
+        cache_precision: 4
+
+nucleos_maps:
+    geocoder:
+        service: 'bazinga_geocoder.provider.nominatim'

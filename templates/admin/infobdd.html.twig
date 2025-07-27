@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Info de la base de données{% endblock %}
+
+{% block body %}
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Info de la base de données</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('admin') }}">Retour<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+  Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+ </span>
+ </div>
+
+ </nav>
+ </br>
+        <div class="card card_admin">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <td>Taille de la base de données</th>
+                        <td>{{ tailleBase }} MB</td>   
+                    </tr>
+                    {% for table, count in rowCounts %}
+                    <tr>
+                        <td>{{ table }} </td>
+                        <td>{{ count }} lignes</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                
+                
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

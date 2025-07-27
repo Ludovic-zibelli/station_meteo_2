@@ -229,3 +229,6 @@ header
 	margin-bottom: 10px;
 }
 
+.bg-orange {
+    background-color: #fd7e14 !important;
+}

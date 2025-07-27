@@ -5,6 +5,11 @@
 {% block body %}
     <?php header('Access-Control-Allow-Origin: *'); ?>
     <div class="container-fluid">
+        {% for message in app.flashes('success')%}
+		<div class="alert alert-success">
+			{{ message }}
+		</div>
+	    {% endfor %}
         <h1 class="text-center">Tableau de bord du site</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse" id="navbarText">

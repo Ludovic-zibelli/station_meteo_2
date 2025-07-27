@@ -1,5 +1,10 @@
 framework:
     cache:
+        app: cache.adapter.filesystem
+        pools:
+            nucleos_maps.cache.pool:
+                adapter: cache.app
+                default_lifetime: 600
         # Unique name of your app: used to compute stable namespaces for cache keys.
         #prefix_seed: your_vendor_name/app_name
 

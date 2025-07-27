@@ -2,39 +2,90 @@
 
 {% block body %}
     {% if alerte %}
+	<div class="container-fluid index">
         <div class="row">
             <div class="col-12">
-				<div class="card text-white bg-danger mb-3" style="">
-					<div class="card-header">
+				<div class="card  " style="">
+					<div class="card-header text-white bg-danger">
 						<img src="{{ asset('/images/attention.png') }}" width="30" height="30" alt="Attention">
 						<strong>  ALERTE METEO  </strong>
 						<img src="{{ asset('/images/attention.png') }}" width="30" height="30" alt="Attention">
 					</div>
-					<div class="card-body">
-						{% for al in alerte %}
-							<p class="card-text">{{ al.CreatdAt|date("d/m/Y H:i")  }} <strong>{{ al.message }}</strong> </p>
-						{% endfor %}
+					{% for al in alerte %}
+					{% set couleurs = {
+						1: "#15ed13",  
+						2: "#f9ff00",  
+						3: "#f7a401",    
+						4: "#e71919"    
+					} %}
+					
+					<div class="card-body" style="background-color:{{ couleurs[al.level] ?? 'Niveau inconnu' }};">
+						<div class="row">
+							<div class="col-2 d-flex align-items-center justify-content-center">
+								<img src="{{ asset('/images/') }}{{ al.pictogramme }}" width="180" height="180" alt="Attention">
+							</div>
+							<div class="col-10">
+								{% set niveau = {
+									1: "Vert",
+									2: "Jaune",
+									3: "Orange",
+									4: "Rouge"
+								} %}
+								{% set phenomenes = {
+									1: "Vent",
+									2: "Pluie",
+									3: "Orages",
+									4: "Crues",
+									5: "Neige / Verglas",
+									6: "Canicule",
+									7: "Grand froid",
+									8: "Avalanches",
+									9: "Vagues submersion"
+								} %}
+									<p class="card-text">{{ al.CreatdAt|date("d/m/Y H:i")  }}</p>
+									<p class="card-text">{{ al.origine }} Vigilance <strong>{{ niveau[al.level] ?? 'Niveau inconnu' }}</strong> </p>
+									<p class="card-text"><strong>{{ phenomenes[al.codephenomene] ?? 'Phénomène inconnu' }} </strong></p>
+									<p class="card-text">{{ al.message }}</p>
+								{% endfor %}
+							</div>
+						</div>
 					</div>
 				</div>
             </div>
         </div>
     {% endif %}
-<div class="container-fluid index">
+
 	<div class="row">
 			<div class="col-md-12 col-sm-12 col-lg-12 text-center">
 			<div class="card" style="width: auto;">
+			<div class="card-header">
+				<h3>Bienvenu sur la page web de la Station Météo DIY de L'HÔPITAL(57)</h3>
+			</div>
 		  	<div class="card-body">
-		    <h5 class="card-title">Bienvenu sur la page web de la station Météo de L'HÔPITAL(57)</h5>
-		    <h6 class="card-subtitle mb-2 sm-2 lg-2 text-muted"></h6>
-		    <p class="card-text">La station se situe à L'HÔPITAL en Moselle.<br>
-				La station météo a était crée avec un Arduino UNO pour plus de détails allez jeter un œil sur la page présentation.<br>
-				La station fait une acquisition des données et les envois tous les 30 seconds vers le serveur qui sera utiliser pour l'affichage en dynamique mes aussi pour les stocker toutes les 30 minutes dans une base de données.<br>
-				L'affichage des données en direct ce fait via des gauges en JavaScript qui est rafraichi toutes les 30 secondes.<br>
-				Il y a aussi la page Historique où l'on peut trouver des graphiques sur 24H très intéressant pour voir l'évolution dans le temps il y aussi un moteur de recherche pour chercher des données a des dates plus précise.<br>
-				Le site ainsi que la Station Météo sont toujours en phase de développement donc a fil du temps il y aura encore des évolutions avec l'ajout de nouveau capteur.<br>
-				Pour tous les changements à venir toutes les infos seront publier dans la section articles.<br>
-				Si vous avez des remarques ou des idées n'hésitez pas a envoyer un message grâce à l'encadrer Contact.<br>
-				Bonne visite</p>
+		    <p class="card-text">
+				<div class="container">
+					
+					<p>Notre station météo est un projet <strong>fait maison</strong>, avec une structure entièrement <strong>imprimée en 3D</strong>. Elle est équipée de plusieurs capteurs pour une surveillance précise des conditions météorologiques :</p>
+			
+					<h2>📡 Équipements</h2>
+					<ul>
+						<li><strong>Anémomètre</strong> – mesure la vitesse du vent</li>
+						<li><strong>Pluviomètre</strong> – enregistre les précipitations</li>
+						<li><strong>Girouette</strong> – indique la direction du vent</li>
+						<li><strong>Capteurs de température et de pression atmosphérique</strong></li>
+					</ul>
+			
+					<h2>💡 Technologie embarquée</h2>
+					<p>Le cœur de la station est un <strong>ESP32 avec connectivité Wi-Fi</strong>. Toutes les données sont collectées et envoyées à un serveur toutes les 30 secondes, garantissant un suivi en temps réel.</p>
+			
+					<h2>🔋 Alimentation autonome</h2>
+					<p>Pour une autonomie maximale, la station est alimentée par un <strong>panneau solaire de 9V</strong> et une <strong>batterie de 12 000 mAh</strong>.</p>
+			
+					<div class="footer">
+						<p>📌<a class="nav-link" href="{{ path('presentation') }}">En savoir plus sur la station</a></p>
+					</div>
+				</div>
+			
 		  </div> 
 		</div>
 	</div>
@@ -46,9 +97,41 @@
 			  <div class="card-header text-center">
 			    <h4>Données Météo</h4> 
 			  </div>
+			  {% if viewStation %}
 			  <div class="card-body">
-			    <h5 class="card-title text-center">Relevés en direct</h5>
-			    	 
+				<div class="card">
+					<div class="card-header">
+						<h5>Choisir une station météo</h5>
+					</div>
+					 <div class="card-body">
+						<form id="stationForm" method="GET" action="{{ path('home') }}">
+							<div class="form-group">
+								<label for="stationSelect">Stations disponibles :</label>
+								<select id="stationSelect" name="station" class="form-control" onchange="document.getElementById('stationForm').submit();">
+									{% for sta in stationmeteos %}
+										<option value="{{ sta.id }}" {% if sta.id == 2 %}selected{% endif %}>
+											{{ sta.ville }} - {{ sta.user.prenom }}
+										</option>
+									{% endfor %}
+								</select>
+							</div>
+						</form>
+					</div>
+				</div>
+				{% endif %}
+				
+			{% for sta in stationmeteos %}
+			    
+			<h5 class="card-title text-center">Relevés en direct de la station de {{ sta.user.prenom }} à {{ sta.ville }} </h5>
+			<p>La Station est : 	
+			{% if  sta.stationdirect.ghost == 1 %}
+			En ligne <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
+			{% endif %}
+			{% if  sta.stationdirect.ghost == 0 %}
+			Hors ligne <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
+			{% endif %}</p>
+			<p>Dernière mise à jour : {{ sta.stationdirect.dateheure|date("d/m/Y H:i") }}</p>
+			{% endfor %}
 	 				<noscript>
 					    <h2 style="color:red; text-align:center">&gt;&gt;This pages requires JavaScript enabling in your browser.&lt;&lt;<br>&gt;&gt;Please enable scripting it to enjoy this site at its best.&lt;&lt;</h2>
 					</noscript>
@@ -114,49 +197,42 @@
 			</div>
 				  <br>
 				  <div class="row">
-					  <div class="table-responsive-sm table-responsive-md table-responsive-lg">
+					  <div class=" col-md-12 col-sm-12 col-lg-12 table-responsive-sm table-responsive-md table-responsive-lg">
 						  <div class="card">
 							  <div class="card-header">
-								  Minimales est maximales du jour
+								  <h5>Minimales est maximales du jour</h5>
 							  </div>
 							  <div class="card-body">
 								  <table class="table table-bordered">
 									  <thead>
-									  <tr>
-										  <th scope="col" colspan="2">Température</th>
-										  <th scope="col" colspan="2">Point de rosée</th>
-										  <th scope="col" colspan="2">Humidité</th>
-										  <th scope="col" colspan="2">Pression </th>
-										  <th scope="col" colspan="2">Vitesse du vent </th>
-									  </tr>
+								    <tr>
+										<th colspan="3">Température</th>
+										<th colspan="3">Point de rosée</th>
+										<th colspan="3">Humidité</th>
+										<th colspan="3">Pression</th>
+										<th colspan="3">Vitesse du vent</th>
+									</tr>
+									<tr>
+										<th>Mini</th>
+										<th>Maxi</th>
+										<th>Tendance</th>
+										<th>Mini</th>
+        								<th>Maxi</th>
+        								<th>Tendance</th>
+										<th>Mini</th>
+										<th>Maxi</th>
+										<th>Tendance</th>
+										<th>Mini</th>
+										<th>Maxi</th>
+										<th>Tendance</th>
+										<th>Mini</th>
+										<th>Maxi</th>
+										<th>Tendance</th>
+									</tr>
 									  </thead>
-									  <tbody>
-									  <tr>
-										  <td>Mini</td>
-										  <td>Maxi</td>
-										  <td>Mini</td>
-										  <td>Maxi</td>
-										  <td>Mini</td>
-										  <td>Maxi</td>
-										  <td>Mini</td>
-										  <td>Maxi</td>
-										  <td>Mini</td>
-										  <td>Maxi</td>
-									  </tr>
-									  {% for mima in minimaxi %}
-										  <tr>
-											  <td>{{ mima.minitemp }} C°</td>
-											  <td>{{ mima.maxitemp }} C°</td>
-											  <td>{{ mima.miniptro }} C°</td>
-											  <td>{{ mima.maxiptro }} C°</td>
-											  <td>{{ mima.minihumi }} %</td>
-											  <td>{{ mima.maxihumi }} %</td>
-											  <td>{{ mima.minipres }} Hpa</td>
-											  <td>{{ mima.maxipres }} Hpa</td>
-											  <td>{{ mima.minianemo }} Km/h</td>
-											  <td>{{ mima.maxianemo }} Km/h</td>
-										  </tr>
-									  {% endfor %}
+									  <tbody id="minimax-tbody">
+									 
+								
 									  </tbody>
 								  </table>
 							  </div>
@@ -168,7 +244,7 @@
 					  <div class="col-md-12 col-sm-12 col-lg-12">
                           <div class="card">
                               <div class="card-header">
-                                  Prévision de la station météo
+                                  <h5>Prévisions de la station météo</h5>
                               </div>
                               <div class="card-body">
 								  <div class="row">
@@ -181,53 +257,326 @@
 										  </blockquote>
 									  </div>
 								  </div>
+								  <div class="row">
+										<div class="col-md-12 col-sm-12 col-lg-12">
+											<img src="{{ asset('/images/annimation/') }}{{ lumiere }}" width=100% height=auto class="anim_lumier text-center" alt="animation_lumiere">
+										</div>
+								  </div>
                               </div>
                           </div>
 					  </div>
 				  </div>
 				  <div class="row text-center">
-					  <div class="col-md-12 col-sm-12 col-lg-12">
-                      	<img src="{{ asset('/images/annimation/') }}{{ lumiere }}" width=100% height=auto class="anim_lumier text-center" alt="animation_lumiere">
-					  </div>
-				  </div>
-  					
-  						<h5 class="card-title text-center">Données Météo France</h5><br>
-  					
-  					<div class="row">		
-  						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
-  							<h6>Vigilance Météo en cours</h6><br>
-                            <!-- Debut code vignette vigilance départementale  Météo-France -->
-                            <iframe src="https://vigilance.meteofrance.fr/fr/widget-vigilance/vigilance-departement/57"  width="302" height="122" frameborder="0">
-                            </iframe>
-                            <!-- FIN   -->
+					<div class="col-md-12 col-sm-12 col-lg-12">
+						<div class="card rounded-1">
+							{% if meteo %}
+							<div class="card-header">
+								<h4 class="card-title text-center">Prévision a 4 jours de {{ meteo.city.name}}({{ meteo.city.cp}})</h4>
+							</div>
+							<h3></h3>
+							<h5>Mise a jour:  {{ meteo.update|date("d/m/Y H:i")}}</h5>
+							<div class='row'>
+							<div class="card-body col-md-3 col-sm-3 col-lg-3">
+									<div class="card shadow-lg">
+										<h5 class="card-header">{{ meteo.forecast[0].datetime|date("d/m/Y")}}</h5>
+										<div class="card-body">
+											<img src="{{ asset('images/meteo/' ~ weatherIcon) }}" width=200 height=200 alt="Météo aujourd'hui">
+											<div class="row">
+												
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Mini</h5>
+													<p>{{ meteo.forecast[0].tmin }}°C</p>
+												</div>
+												<div class="col-md-2 col-sm-2 col-lg-2">
+													<i class="wi wi-thermometer" style="font-size: 40px;"></i>
+												</div>		
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Maxi</h5>
+													<p>{{ meteo.forecast[0].tmax }}°C</p>
+												</div>	
+											</div>
+										  <table class="table table-secondary">
+											
+											<tbody>
+												
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Vent/Rafale <i class="wi wi-strong-wind" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].wind10m }} Km/h |{{ meteo.forecast[0].gust10m }}</td>
+												</tr>
+											
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Direction du vent</td>
+													<td><i class="wi wi-wind towards-{{ meteo.forecast[0].dirwind10m }}-deg" style="font-size: 30px;"></i></td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].rr10 }} mm</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].probarain }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Ensoleilement <i class="wi wi-day-sunny" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].sun_hours}} H</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de gel <i class="wi wi-snowflake-cold"style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].probafrost }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de broullard <i class="wi wi-windy"style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].probafog }} %</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 70km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].probawind70 }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 100km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[0].probawind100 }} %</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>	 
+								<div class="card-body col-md-3 col-sm-3 col-lg-3">
+									<div class="card shadow-lg">
+										<h5 class="card-header">{{ meteo.forecast[1].datetime|date("d/m/Y")}}</h5>
+										<div class="card-body">
+											<img src="{{ asset('images/meteo/' ~ weatherIcon1) }}" width=200 height=200 alt="Météo aujourd'hui">
+											<div class="row">
+												
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Mini</h5>
+													<p>{{ meteo.forecast[1].tmin }}°C</p>
+												</div>	
+												<div class="col-md-2 col-sm-2 col-lg-2">
+													<i class="wi wi-thermometer" style="font-size: 40px;"></i>
+												</div>	
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Maxi</h5>
+													<p>{{ meteo.forecast[1].tmax }}°C</p>
+												</div>	
+											</div>
+										  <table class="table table-secondary">
+											
+											<tbody>
+												
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Vent/Rafale <i class="wi wi-strong-wind" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].wind10m }} Km/h |{{ meteo.forecast[1].gust10m }}</td>
+												</tr>
+											
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Direction du vent</td>
+													<td><i class="wi wi-wind towards-{{ meteo.forecast[1].dirwind10m }}-deg" style="font-size: 30px;"></i></td>
+												</tr>
+												<tr>
+													<td  class="align-middle" style="font-size: 12px;">Pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].rr10 }} mm</td>
+												</tr>
+												<tr class="table-active">
+													<td  class="align-middle" style="font-size: 12px;">Risque de pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].probarain }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Ensoleilement <i class="wi wi-day-sunny" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].sun_hours}} H</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de gel <i class="wi wi-snowflake-cold" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].probafrost }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de broullard <i class="wi wi-windy" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].probafog }} %</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 70km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].probawind70 }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 100km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[1].probawind100 }} %</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>	 
+								<div class="card-body col-md-3 col-sm-3 col-lg-3">
+									<div class="card shadow-lg">
+										<h5 class="card-header">{{ meteo.forecast[2].datetime|date("d/m/Y")}}</h5>
+										<div class="card-body">
+											<img src="{{ asset('images/meteo/' ~ weatherIcon2) }}" width=200 height=200 alt="Météo aujourd'hui">
+											<div class="row">
+												
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Mini</h5>
+													<p>{{ meteo.forecast[2].tmin }}°C</p>
+												</div>	
+												<div class="col-md-2 col-sm-2 col-lg-2">
+													<i class="wi wi-thermometer" style="font-size: 40px;"></i>
+												</div>	
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Maxi</h5>
+													<p>{{ meteo.forecast[2].tmax }}°C</p>
+												</div>	
+											</div>
+										  <table class="table table-secondary">
+											
+											<tbody>
+												
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Vent/Rafale <i class="wi wi-strong-wind" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].wind10m }} Km/h |{{ meteo.forecast[2].gust10m }}</td>
+												</tr>
+											
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Direction du vent</td>
+													<td><i class="wi wi-wind towards-{{ meteo.forecast[2].dirwind10m }}-deg" style="font-size: 30px;"></i></td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].rr10 }} mm</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].probarain }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Ensoleilement <i class="wi wi-day-sunny" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].sun_hours}} H</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de gel <i class="wi wi-snowflake-cold" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].probafrost }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de broullard <i class="wi wi-windy" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].probafog }} %</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 70km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].probawind70 }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 100km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[2].probawind100 }} %</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>	 
+								<div class="card-body col-md-3 col-sm-3 col-lg-3">
+									<div class="card shadow-lg">
+										<h5 class="card-header">{{ meteo.forecast[3].datetime|date("d/m/Y")}}</h5>
+										<div class="card-body">
+											<img src="{{ asset('images/meteo/' ~ weatherIcon3) }}" width=200 height=200 alt="Météo aujourd'hui">
+											<div class="row">
+												
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Mini</h5>
+													<p>{{ meteo.forecast[3].tmin }}°C</p>
+												</div>	
+												<div class="col-md-2 col-sm-2 col-lg-2">
+													<i class="wi wi-thermometer" style="font-size: 40px;"></i>
+												</div>
+												<div class="col-md-5 col-sm-5 col-lg-5">
+													<h5>Maxi</h5>
+													<p>{{ meteo.forecast[3].tmax }}°C</p>
+												</div>	
+											</div>
+										  <table class="table table-secondary">
+											
+											<tbody>
+												
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Vent/Rafale <i class="wi wi-strong-wind" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].wind10m }} Km/h |{{ meteo.forecast[3].gust10m }}</td>
+												</tr>
+											
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Direction du vent</td>
+													<td><i class="wi wi-wind towards-{{ meteo.forecast[3].dirwind10m }}-deg" style="font-size: 30px;"></i></td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].rr10 }} mm</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de pluie <i class="wi wi-raindrops" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].probarain }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Ensoleilement <i class="wi wi-day-sunny" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].sun_hours}} H</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de gel <i class="wi wi-snowflake-cold" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].probafrost }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de broullard <i class="wi wi-windy" style="font-size: 20px;"></i></td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].probafog }} %</td>
+												</tr>
+												<tr class="table-active">
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 70km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].probawind70 }} %</td>
+												</tr>
+												<tr>
+													<td class="align-middle" style="font-size: 12px;">Risque de vent 100km/h</td>
+													<td style="font-size: 12px;">{{ meteo.forecast[3].probawind100 }} %</td>
+												</tr>
+											</tbody>
+										  </table>
+										</div>
+									</div>
+								</div>	 
+									{% else %}
+									<p>Aucune donnée disponible.</p>
+									{% endif %}	 
+								</div>
+							</div>
 						</div>
-						<div class="col-md-6 col-sm-6 col-lg-6 center-block" style=float:none;>
-							<h6>Prévisions Météo France</h6><br>
-							<script charset='UTF-8' src='http://www.meteofrance.com/mf3-rpc-portlet/rest/vignettepartenaire/573360/type/VILLE_FRANCE/size/PAYSAGE_VIGNETTE' type='text/javascript'></script>
+					</div>
+					</div>
+  				
+					  <div class="row text-center">
+						<div class="col-md-12 col-sm-12 col-lg-12">
+							<div class="card">
+								<div class="card-header">
+									<h5 class="card-title text-center">Image satellite Météo</h5>
+								</div>
+								<div class="card-body">
+									<div class="row">
+										
+										<div class="col" >
+										  <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/fr-FR/widgets/radar/continent/eu/rain" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:600px!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="yes" frameborder="0"></iframe>
+										</div>
+										<div class="col">
+										  <iframe sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" src="https://widgets.meteox.com/fr-FR/widgets/radar/continent/eu/satellite" style="width:100%!important;max-width:600px!important;max-height:600px!important;height:100%!important;padding:0px;border:none!important;box-sizing:border-box!important;" scrolling="no" frameborder="0"></iframe>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-  					</div>
-  						<h5 class="card-title text-center">Image satellite Météo</h5><br>
-  					<div class="row">
-  						<div class="col-md-1 col-sm-1 col-lg-1"></div>
-  						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
-  							<a href='http://fr.sat24.com/fr' target='sat24'><img src='http://api.sat24.com/animated/EU/visual/1/Central%20European%20Standard%20Time/4436851' width=280 height=280></img></a>
-  						</div>
-  						<div class="col-md-5 col-sm-5 col-lg-5 center-block" style=float:none;>
-  							<a href='http://fr.sat24.com/fr' target='sat24'><img src='http://api.sat24.com/crop?type=visual5hdcomplete&lat=49.1621&lon=6.7468&width=300&height=300&zoom=1.00&continent=eu' width=280 height=280></img></a>
-  						</div>
-  						<div class="col-md-1 col-sm-1 col-lg-1"></div>
-  					</div>
-
+					</div>
 			  </div>
 
 			</div>
 		</div>
-	</div>
-	<div class="row articles_home">
-		<div class="col-md-12 col-sm-12 col-lg-12">
-			<h5 class="text-center">Articles</h5>
-		</div>
-			    	{% for article in articles %}
+		<div class="row articles_home">
+			<div class="col-md-12 col-sm-12 col-lg-12">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title text-center">Articles</h5>
+					</div>
+					<div class="card-body">
+						{% for article in articles %}
 			    		<div class="col-md-4 col-sm-4 col-lg-4">
 			    			<div class="card card_articles">
 								{% if article.image %}
@@ -246,14 +595,18 @@
 			    				</div>
 			    			</div>
 			    		</div> 
-			    	{% endfor %}
-	</div>
+			    		{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+<section id="contact" >
 	{{ form_start(form) }}
 	<div class="row contact_home">
 		<div class="col-md-12 col-sm-12 col-lg-12">
 			<div class="card">
 			  <div class="card-header">
-			    Contact
+			    <h5>Contact</h5>
 			  </div>
 				{% for message in app.flashes('success')%}
 					<div class="alert alert-success">
@@ -299,6 +652,8 @@
 			</div>
 		</div>
 	</div>
+</section>
+		
 </div>
 
 

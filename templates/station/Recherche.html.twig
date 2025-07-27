@@ -5,6 +5,11 @@
 {% block body %}
 <div class="container-fluid">
     <div class="row">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+              <a class="nav-item" href="{{ path('historique') }}">Retour</a>
+            </div>
+        </nav>
         <div class="col-md-12 col-sm-12 col-lg-12">
             <div id="div_chartTR"></div>
         </div>
@@ -26,6 +31,8 @@
                             <th scope="col">Température</th>
                             <th scope="col">Pression</th>
                             <th scope="col">Humidité</th>
+                            <th scope="col">Anémometre</th>
+                            <th scope="col">Pluviomètre</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,6 +43,8 @@
                             <td>{{ resultat.temperature }}</td>
                             <td>{{ resultat.pression }}</td>
                             <td>{{ resultat.humiditer }}</td>
+                            <td>{{ resultat.anemometre }}</td>
+                            <td>{{ resultat.pluviometre }}</td>
                         </tr>
                 {% endfor %}
                         </tbody>

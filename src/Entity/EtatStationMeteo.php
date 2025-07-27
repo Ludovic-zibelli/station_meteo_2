@@ -7,9 +7,27 @@ use App\Repository\EtatStationMeteoRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
  * @ORM\Entity(repositoryClass=EtatStationMeteoRepository::class)
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/etatstationmeteo"
+ *         }
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/etatstationmeteo/{id}"
+ *         },
+ *         "put"={
+ *             "method"="PUT",
+ *             "path"="/etatstationmeteo/{id}"
+ *         }
+ *     }
+ * )
  */
+
 class EtatStationMeteo
 {
     /**
@@ -146,8 +164,9 @@ class EtatStationMeteo
 
     /**
      * @ORM\OneToOne(targetEntity=StationMeteos::class, inversedBy="etatStationMeteo", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="station_meteo_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    private $station_meteo;
+    private $stationMeteo;
 
     public function getId(): ?int
     {
@@ -456,12 +475,12 @@ class EtatStationMeteo
 
     public function getStationMeteo(): ?StationMeteos
     {
-        return $this->station_meteo;
+        return $this->stationMeteo;
     }
 
-    public function setStationMeteo(?StationMeteos $station_meteo): self
+    public function setStationMeteo(?StationMeteos $stationMeteo): self
     {
-        $this->station_meteo = $station_meteo;
+        $this->stationMeteo = $stationMeteo;
 
         return $this;
     }

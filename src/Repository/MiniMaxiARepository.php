@@ -33,6 +33,17 @@ class MiniMaxiARepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByMiniForStation($stationMeteos)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.stationMeteos = :station')
+            ->setParameter('station', $stationMeteos)
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     /*
     public function findOneBySomeField($value): ?MiniMaxiA

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des API{% endblock %}
+
+{% block body %}
+<?php header('Access-Control-Allow-Origin: *'); ?>
+<div class="container-fluid">
+    <h1 class="text-center">Gestion des API</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ path('admin') }}">Retour<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
+                </li>
+            </ul>
+            <span class="navbar-text">
+  Bienvenu {{ app.user.prenom }} {{ app.user.nom }}({{ app.user.email }})
+    </span>
+</div>
+</nav>
+</br>
+{% for message in app.flashes('success')%}
+		<div class="alert alert-success text-center">
+			{{ message }}
+		</div>
+	{% endfor %}
+<div class="card text-center">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>API</th>
+                    <th>Dernier mise a jour</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>   
+                <tr>
+                    {% for vig in vigilance %}
+                    <td>Meteo france vigilance</td>
+                    <td>{{ vig.updatedate|date("d/m/Y H:i") }}</td>
+                    <td><a href="{{ path ('admin.refrechmf')}}" class="btn btn-secondary btn-sm">Mettre a jours</a></td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <td>meteo-concept.fr</td>
+                    <td>{{ meteo.update|date("d/m/Y H:i")}}</td>
+                    <td><a href="{{ path ('admin.refrechmc')}}" class="btn btn-secondary btn-sm">Mettre a jours</a></td></td>
+                </tr>
+                <tr>
+                    {% for sd in stationDirect %}
+                    <td>API meteospit.fr Station direct</td>
+                    <td>{{ sd.dateheure|date("d/m/Y H:i") }}</td>
+                    <td><a href="/api" class="btn btn-secondary btn-sm">Accéder a l'API</a></td>
+                    {% endfor %}
+                </tr>
+                {% for orage in orages %}
+                <tr>
+                    <td>Orages {{orage.radius}} Km</td>
+                    <td>{{ orage.datetime|date("d/m/Y H:i")}}</td>
+                    <td><a href="{{ path ('admin.refrechorages')}}" class="btn btn-secondary btn-sm">Mettre a jours</a></td></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

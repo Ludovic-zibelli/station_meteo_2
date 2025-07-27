@@ -23,7 +23,9 @@ class RechercheType extends AbstractType
                     'Tout' => 0,
                     'Température' => 1,
                     'Pression' => 2,
-                    'Humidité' => 3
+                    'Humidité' => 3,
+                    'Vitesse du vent' => 4,
+                    'Pluviométre' => 5,
                 ]
             ])
             ->add('date_debut', DateTimeType::class)

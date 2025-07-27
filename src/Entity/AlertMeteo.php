@@ -46,6 +46,16 @@ class AlertMeteo
      */
     private $pictogramme;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $code_phenomene;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $origine;
+
     public function __construct()
     {
         $this->creatd_at = new \DateTime();
@@ -124,6 +134,30 @@ class AlertMeteo
     public function setPictogramme(?string $pictogramme): self
     {
         $this->pictogramme = $pictogramme;
+
+        return $this;
+    }
+
+    public function getCodePhenomene(): ?int
+    {
+        return $this->code_phenomene;
+    }
+
+    public function setCodePhenomene(?int $code_phenomene): self
+    {
+        $this->code_phenomene = $code_phenomene;
+
+        return $this;
+    }
+
+    public function getOrigine(): ?string
+    {
+        return $this->origine;
+    }
+
+    public function setOrigine(?string $origine): self
+    {
+        $this->origine = $origine;
 
         return $this;
     }

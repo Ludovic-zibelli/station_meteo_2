@@ -5,12 +5,15 @@
 {% block body %}
     <?php header('Access-Control-Allow-Origin: *'); ?>
     <div class="container-fluid">
-        <h1 class="text-center">Gestion du Site</h1>
+        <h1 class="text-center">Taleau de bord du site</h1>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('admin.article') }}">Articles <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('alertemeteo')}}">Alertes Meteo</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('gestionstation') }}">Gestion des Stations</a>
@@ -19,7 +22,10 @@
                         <a class="nav-link" href="{{ path('user') }}">Utilisateurs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Base de données</a>
+                        <a class="nav-link" href="{{ path('admin.infobdd') }}">Base de données</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('admin.apigestion') }}">Gestion API</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('logout') }}">Se déconecter</a>
@@ -30,6 +36,63 @@
     </span>
             </div>
         </nav>
+        <div class="card mt-3">
+            <div class="card-header text-center">
+                <h2>Configuration du Site</h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 text-center mb-3">
+                        <h5>Mode maintenance</h5>
+                        <p>Le mode maintenance permet de mettre le site en pause pour effectuer des modifications</p>
+                        <form method="post" action="{{ path('admin.maintenance') }}">
+                            <button type="submit" class="btn btn-warning">
+                                {% if maintenance %}
+                                    Désactiver le mode maintenance
+                                {% else %}
+                                    Activer le mode maintenance
+                                {% endif %}
+                            </button>
+                        </form>
+                      {% if maintenance %}
+                        <div class="alert alert-warning mt-2">
+                            <strong>Le site est actuellement en maintenance !</strong><br>
+                            <small>Dernière modification : {{ date_time_main|date("d/m/Y H:i") }}</small>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-success mt-2">
+                            <strong>Le site est accessible.</strong><br>
+                            <small>Dernière modification : {{ date_time_main|date("d/m/Y H:i") }}</small>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="col-6 text-center mb-3">
+                    <h5>Affichage du menu des Stations</h5>
+                    <p>Réglage pour afficher ou caher le menu deroulent des staitons</p>
+                        <form method="post" action="{{ path('admin.view') }}">
+                            <button type="submit" class="btn btn-info">
+                                {% if view_station %}
+                                    Cacher le menu des stations
+                                {% else %}
+                                    Afficher le menu des stations
+                                {% endif %}
+                            </button>
+                        </form>
+                        {% if view_station %}
+                            <div class="alert alert-success mt-2">
+                                <strong>Le menu des stations est affiché !</strong><br>
+                                <small>Dernière modification : {{ date_time_view|date("d/m/Y H:i") }}</small>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-secondary mt-2">
+                                <strong>Le menu des stations est caché !</strong><br>
+                                <small>Dernière modification : {{ date_time_view|date("d/m/Y H:i") }}</small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>   
+            </div>
+        </div>
         <div class="card card_admin">
             <div class="card-header text-center">
                 <h2>Données brut de la station Météo</h2>
@@ -45,7 +108,7 @@
                 </div>
                 <div class="row text-center">
                     <div class="col md lg sm">
-                        Heure du relevé: <span id="heure_releve"> </span> Date du relevé:<span id="date_releve"> </span>
+                        Heure du relevé: <span id="heure_releve"> </span> Date du relevé: <span id="date_releve"> </span>
                     </div>
                 </div>
                 <br>
@@ -54,12 +117,12 @@
                         <table id="donne_meteo" class="table table-hover">
                                 <tbody>
                                 <tr>
-                                    <td>Température DHT11</td>
+                                    <td>Température DHT22</td>
                                     <td id="temp_dht11"></td>
                                     <td>C°</td>
                                 </tr>
                                 <tr>
-                                    <td>Température BMP180</td>
+                                    <td>Température BMP280</td>
                                     <td id="temp_bmp180"></td>
                                     <td>C°</td>
                                 </tr>
@@ -95,12 +158,12 @@
                         <table class="table table-hover">
                             <tbody>
                                 <tr>
-                                    <td>Humiditer DHT11</td>
+                                    <td>Humiditer DHT22</td>
                                     <td id="humiditer"></td>
                                     <td>%</td>
                                 </tr>
                                 <tr>
-                                    <td>Pression atmo BMP180</td>
+                                    <td>Pression atmo BMP280</td>
                                     <td id="pression"></td>
                                     <td>hpa</td>
                                 </tr>
@@ -124,71 +187,132 @@
                 </div>
             </div>
         </div>
-        {{ form_start(form) }}
+        
         <div class="card  text-center">
             <div class="card-header">
-                <h2>Gestion alerte Météo</h2>
+                <h2>Alertes meteo de la station</h2>
             </div>
             <div class="card-body">
-                <h5 class="card-title">Alerte Météo Manuel</h5>
-                <p class="card-text">Création d'alerte météo en manuel en plus des alertes automatique</p>
-                {{ form_widget(form) }}
-                <button class="btn btn-primary btn-block" type="submit">Envoyer</button>
-                {{ form_end(form) }}
-                <br>
-                <h5 class="card-title">Historique des alertes Météo Auto/Manu</h5>
-                <p class="card-text">L'historique des 5 dernières alertes Météo</p>
+           
                 <div class="table-responsive-sm table-responsive-md table-responsive-lg">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th scope="col">Date de création</th>
-                            <th scope="col">Type d'alerte</th>
-                            <th scope="col">En ligne</th>
-                            <th scope="col">Niveau de vigilance</th>
-                            <th scope="col">Message d'alerte</th>
-                            <th scope="col">Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for alerte in alerterepo %}
-                        <tr>
-                            <td>{{ alerte.CreatdAt|date("d/m/Y H:i") }}</td>
-                            <td>
-                                {% if  alerte.type == true%}
-                                    Manuel
-                                {% else %}
-                                    Automatique
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if  alerte.online  == true %}
-                                    Alerte en ligne
-                                {% else %}
-                                    Alerte Hor ligne
-                                {% endif %}
-                            </td>
-                            <td>{{ alerte.level }}</td>
-                            <td>{{ alerte.message }}</td>
-                            <td>
-                                <a href="{{ path ('admin.alerte.edit', {id: alerte.id})}}" class="btn btn-primary">Editer</a>
-                                <form method="POST" action="{{ path ('admin.alerte.delete', {id: alerte.id})}}" style="display:inline-block">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ alerte.id)}}">
-                                    <button class="btn btn-danger" onclick="return confirm('Voulez-vous vraiment supprimer cette alerte ?')">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h5>Alerte en cours de la station</h5>
+                            {% if alerterepo %}
+                            {% for alerte in alerterepo %}
+                            {% set niveau = {
+                                1: "Vert",
+                                2: "Jaune",
+                                3: "Orange",
+                                4: "Rouge"
+                            } %}
+                            {% set couleurs = {
+                                1: "#15ed13",  
+                                2: "#f9ff00",  
+                                3: "#f7a401",    
+                                4: "#e71919"    
+                            } %}
+                            <table class="table">
+                                <tr>
+                                    <td>{{ alerte.CreatdAt|date("d/m/Y H:i") }}</td>
+                                    <td>Origine: {{ alerte.origine }}</td>
+                                
+                                </tr>
+                                <tr>
+                                    <td>
+                                        {% if  alerte.type == true%}
+                                            Manuel
+                                        {% else %}
+                                            Automatique
+                                        {% endif %}
+                                    </td>
+                                    <td>Vigilance: <strong style="color: {{ couleurs[alerte.level] }}">{{ niveau[alerte.level] ?? 'Niveau inconnu' }}</strong></td>
+                                </tr>
+                               
+                            </table>
+                            {% endfor %}
+                            {% else %}
+                                <span class="badge badge-success">Aucune alerte en cours</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            <h5>Vigilance meteo France</h5>
+                            {% for vigi in vigilance %}
+                            {% set phenomenes = {
+                                1: "Vent",
+                                2: "Pluie",
+                                3: "Orages",
+                                4: "Crues",
+                                5: "Neige / Verglas",
+                                6: "Canicule",
+                                7: "Grand froid",
+                                8: "Avalanches",
+                                9: "Vagues submersion"
+                            } %}
+                            {% set niveau = {
+                                1: "Vert",
+                                2: "Jaune",
+                                3: "Orange",
+                                4: "Rouge"
+                            } %}
+                            Information de Météo France mise a jour le {{vigi.updatedate|date("d/m/Y H:i")}}
+                            <p class="card-text" style="color: {{ vigi.riskcolor }}"><strong>{{ niveau[vigi.riskcode] ?? 'Niveau inconnu' }}</strong> </p>
+                                <p>Phénomene: {{ phenomenes[vigi.hazardcode] ?? 'Phénomène inconnu' }}</p>
+                                <p>Debut: {{vigi.starttime|date("d/m/Y H:i")}} Fin: {{vigi.endtime|date("d/m/Y H:i")}}</p>
+                                <p>{{vigi.text1}}</p> 
+                                <p>{{vigi.text2}}</p>
+                                <p>{{vigi.text3}}</p>
+                                <p>{{vigi.text4}}</p>
+                                <p>{{vigi.text21}}</p> 
+                                <p>{{vigi.text22}}</p>
+                                <p>{{vigi.text23}}</p>
+                                <p>{{vigi.text24}}</p>
+                            
+                                
+                            {% endfor%}
+                        </div>
+                    
+                    </div>
                 </div>
-                <div class="card-footer text-muted">
-                    <a href="#">Voir toute les alertes</a>
-                </div>
+                
+               
             </div>
-        </div>
-
+        </div>   
+         <div class="card  text-center">
+            <div class="card-header">
+                <h2>Inforamtion Orages</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Distance</th>
+                            <th scope="col">Nombre d'éclaire</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Interval entre eclaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for orage in orages %}
+                        <tr>
+                            <td>{{ orage.datetime|date("d/m/Y H:i") }}</td>
+                            <td>{{ orage.radius }} km</td>
+                            <td>{{ orage.totalstrikes }}</td>
+                            <td>{{ orage.status }}</td>
+                            <td>{% if orage.intervals is iterable %}
+                                {{ orage.intervals|join(', ') }} s
+                                {% else %}
+                                {{ orage.intervals }} s
+                                {% endif %}
+                            </td>
+                        </tr>
+                {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div> 
+        
     </div>
     <script src="{{ asset('js/donnee_meteo.js') }}"></script>
     <script src="{{ asset('js/moment-with-locales.js') }}"></script>

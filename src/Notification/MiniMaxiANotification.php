@@ -20,6 +20,8 @@ class MiniMaxiANotification
      */
     private $mnh;
 
+    
+
     /**
      * @var \DateTime
      */
@@ -33,109 +35,87 @@ class MiniMaxiANotification
         $this->date_time = new \DateTime();
     }
 
-    public function minimaxicompare()
+    public function minimaxicompare($stationMeteos)
     {
-        $bdd = $this->mnh->findByMini();
-        $bdd2 = $this->mna->findByMiniA();
+        // Récupère les valeurs horaires et agrégées pour la station donnée
+        $bdd = $this->mnh->findByMiniForStation($stationMeteos);
+        $bdd2 = $this->mna->findByMiniForStation($stationMeteos);
 
-        if ($bdd[0]->getMiniTemp() < $bdd2[0]->getMiniTemp())
-        {
-            $bdd2[0]->setMiniTemp($bdd[0]->getMiniTemp());
-            $bdd2[0]->setDateMiniTemp($this->date_time);
+        if (!$bdd || !$bdd2 || !isset($bdd[0]) || !isset($bdd2[0])) {
+            // Gérer le cas où il n'y a pas de données pour cette station
+            return;
         }
 
-        if ($bdd[0]->getMaxiTemp() > $bdd2[0]->getMaxiTemp())
-        {
-            $bdd2[0]->setMaxiTemp($bdd[0]->getMaxiTemp());
-            $bdd2[0]->setDateMaxiTemp($this->date_time);
+        // On travaille sur les premiers résultats (le plus récent du jour)
+        $h = $bdd[0];
+        $a = $bdd2[0];
+
+        if ($h->getMiniTemp() < $a->getMiniTemp()) {
+            $a->setMiniTemp($h->getMiniTemp());
+            $a->setDateMiniTemp($this->date_time);
         }
-
-
-        if ($bdd[0]->getMiniHumi() < $bdd2[0]->getMiniHumi())
-        {
-            $bdd2[0]->setMiniHumi($bdd[0]->getMiniHumi());
-            $bdd2[0]->setDateMiniHumi($this->date_time);
+        if ($h->getMaxiTemp() > $a->getMaxiTemp()) {
+            $a->setMaxiTemp($h->getMaxiTemp());
+            $a->setDateMaxiTemp($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiHumi() > $bdd2[0]->getMaxiHumi())
-        {
-            $bdd2[0]->setMaxiHumi($bdd[0]->getMaxiHumi());
-            $bdd2[0]->setDateMaxiHumi($this->date_time);
+        if ($h->getMiniHumi() < $a->getMiniHumi()) {
+            $a->setMiniHumi($h->getMiniHumi());
+            $a->setDateMiniHumi($this->date_time);
         }
-
-        if ($bdd[0]->getMiniPres()< $bdd2[0]->getMiniPres())
-        {
-            $bdd2[0]->setMiniPres($bdd[0]->getMiniPres());
-            $bdd2[0]->setDateMiniPres($this->date_time);
+        if ($h->getMaxiHumi() > $a->getMaxiHumi()) {
+            $a->setMaxiHumi($h->getMaxiHumi());
+            $a->setDateMaxiHumi($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiPres() > $bdd2[0]->getMaxiPres())
-        {
-            $bdd2[0]->setMaxiPres($bdd[0]->getMaxiPres());
-            $bdd2[0]->setDateMaxiPres($this->date_time);
+        if ($h->getMiniPres() < $a->getMiniPres()) {
+            $a->setMiniPres($h->getMiniPres());
+            $a->setDateMiniPres($this->date_time);
         }
-
-        if ($bdd[0]->getMiniLumi() < $bdd2[0]->getMiniLumi())
-        {
-            $bdd2[0]->setMiniLumi($bdd[0]->getMiniLumi());
-            $bdd2[0]->setDateMiniLumi($this->date_time);
+        if ($h->getMaxiPres() > $a->getMaxiPres()) {
+            $a->setMaxiPres($h->getMaxiPres());
+            $a->setDateMaxiPres($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiLumi() > $bdd2[0]->getMaxiLumi())
-        {
-            $bdd2[0]->setMaxiLumi($bdd[0]->getMaxiLumi());
-            $bdd2[0]->setDateMaxiLumi($this->date_time);
+        if ($h->getMiniLumi() < $a->getMiniLumi()) {
+            $a->setMiniLumi($h->getMiniLumi());
+            $a->setDateMiniLumi($this->date_time);
         }
-
-        if ($bdd[0]->getMiniPtro() < $bdd2[0]->getMiniPtro())
-        {
-            $bdd2[0]->setMiniPtro($bdd[0]->getMiniPtro());
-            $bdd2[0]->setDateMiniPtro($this->date_time);
+        if ($h->getMaxiLumi() > $a->getMaxiLumi()) {
+            $a->setMaxiLumi($h->getMaxiLumi());
+            $a->setDateMaxiLumi($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiPtro() > $bdd2[0]->getMaxiPtro())
-        {
-            $bdd2[0]->setMaxiPtro($bdd[0]->getMaxiPtro());
-            $bdd2[0]->setDateMaxiPtro($this->date_time);
+        if ($h->getMiniPtro() < $a->getMiniPtro()) {
+            $a->setMiniPtro($h->getMiniPtro());
+            $a->setDateMiniPtro($this->date_time);
         }
-
-        //Pas encore présent sur la station
-        if ($bdd[0]->getMiniAnemo() < $bdd2[0]->getMiniAnemo())
-        {
-            $bdd2[0]->setMiniAnemo($bdd[0]->getMiniAnemo());
-            $bdd2[0]->setDateMiniAnemo($this->date_time);
+        if ($h->getMaxiPtro() > $a->getMaxiPtro()) {
+            $a->setMaxiPtro($h->getMaxiPtro());
+            $a->setDateMaxiPtro($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiAnemo() > $bdd2[0]->getMaxiAnemo())
-        {
-            $bdd2[0]->setMaxiAnemo($bdd[0]->getMaxiAnemo());
-            $bdd2[0]->setDateMaxiAnemo($this->date_time);
+        if ($h->getMiniAnemo() < $a->getMiniAnemo()) {
+            $a->setMiniAnemo($h->getMiniAnemo());
+            $a->setDateMiniAnemo($this->date_time);
         }
-
-        if ($bdd[0]->getMiniGirou() < $bdd2[0]->getMiniGirou())
-        {
-            $bdd2[0]->setMiniGirou($bdd[0]->getMiniGirou());
-            $bdd2[0]->setDateMiniGirou($this->date_time);
+        if ($h->getMaxiAnemo() > $a->getMaxiAnemo()) {
+            $a->setMaxiAnemo($h->getMaxiAnemo());
+            $a->setDateMaxiAnemo($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiGirou() > $bdd2[0]->getMaxiGirou())
-        {
-            $bdd2[0]->setMaxiGirou($bdd[0]->getMaxiGirou());
-            $bdd2[0]->setDateMaxiGirou($this->date_time);
+        if ($h->getMiniGirou() < $a->getMiniGirou()) {
+            $a->setMiniGirou($h->getMiniGirou());
+            $a->setDateMiniGirou($this->date_time);
         }
-
-        if ($bdd[0]->getMiniPluvio() < $bdd2[0]->getMiniPluvio())
-        {
-            $bdd2[0]->setMiniPluvio($bdd[0]->getMiniPluvio());
-            $bdd2[0]->setDateMiniPluvio($this->date_time);
+        if ($h->getMaxiGirou() > $a->getMaxiGirou()) {
+            $a->setMaxiGirou($h->getMaxiGirou());
+            $a->setDateMaxiGirou($this->date_time);
         }
-
-        if ($bdd[0]->getMaxiPluvio() > $bdd[0]->getMaxiPluvio())
-        {
-            $bdd2[0]->setMaxiPluvio($bdd[0]->getMaxiPluvio());
-            $bdd2[0]->setDateMaxiPluvio($this->date_time);
+        if ($h->getMiniPluvio() < $a->getMiniPluvio()) {
+            $a->setMiniPluvio($h->getMiniPluvio());
+            $a->setDateMiniPluvio($this->date_time);
+        }
+        if ($h->getMaxiPluvio() > $a->getMaxiPluvio()) {
+            $a->setMaxiPluvio($h->getMaxiPluvio());
+            $a->setDateMaxiPluvio($this->date_time);
         }
 
         $this->em->flush();
     }
+    
 }

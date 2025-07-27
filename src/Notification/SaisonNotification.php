@@ -2,6 +2,8 @@
 
 namespace App\Notification;
 
+use App\Entity\StationDirect;
+
 class SaisonNotification
 {
 
@@ -13,7 +15,18 @@ class SaisonNotification
 
     private $barometre;
 
-    public function AnimationLumiere()
+   
+
+    /**
+     * AnimationLumiere constructor.
+     */
+    public function __construct()
+    {
+        
+    
+    }
+
+    public function AnimationLumiere($lumiere)
     {
         //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
         # Chemin vers fichier texte
@@ -26,10 +39,10 @@ class SaisonNotification
         //Definition avant midi apres midi
         $am_pm = date("a");
         //Calcul taux d'ensoilement
-        $a = (int)$read[10] * 100;
+        $a = (int)$lumiere * 100;
         $taux = $a / 5;
 
-
+        
         //avant midi
         if($am_pm == "am"){
             if($taux <= 10){
@@ -118,7 +131,7 @@ class SaisonNotification
         return $this->saison;
     }
 
-    public function previsions()
+    public function previsions($press)
     {
 
         //Lecture d'un fichier .txt ligne par ligne et stokage dans un tableau
@@ -127,7 +140,7 @@ class SaisonNotification
         # On met dans la variable (tableau $read) le contenu du fichier
         $read=file($file);
         //tranformation nombre pression a virgule en entier pour variable prevision
-        $pression2 = intval($read[5]);
+        $pression2 = intval($press);
         $saison = $this->saison();
 
 

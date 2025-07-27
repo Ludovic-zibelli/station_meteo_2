@@ -1,0 +1,20 @@
+{
+    "dateheure": {
+        "date": "2025-06-28 14:59:33.000000",
+        "timezone_type": 1,
+        "timezone": "+00:00"
+    },
+    "temp1": 29,
+    "humiditer": 10,
+    "temp2": 31,
+    "pression_ajt": 1120,
+    "lumiere": 3,
+    "pluvio": 0,
+    "anemo": 0,
+    "girou": 190,
+    "pt_rosee": "12,3",
+    "bitvie": "0",
+    "eclaire_1km": 0,
+    "eclaire_10km": 0,
+    "eclaire_50km": 0
+}

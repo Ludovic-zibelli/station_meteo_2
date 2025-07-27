@@ -2,8 +2,9 @@
 
 namespace App\Notification;
 
-
+use App\Entity\StationDirect;
 use App\Repository\MiniMaxiHRepository;
+use App\Repository\StationDirectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -17,216 +18,115 @@ class MiniMaxiNotification
      * @var MiniMaxiHRepository
      */
     private $repo;
+      /**
+     * @var MeteoDirect 
+     */
+    private $meteoDirect;
 
     /**
      * MiniMaxiNotification constructor.
      * @param EntityManagerInterface $em
      * @param MiniMaxiHRepository $repo
      */
-    public function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo )
+    public function __construct(EntityManagerInterface $em, MiniMaxiHRepository $repo, StationDirectRepository $meteoDirect)
     {
         $this->em = $em;
         $this->repo = $repo;
+        $this->meteoDirect = $meteoDirect;
     }
 
-    /**
-     * @var int
-     */
-    private $temp1;
 
-    /**
-     * @var int
-     */
-    private $temp2;
-
-    /**
-     * @var int
-     */
-    private $humiditer;
-
-    /**
-     * @var int
-     */
-    private $pression;
-
-    /**
-     * @var int
-     */
-    private $lumiere;
-
-    /**
-     * @var int
-     */
-    private $tension;
-
-    /**
-     * @var int
-     */
-    private $pression_ajt;
-
-    /**
-     * @var string
-     */
-    private $pt_rosee;
-
-    /**
-     * @var int
-     */
-    private $pluvio;
-
-    /**
-     * @var int
-     */
-    private $anemo;
-
-    /**
-     * @var int
-     */
-    private $girou;
-
-
-
-    function getMinimaxi($request)
+    public function getMinimaxi(StationDirect $stationDirect)
     {
-        $this->temp1 = $request->get('temp1');
-        $this->temp2 = $request->get('temp2');
-        $this->humiditer = $request->get('humiditer');
-        $this->pression = $request->get('pression');
-        $this->lumiere = $request->get('lumiere');
-        $this->tension = $request->get('tempinter');
-        $this->pression_ajt = $request->get('pression') + 29.68;
-        $this->pt_rosee = $this->ptRosee();
-        $this->pluvio = $request->get('pluvio');
-        $this->anemo = $request->get('anemo');
-        $this->girou = $request->get('girou');
+        // Récupère la station météo liée à cette mesure
+        $stationMeteos = $stationDirect->getStationMeteos();
 
-        $bdd = $this->repo->findByMini();
+        // Récupère le MiniMaxiH du jour pour cette station (adapte la méthode si besoin)
+        $miniMaxi = $this->repo->findOneBy([
+            'stationMeteos' => $stationMeteos,
+            // 'date' => new \DateTime('today'), // décommente si tu as un champ date
+        ]);
 
-        //Comparaison table journaliere
-        if ($this->temp2 < $bdd[0]->getMiniTemp())
-        {
-            $bdd[0]->setMiniTemp($this->temp2);
-            //$this->mini_temp = $this->temp2;
+        if (!$miniMaxi) {
+            // Gérer le cas où il n'y a pas encore d'enregistrement pour aujourd'hui
+            return;
         }
 
-        if ($this->temp2 > $bdd[0]->getMaxiTemp())
-        {
-            $bdd[0]->setMaxiTemp($this->temp2);
-            //$this->maxi_temp = $this->temp2;
+        // Récupère les valeurs directement depuis StationDirect
+        $temp2      = $stationDirect->getTempdh22();
+        $humiditer  = $stationDirect->getHumidite();
+        $pression   = $stationDirect->getPression();
+        $lumiere    = $stationDirect->getLumiere();
+        $tension    = $stationDirect->getTempbmp280();
+        $pression_ajt = $pression + 29.68;
+        $pt_rosee   = $this->ptRoseeFromValues($temp2, $humiditer);
+        $pluvio     = $stationDirect->getPluviometre();
+        $anemo      = $stationDirect->getAnemometre();
+        $girou      = $stationDirect->getGirouette();
+
+        // Comparaison table journalière
+        if ($temp2 < $miniMaxi->getMiniTemp()) {
+            $miniMaxi->setMiniTemp($temp2);
         }
-
-
-        if ($this->humiditer < $bdd[0]->getMiniHumi())
-        {
-            $bdd[0]->setMiniHumi($this->humiditer);
-            //$this->mini_humi = $this->humiditer;
+        if ($temp2 > $miniMaxi->getMaxiTemp()) {
+            $miniMaxi->setMaxiTemp($temp2);
         }
-
-        if ($this->humiditer > $bdd[0]->getMaxiHumi())
-        {
-            $bdd[0]->setMaxiHumi($this->humiditer);
-            //$this->maxi_humi = $this->humiditer;
+        if ($humiditer < $miniMaxi->getMiniHumi()) {
+            $miniMaxi->setMiniHumi($humiditer);
         }
-
-        if ($this->pression_ajt < $bdd[0]->getMiniPres())
-        {
-            $bdd[0]->setMiniPres($this->pression_ajt);
-            //$this->mini_pres = $this->pression_ajt;
+        if ($humiditer > $miniMaxi->getMaxiHumi()) {
+            $miniMaxi->setMaxiHumi($humiditer);
         }
-
-
-        if ($this->pression_ajt > $bdd[0]->getMaxiPres())
-        {
-            $bdd[0]->setMaxiPres($this->pression_ajt);
-            //$this->maxi_pres = $this->pression_ajt;
+        if ($pression_ajt < $miniMaxi->getMiniPres()) {
+            $miniMaxi->setMiniPres($pression_ajt);
         }
-
-        if ($this->lumiere < $bdd[0]->getMiniLumi())
-        {
-            $bdd[0]->setMiniLumi($this->lumiere);
-            //$this->mini_lumi = $this->lumiere;
+        if ($pression_ajt > $miniMaxi->getMaxiPres()) {
+            $miniMaxi->setMaxiPres($pression_ajt);
         }
-
-
-        if ($this->lumiere > $bdd[0]->getMaxiLumi())
-        {
-            $bdd[0]->setMaxiLumi($this->lumiere);
-            //$this->maxi_lumi = $this->lumiere;
+        if ($lumiere < $miniMaxi->getMiniLumi()) {
+            $miniMaxi->setMiniLumi($lumiere);
         }
-
-        if ($this->pt_rosee < $bdd[0]->getMiniPtro())
-        {
-            $bdd[0]->setMiniPtro($this->pt_rosee);
-            //$this->mini_ptro = $this->pt_rosee;
+        if ($lumiere > $miniMaxi->getMaxiLumi()) {
+            $miniMaxi->setMaxiLumi($lumiere);
         }
-
-        if ($this->pt_rosee > $bdd[0]->getMaxiPtro())
-        {
-            $bdd[0]->setMaxiPtro($this->pt_rosee);
-            //$this->maxi_ptro = $this->pt_rosee;
+        if ($pt_rosee < $miniMaxi->getMiniPtro()) {
+            $miniMaxi->setMiniPtro($pt_rosee);
         }
-
-        //Controle mini maxi anemo
-        if ($this->anemo < $bdd[0]->getMiniAnemo())
-        {
-            $bdd[0]->setMiniAnemo($this->anemo);
-            //$this->mini_ptro = $this->pt_rosee;
+        if ($pt_rosee > $miniMaxi->getMaxiPtro()) {
+            $miniMaxi->setMaxiPtro($pt_rosee);
         }
-
-        if ($this->anemo > $bdd[0]->getMaxiAnemo())
-        {
-            $bdd[0]->setMaxiAnemo($this->anemo);
-            //$this->maxi_ptro = $this->pt_rosee;
+        if ($anemo < $miniMaxi->getMiniAnemo()) {
+            $miniMaxi->setMiniAnemo($anemo);
         }
-
-        //Controle mini maxi girou
-        if ($this->girou < $bdd[0]->getMiniGirou())
-        {
-            $bdd[0]->setMiniGirou($this->girou);
-            //$this->mini_ptro = $this->pt_rosee;
+        if ($anemo > $miniMaxi->getMaxiAnemo()) {
+            $miniMaxi->setMaxiAnemo($anemo);
         }
-
-        if ($this->girou > $bdd[0]->getMaxiGirou())
-        {
-            $bdd[0]->setMaxiGirou($this->girou);
-            //$this->maxi_ptro = $this->pt_rosee;
+        if ($girou < $miniMaxi->getMiniGirou()) {
+            $miniMaxi->setMiniGirou($girou);
         }
-
-        //Controle mini maxi pluviometre
-        if ($this->pluvio < $bdd[0]->getMiniPluvio())
-        {
-            $bdd[0]->setMiniPluvio($this->pluvio);
-            //$this->mini_ptro = $this->pt_rosee;
+        if ($girou > $miniMaxi->getMaxiGirou()) {
+            $miniMaxi->setMaxiGirou($girou);
         }
-
-        if ($this->pluvio > $bdd[0]->getMaxiPluvio())
-        {
-            $bdd[0]->setMaxiPluvio($this->pluvio);
-            //$this->maxi_ptro = $this->pt_rosee;
+        if ($pluvio < $miniMaxi->getMiniPluvio()) {
+            $miniMaxi->setMiniPluvio($pluvio);
         }
-
+        if ($pluvio > $miniMaxi->getMaxiPluvio()) {
+            $miniMaxi->setMaxiPluvio($pluvio);
+        }
 
         $this->em->flush();
-
     }
 
-    //Calcul du point de rosee
-    function ptRosee()
+    // Nouvelle version de ptRosee qui prend les valeurs en paramètre
+    private function ptRoseeFromValues($T, $H)
     {
-
-        $T = $this->temp2;
-        $H = $this->humiditer;
-        $D1 = $T;
-        $D2 = $H;
         $v1 = "0.061121";
         $v2 = "17.67";
         $v3 = "243.5";
         $v4 = "440.8";
         $v5 = "19.48";
-        $pt_rosee_dec =($v3*log($v1*exp($v2*$D1/($D1+$v3))*$D2)-$v4)/($v5-log($v1*exp($v2*$D1/($D1+$v3))*$D2));
-        $pt_rosee = number_format($pt_rosee_dec, 2, ',','');
-
-        return $pt_rosee;
+        $pt_rosee_dec = ($v3*log($v1*exp($v2*$T/($T+$v3))*$H)-$v4)/($v5-log($v1*exp($v2*$T/($T+$v3))*$H));
+        return number_format($pt_rosee_dec, 2, ',','');
     }
 
 

@@ -1,0 +1,18 @@
+{
+  "name": "meteospit",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {},
+  "devDependencies": {
+    "@symfony/webpack-encore": "^2.1.0",
+    "stimulus": "^3.2.2",
+    "webpack-notifier": "^1.6.0"
+  },
+  "dependencies": {
+    "@symfony/stimulus-bridge": "^3.2.2",
+    "core-js": "^3.37.0",
+    "esm": "^3.2.25",
+    "leaflet": "^1.9.4",
+    "vue2-leaflet": "^2.7.1"
+  }
+}

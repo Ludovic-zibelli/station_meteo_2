@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class StationMeteosType extends AbstractType
 {
@@ -21,11 +23,15 @@ class StationMeteosType extends AbstractType
             ->add('filePhoto', VichImageType::class,[
                 'required' => false,
                 'download_link' => false,
-                'image_uri' => true
+                'image_uri' => false
             ])
-            ->add('lien_donnees')
-            ->add('description')
-            ->add('diy')
+            ->add('description', CKEditorType::class)
+            ->add('diy', ChoiceType::class,[
+                'choices' =>[
+                    'Oui' => true,
+                    'Non' => false
+                ]
+            ])
             ->add('user')
             
         ;

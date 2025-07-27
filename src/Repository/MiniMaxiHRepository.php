@@ -33,6 +33,18 @@ class MiniMaxiHRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findByMiniForStation($stationMeteos)
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.stationMeteos = :station')
+            ->setParameter('station', $stationMeteos)
+            // ->andWhere('m.date = :date') // décommente si tu veux filtrer par date
+            // ->setParameter('date', new \DateTime('today'))
+            ->orderBy('m.id', 'DESC') // ou 'm.id', selon ta logique
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?MiniMaxiH

@@ -47,6 +47,21 @@ class StationMeteosRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * Recherche une entité StationMeteos par son identifiant.
+     *
+     * @param int $id
+     * @return StationMeteos|null
+     */
+    public function findById(int $id): ?StationMeteos
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return StationMeteos[] Returns an array of StationMeteos objects
     //  */
