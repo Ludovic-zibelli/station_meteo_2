@@ -344,7 +344,7 @@ class adminController extends AbstractController
             $this->em->persist($alerte);
             $this->em->flush();
             $this->addFlash('success', 'Alerte Météo Manuel ajouter');
-            $notif->alerteTwitter();
+            //$notif->alerteTwitter();
             return $this->redirectToRoute('admin');
         }
         return $this->render('admin/alerte_meteo.html.twig',[

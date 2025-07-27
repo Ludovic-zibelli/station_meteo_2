@@ -155,17 +155,14 @@ class CallApiService
                     'accept' => '*/*',
                 ],
             ]
-            );
+        );
 
-            // Convertir la réponse en tableau
-            $data = $response->toArray();
+        $data = $response->toArray();
 
-            // Sauvegarder dans un fichier JSON
-            //$filePath = __DIR__ . '/../../var/meteo.json'; // Stocké dans var/
-            file_put_contents("meteo.json", json_encode($data, JSON_PRETTY_PRINT));
+        // Chemin absolu vers public/meteo.json
+        $filePath = __DIR__ . '/../../public/meteo.json';
+        file_put_contents($filePath, json_encode($data, JSON_PRETTY_PRINT));
 
-            return $data;
-            //return $response->toArray();
-
+        return $data;
     }
 }

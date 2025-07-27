@@ -24,7 +24,7 @@ class addPrevisionMeteo extends Command
 
     protected function configure()
     {
-        $this->setName('app:addPerevisionMeteo');
+        //$this->setName('app:addPerevisionMeteo');
         $this->setDescription('Commande pour tache cron pour la mise a jour des prévisions météo');
 
     }

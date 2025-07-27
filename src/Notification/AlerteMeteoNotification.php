@@ -86,10 +86,13 @@ class AlerteMeteoNotification
 
     public function vigilanceMeteoFrance()
     {
+        //Recuperation des données de vigilance Météo France
         $data = $this->vigilance_repo->findByVigilance();
-        $alert_auto = $this->repo->findByType(2);
+        //Recuperation des données d'alerte automatique
+        $alert_auto = $this->repo->findByType(false);
+        //dd($alert_auto);
 
-        if ($data[0]->getRiskCode() >= 2) {
+        if ((int)$data[0]->getRiskCode() >= 2) {
             $text = $data[0]->getText1() . $data[0]->getText2() . $data[0]->getText3() . $data[0]->getText4() . $data[0]->getText5()
                 . $data[0]->getText21() . $data[0]->getText22() . $data[0]->getText23() . $data[0]->getText24() . $data[0]->getText25();
 
@@ -97,29 +100,29 @@ class AlerteMeteoNotification
             $alerteExistante = $this->repo->findOneBy([
                 'level' => $data[0]->getRiskCode(),
                 'message' => $text,
-                'codePhenomene' => $data[0]->getHazardCode(),
-                'type' => 2,
-                'origine' => 'Météo France'
+                'code_phenomene' => $data[0]->getHazardCode(),
+                'type' => false,
+                'origine' => 'Météo France',
+                'online' => true
             ]);
 
             if (!$alerteExistante) {
                 $vigilance = new AlertMeteo();
-                $vigilance->setType(false);
                 $vigilance->setOnline(true);
                 $vigilance->setLevel($data[0]->getRiskCode());
                 $vigilance->setMessage($text);
                 $vigilance->setCodePhenomene($data[0]->getHazardCode());
                 $vigilance->setOrigine('Météo France');
                 $vigilance->setPictogramme('meteo-france.jpeg');
-                $vigilance->setType(2);
+                $vigilance->setType(false);
                 $this->em->persist($vigilance);
                 $this->em->flush();
             }
             // Sinon, rien à faire (l'alerte existe déjà)
         }
-
-        if ($data[0]->getRiskCode() < 2 && $alert_auto && $alert_auto[0]->getOnline() == true) {
-            $alert_auto[0]->setOnline(false);
+        
+        if ($data[0]->getRiskCode() == 1 && $alert_auto[0]->getType() ==  false && $alert_auto[0]->getOnline() == true) {
+            $alert_auto[0]->setOnline(0);
             $this->em->flush();
         }
     }

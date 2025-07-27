@@ -93,7 +93,7 @@ class MesureDataPersister implements DataPersisterInterface
         ];
 
         file_put_contents('station_direct.json', json_encode($dataArray, JSON_PRETTY_PRINT));
-
+    
 
         return $this->decorated->persist($data, $context);
       

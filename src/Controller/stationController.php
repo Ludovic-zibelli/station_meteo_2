@@ -291,7 +291,7 @@ class stationController extends AbstractController
     public function getBddstation(BddNotification $bdd, OragesNotification $orages, CallApiService $api, VigilanceMeteoFranceNotification $vmf, AlerteMeteoNotification $alert)
     {
         //$twitter->Twitter();
-        $orages->getOragesData();
+        //$orages->getOragesData();
         //$gauges->realTimeGauges(2);
         //$sm->getStationDirect();
         //$bdd->AddBddStation();
@@ -304,7 +304,7 @@ class stationController extends AbstractController
         //dd($data);
         //dd($datacarte['product']['periods'][0]['timelaps']['domain_ids'][46]);
         //$a = "";
-        //$alert->vigilanceMeteoFrance();
+        $alert->vigilanceMeteoFrance();
         return $this->render('station/essai.html.twig');
     }
 
