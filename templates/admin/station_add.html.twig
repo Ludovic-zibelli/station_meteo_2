@@ -58,6 +58,11 @@
             {{ form_widget(form.description) }}
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+            $('#{{ form.description.vars.id }}').trumbowyg();
+        });
+    </script>
     <div class="row">
         <div class="col">
             <h6 class="card-subtitle mb-2 text-muted">Photo :</h6>

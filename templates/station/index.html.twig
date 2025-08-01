@@ -570,33 +570,33 @@
 			</div>
 		</div>
 		<div class="row articles_home">
-			<div class="col-md-12 col-sm-12 col-lg-12">
-				<div class="card">
-					<div class="card-header">
-						<h5 class="card-title text-center">Articles</h5>
-					</div>
-					<div class="card-body">
+			<div class="card w-100">
+				<div class="card-header">
+					<h5 class="card-title text-center">Articles</h5>
+				</div>
+				<div class="card-body">
+					<div class="row">
 						{% for article in articles %}
-			    		<div class="col-md-4 col-sm-4 col-lg-4">
-			    			<div class="card card_articles">
-								{% if article.image %}
-									<img src="{{ vich_uploader_asset(article, 'imageFile') }}"  width=100% height=auto alt="{{ article.titre }}">
-								{% else %}
-									<img src="{{ asset('/images/logo_meteo.png') }}" width=100% height=auto class=" " alt="{{ article.titre }}">
-								{% endif %}
-
-			    				<div class="card-body">
-			    					<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
-			    					<div class="card-text">{{ article.content|striptags|slice(0, 100)|raw  }}</div>
-									<p class="card-text"><small class="text-muted"><a href="{{ path('article.show', {id: article.id}) }}">Lire la suite</a></small></p>
-			    				</div>
-			    				<div class="card-footer">
-			    					<p>Auteur de l'article {{ article.auteur }}|Editer le {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
-			    				</div>
-			    			</div>
-			    		</div> 
-			    		{% endfor %}
+							<div class="col-md-4 col-sm-6 col-lg-4 mb-4 d-flex">
+								<div class="card card_articles h-100 w-100">
+									{% if article.image %}
+										<img src="{{ vich_uploader_asset(article, 'imageFile') }}" class="card-img-top" alt="{{ article.titre }}">
+									{% else %}
+										<img src="{{ asset('/images/logo_meteo.png') }}" class="card-img-top" alt="{{ article.titre }}">
+									{% endif %}
+									<div class="card-body">
+										<a href="{{ path('article.show', {id: article.id}) }}"><h5 class="card-title">{{ article.titre }}</h5></a>
+										<div class="card-text">{{ article.content|striptags|slice(0, 100)|raw }}</div>
+										<p class="card-text"><small class="text-muted"><a href="{{ path('article.show', {id: article.id}) }}">Lire la suite</a></small></p>
+									</div>
+									<div class="card-footer">
+										<p>Auteur de l'article {{ article.auteur }} | Edité le {{ article.CreatedAt|date("d/m/Y H:i") }}</p>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>

@@ -6,6 +6,7 @@ use App\Entity\Arcticles;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
@@ -16,7 +17,7 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('titre')
-            ->add('content', CKEditorType::class)
+            ->add('content', TextareaType::class)
             ->add('auteur')
             ->add('online', ChoiceType::class, [
                 'choices' =>[

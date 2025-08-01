@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class StationMeteosType extends AbstractType
 {
@@ -25,7 +26,7 @@ class StationMeteosType extends AbstractType
                 'download_link' => false,
                 'image_uri' => false
             ])
-            ->add('description', CKEditorType::class)
+            ->add('description', TextareaType::class)
             ->add('diy', ChoiceType::class,[
                 'choices' =>[
                     'Oui' => true,
