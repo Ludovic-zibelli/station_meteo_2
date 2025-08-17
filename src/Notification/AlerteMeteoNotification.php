@@ -86,15 +86,25 @@ class AlerteMeteoNotification
 
     public function vigilanceMeteoFrance()
     {
-        //Recuperation des données de vigilance Météo France
+        // Récupération des données de vigilance Météo France
         $data = $this->vigilance_repo->findByVigilance();
-        //Recuperation des données d'alerte automatique
+        // Récupération des données d'alerte automatique
         $alert_auto = $this->repo->findByType(false);
-        //dd($alert_auto);
 
         if ((int)$data[0]->getRiskCode() >= 2) {
             $text = $data[0]->getText1() . $data[0]->getText2() . $data[0]->getText3() . $data[0]->getText4() . $data[0]->getText5()
                 . $data[0]->getText21() . $data[0]->getText22() . $data[0]->getText23() . $data[0]->getText24() . $data[0]->getText25();
+
+            // Désactive toutes les alertes météo France actives avant d'en créer une nouvelle
+            $alertesActives = $this->repo->findBy([
+                'type' => false,
+                'origine' => 'Météo France',
+                'online' => true
+            ]);
+            foreach ($alertesActives as $alerte) {
+                $alerte->setOnline(false);
+            }
+            $this->em->flush();
 
             // Vérifie si une alerte identique existe déjà
             $alerteExistante = $this->repo->findOneBy([
@@ -120,7 +130,7 @@ class AlerteMeteoNotification
             }
             // Sinon, rien à faire (l'alerte existe déjà)
         }
-        
+
         if ($data[0]->getRiskCode() == 1 && $alert_auto[0]->getType() ==  false && $alert_auto[0]->getOnline() == true) {
             $alert_auto[0]->setOnline(0);
             $this->em->flush();
