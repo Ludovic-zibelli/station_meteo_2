@@ -73,7 +73,10 @@ final class EtatStationMeteoPersister implements ContextAwareDataPersisterInterf
                     'logDateGirou'    => 'log_date_girou',
                     'logDateTension'  => 'log_date_tension',
                     'logDateAnemo'    => 'log_date_anemo',
-                    'logDatePluvio'   => 'log_date_pluvio',
+                    'logDatePluvio'   => 'log_date_pluvio',         
+                    'tensionSolaire'  => 'tension_solaire',
+                    'tensionBatterie' => 'tension_batterie',
+
                     // NB: stationMeteo IRI non traité ici (relation gérée par Doctrine)
                 ];
 

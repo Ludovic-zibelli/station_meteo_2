@@ -170,6 +170,16 @@ class EtatStationMeteo
      */
     private $stationMeteo;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tension_solaire;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $tension_batterie;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -483,6 +493,30 @@ class EtatStationMeteo
     public function setStationMeteo(?StationMeteos $stationMeteo): self
     {
         $this->stationMeteo = $stationMeteo;
+
+        return $this;
+    }
+
+    public function getTensionSolaire(): ?float
+    {
+        return $this->tension_solaire;
+    }
+
+    public function setTensionSolaire(?float $tension_solaire): self
+    {
+        $this->tension_solaire = $tension_solaire;
+
+        return $this;
+    }
+
+    public function getTensionBatterie(): ?float
+    {
+        return $this->tension_batterie;
+    }
+
+    public function setTensionBatterie(?float $tension_batterie): self
+    {
+        $this->tension_batterie = $tension_batterie;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 {% block title %}Tableau de bord du site{% endblock %}
 
 {% block body %}
+<script>console.log('stationview simple log — template rendu');</script>
 <?php header('Access-Control-Allow-Origin: *'); ?>
 <div class="container-fluid">
     <h1 class="text-center">Tableau de bord du site</h1>
@@ -123,21 +124,21 @@
                             <tbody>
                               <tr>
                                 <td><b>BMP280</b></td>
-                                <td>{{stationmeteo.stationdirect.tempbmp280}} C°</td>
+                                <td><span id="tempBmp280">{{ stationmeteo.stationdirect.tempbmp280 }}</span> C°</td>
                                 <td><b>DHT22</b></td>
-                                <td>{{stationmeteo.stationdirect.tempdh22}} C°</td>
+                                <td><span id="tempDht22">{{ stationmeteo.stationdirect.tempdh22 }}</span> C°</td>
                               </tr>
                               <tr>
                                 <td><b>Humidité</b></td>
-                                <td>{{stationmeteo.stationdirect.humidite}} %</td>
+                                <td><span id="humidite">{{ stationmeteo.stationdirect.humidite }}</span> %</td>
                                 <td><b>Pression</b></td>
-                                <td>{{stationmeteo.stationdirect.pression}} hpa</td>
+                                <td><span id="pression">{{ stationmeteo.stationdirect.pression }}</span> hpa</td>
                               </tr>
                               <tr>
                                 <td><b>Lumiére</b></td>
-                                <td>{{stationmeteo.stationdirect.lumiere}} Lux</td>
+                                <td><span id="lumiere">{{ stationmeteo.stationdirect.lumiere }}</span> Lux</td>
                                 <td><b>Anemometre</b></td>
-                                <td>{{stationmeteo.stationdirect.anemometre}} Km/h</td>
+                                <td><span id="anemometre">{{ stationmeteo.stationdirect.anemometre }}</span> Km/h</td>
                               </tr>
                             </tbody>
                           </table>
@@ -152,15 +153,21 @@
                             <tbody>
                                 <tr>
                                     <td><b>Girouette</b></td>
-                                    <td>{{stationmeteo.stationdirect.girouette}} °</td>
+                                    <td><span id="girouette">{{ stationmeteo.stationdirect.girouette }}</span> °</td>
                                     <td><b>Pluviometre</b></td>
-                                    <td>{{stationmeteo.stationdirect.pluviometre}} ml</td>
+                                    <td><span id="pluviometre">{{ stationmeteo.stationdirect.pluviometre }}</span> ml</td>
                                 </tr>
                                 <tr>
                                     <td><b>Point de rose</b></td>
-                                    <td>{{stationmeteo.stationdirect.pointrose}} C°</td>
+                                    <td><span id="pointrose">{{ stationmeteo.stationdirect.pointrose }}</span> C°</td>
                                     <td><b>Temperature ressenti</b></td>
-                                    <td></td>
+                                    <td><span id="tempRessenti"></span></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Tension panneau solaire:</b></td>
+                                    <td><span id="tensionSolaire">{{ stationmeteo.etatstationmeteo.tensionsolaire }}</span> V</td>
+                                    <td><b>Tension batterie :</b></td>
+                                    <td><span id="tensionBatterie">{{ stationmeteo.etatstationmeteo.tensionbatterie }}</span> V</td>
                                 </tr>
                             </tbody>
                           </table>
@@ -186,123 +193,63 @@
                 <tr>
                      <td><b>BMP280 :</b> </td>
                      <td>
-                        {% if stationmeteo.etatstationmeteo.modulebmp280 == 1 %}
-                            <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.modulebmp280 == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleBmp280Img" src="{{ stationmeteo.etatstationmeteo.modulebmp280 == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt="status">
                      </td>
                      <td><b>DHT22 :</b></td>
                      <td>
-                        {% if stationmeteo.etatstationmeteo.capteurdht22 == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.capteurdht22 == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="capteurDht22Img" src="{{ stationmeteo.etatstationmeteo.capteurdht22 == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt="status">
                     </td>
                 </tr>
                 <tr>
                     <td><b>DHT22 :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.moduledht22 == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.moduledht22 == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleDht22Img" src="{{ stationmeteo.etatstationmeteo.moduledht22 == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                     <td><b>BMP280 :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.capteurbmp280 == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.capteurbmp280 == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="capteurBmp280Img" src="{{ stationmeteo.etatstationmeteo.capteurbmp280 == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                 </tr>
                 <tr>
                     <td><b>Anemometre :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.moduleanemo == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.moduleanemo == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleAnemoImg" src="{{ stationmeteo.etatstationmeteo.moduleanemo == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                     <td><b>Pluviometre :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.capteurpluvio == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.capteurpluvio == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="capteurPluvioImg" src="{{ stationmeteo.etatstationmeteo.capteurpluvio == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                  </tr>
                  <tr>
                     <td><b>Girouette :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.modulegirou == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.modulegirou == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleGirouImg" src="{{ stationmeteo.etatstationmeteo.modulegirou == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                     <td><b>Girouette :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.capteurgirou == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.capteurgirou == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="capteurGirouImg" src="{{ stationmeteo.etatstationmeteo.capteurgirou == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                  </tr>
                  <tr>
                     <td><b>Pluviometre :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.modulepluvio == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.modulepluvio == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="modulePluvioImg" src="{{ stationmeteo.etatstationmeteo.modulepluvio == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                     <td><b>Anemometre :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.capteuranemo == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.capteuranemo == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="capteurAnemoImg" src="{{ stationmeteo.etatstationmeteo.capteuranemo == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                  </tr>
                  <tr>
                     <td><b>Tension :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.moduletension == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.moduletension == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleTensionImg" src="{{ stationmeteo.etatstationmeteo.moduletension == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                  </tr>
                  <tr>
                     <td><b>Bit de vie :</b></td>
                     <td>
-                        {% if stationmeteo.etatstationmeteo.modulebitvie == 1 %}
-                        <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-                        {% endif %}
-                        {% if stationmeteo.etatstationmeteo.modulebitvie == 0 %}
-                            <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-                        {% endif %}
+                        <img id="moduleBitvieImg" src="{{ stationmeteo.etatstationmeteo.modulebitvie == 1 ? asset('/images/button-green.png') : asset('/images/button-red.png') }}" width="20" height="20" alt=" bouton">
                     </td>
                  </tr>
                 </tbody>
@@ -321,33 +268,33 @@
                 <tbody>
                     <tr>
                         <td><b>BMP280</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdatebmp280|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.logbmp280}}</td>
+                        <td><span id="logDateBmp280">{{ stationmeteo.etatstationmeteo.logdatebmp280 ? stationmeteo.etatstationmeteo.logdatebmp280|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logBmp280">{{ stationmeteo.etatstationmeteo.logbmp280}}</span></td>
                     </tr>
                     <tr>
                         <td><b>DHT22</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdatedht22|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdht22}}</td>
+                        <td><span id="logDateDht22">{{ stationmeteo.etatstationmeteo.logdatedht22 ? stationmeteo.etatstationmeteo.logdatedht22|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logDht22">{{ stationmeteo.etatstationmeteo.logdht22}}</span></td>
                     </tr>
                     <tr>
                         <td><b>Girouette</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdategirou|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.loggirou}}</td>
+                        <td><span id="logDateGirou">{{ stationmeteo.etatstationmeteo.logdategirou ? stationmeteo.etatstationmeteo.logdategirou|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logGirou">{{ stationmeteo.etatstationmeteo.loggirou}}</span></td>
                     </tr>
                     <tr>
                         <td><b>Anemometre</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdateanemo|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.loganemo}}</td>
+                        <td><span id="logDateAnemo">{{ stationmeteo.etatstationmeteo.logdateanemo ? stationmeteo.etatstationmeteo.logdateanemo|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logAnemo">{{ stationmeteo.etatstationmeteo.loganemo}}</span></td>
                     </tr>
                     <tr>
                         <td><b>Pluviometre</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdatepluvio|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.logpluvio}}</td>
+                        <td><span id="logDatePluvio">{{ stationmeteo.etatstationmeteo.logdatepluvio ? stationmeteo.etatstationmeteo.logdatepluvio|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logPluvio">{{ stationmeteo.etatstationmeteo.logpluvio}}</span></td>
                     </tr>
                     <tr>
                         <td><b>Tension</b></td>
-                        <td>{{ stationmeteo.etatstationmeteo.logdatetension|date("d/m/Y") }}</td>
-                        <td>{{ stationmeteo.etatstationmeteo.logtension}}</td>
+                        <td><span id="logDateTension">{{ stationmeteo.etatstationmeteo.logdatetension ? stationmeteo.etatstationmeteo.logdatetension|date("d/m/Y H:i:s") : '' }}</span></td>
+                        <td><span id="logTension">{{ stationmeteo.etatstationmeteo.logtension}}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -366,8 +313,109 @@
 </script>  
 
 {% block javascripts %}
+    {{ parent() }}
+    <script>
+        (function(){
+            console.log('stationview script initializing');
+            const etatId = {{ stationmeteo.etatstationmeteo ? stationmeteo.etatstationmeteo.id : 'null' }};
+            const stationDirectId = {{ stationmeteo.stationdirect ? stationmeteo.stationdirect.id : 'null' }};
+            console.log('etatId, stationDirectId =', etatId, stationDirectId);
 
-	
+            if(!etatId && !stationDirectId){
+                console.warn('Pas d\'etatStationMeteo ni stationDirect associé (id manquant)');
+                return;
+            }
+
+            // Utiliser les routes API Platform en snake_case (vérifier via /api)
+            const etatUrl = etatId ? `/api/etat_station_meteos/${etatId}` : null;
+            const stationDirectUrl = stationDirectId ? `/api/station_directs/${stationDirectId}` : null;
+
+            const API_KEY = '{{ api_key|default('') }}';
+
+            const green = '{{ asset("/images/button-green.png") }}';
+            const red = '{{ asset("/images/button-red.png") }}';
+
+            function imgSrc(val){ return val == 1 ? green : red; }
+            function formatDate(d){ try{ return d ? new Date(d).toLocaleString() : ''; }catch(e){return ''; } }
+
+            async function fetchJson(url){
+                try {
+                    const headers = { 'Accept':'application/json' };
+                    if(API_KEY) headers['x-api-key'] = API_KEY;
+                    const res = await fetch(url, { headers, credentials: 'same-origin' });
+                    console.log('fetch', url, 'status', res.status);
+                    if(!res.ok) {
+                        const txt = await res.text();
+                        console.warn('API error', url, res.status, txt);
+                        return null;
+                    }
+                    return await res.json();
+                } catch (err) {
+                    console.error('fetchJson error for', url, err);
+                    return null;
+                }
+            }
+
+            async function refreshEtat(){
+                try{
+                    const [etat, stationDirect] = await Promise.all([
+                        etatUrl ? fetchJson(etatUrl) : Promise.resolve(null),
+                        stationDirectUrl ? fetchJson(stationDirectUrl) : Promise.resolve(null)
+                    ]);
+                    if(stationDirect){
+                        console.debug('stationDirect data', stationDirect);
+                        document.getElementById('tempBmp280')?.textContent = stationDirect.tempbmp280 ?? '';
+                        document.getElementById('tempDht22')?.textContent = stationDirect.tempdh22 ?? '';
+                        document.getElementById('humidite')?.textContent = stationDirect.humidite ?? '';
+                        document.getElementById('pression')?.textContent = stationDirect.pression ?? '';
+                        document.getElementById('lumiere')?.textContent = stationDirect.lumiere ?? '';
+                        document.getElementById('anemometre')?.textContent = stationDirect.anemometre ?? '';
+                        document.getElementById('girouette')?.textContent = stationDirect.girouette ?? '';
+                        document.getElementById('pluviometre')?.textContent = stationDirect.pluviometre ?? '';
+                        document.getElementById('pointrose')?.textContent = stationDirect.pointrose ?? '';
+                        document.getElementById('tempRessenti')?.textContent = stationDirect.tempressenti ?? '';
+                    }
+                    if(etat){
+                        console.debug('etat data', etat);
+                        document.getElementById('tensionSolaire')?.textContent = etat.tensionSolaire ?? etat.tensionsolaire ?? '';
+                        document.getElementById('tensionBatterie')?.textContent = etat.tensionBatterie ?? etat.tensionbatterie ?? '';
+                        document.getElementById('moduleBmp280Img')?.setAttribute('src', imgSrc(etat.moduleBmp280 ?? etat.modulebmp280));
+                        document.getElementById('capteurDht22Img')?.setAttribute('src', imgSrc(etat.capteurDht22 ?? etat.capteurdht22));
+                        document.getElementById('moduleDht22Img')?.setAttribute('src', imgSrc(etat.moduleDht22 ?? etat.moduledht22));
+                        document.getElementById('capteurBmp280Img')?.setAttribute('src', imgSrc(etat.capteurBmp280 ?? etat.capteurbmp280));
+                        document.getElementById('moduleAnemoImg')?.setAttribute('src', imgSrc(etat.moduleAnemo ?? etat.moduleanemo));
+                        document.getElementById('capteurPluvioImg')?.setAttribute('src', imgSrc(etat.capteurPluvio ?? etat.capteurpluvio));
+                        document.getElementById('moduleGirouImg')?.setAttribute('src', imgSrc(etat.moduleGirou ?? etat.modulegirou));
+                        document.getElementById('capteurGirouImg')?.setAttribute('src', imgSrc(etat.capteurGirou ?? etat.capteurgirou));
+                        document.getElementById('modulePluvioImg')?.setAttribute('src', imgSrc(etat.modulePluvio ?? etat.modulepluvio));
+                        document.getElementById('capteurAnemoImg')?.setAttribute('src', imgSrc(etat.capteurAnemo ?? etat.capteuranemo));
+                        document.getElementById('moduleTensionImg')?.setAttribute('src', imgSrc(etat.moduleTension ?? etat.moduletension));
+                        document.getElementById('moduleBitvieImg')?.setAttribute('src', imgSrc(etat.moduleBitvie ?? etat.modulebitvie));
+
+                        document.getElementById('logDateBmp280')?.textContent = formatDate(etat.logDateBmp280 ?? etat.log_date_bmp280);
+                        document.getElementById('logBmp280')?.textContent = etat.logBmp280 ?? etat.log_bmp280 ?? '';
+                        document.getElementById('logDateDht22')?.textContent = formatDate(etat.logDateDht22 ?? etat.log_date_dht22);
+                        document.getElementById('logDht22')?.textContent = etat.logDht22 ?? etat.log_dht22 ?? '';
+                        document.getElementById('logDateGirou')?.textContent = formatDate(etat.logDateGirou ?? etat.log_date_girou);
+                        document.getElementById('logGirou')?.textContent = etat.logGirou ?? etat.log_girou ?? '';
+                        document.getElementById('logDateAnemo')?.textContent = formatDate(etat.logDateAnemo ?? etat.log_date_anemo);
+                        document.getElementById('logAnemo')?.textContent = etat.logAnemo ?? etat.log_anemo ?? '';
+                        document.getElementById('logDatePluvio')?.textContent = formatDate(etat.logDatePluvio ?? etat.log_date_pluvio);
+                        document.getElementById('logPluvio')?.textContent = etat.logPluvio ?? etat.log_pluvio ?? '';
+                        document.getElementById('logDateTension')?.textContent = formatDate(etat.logDateTension ?? etat.log_date_tension);
+                        document.getElementById('logTension')?.textContent = etat.logTension ?? etat.log_tension ?? '';
+                        if(document.getElementById('ghost')) document.getElementById('ghost').textContent = etat.ghost ?? '';
+                    }
+                }catch(e){
+                    console.error('refreshEtat error', e);
+                }
+            }
+
+            // premier appel + intervalle
+            refreshEtat();
+            setInterval(refreshEtat, 8000);
+        })();
+    </script>
 {% endblock %}
 
 
