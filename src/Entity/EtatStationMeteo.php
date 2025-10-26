@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=EtatStationMeteoRepository::class)
  * @ApiResource(
+ * 
  *     collectionOperations={
  *         "get"={
  *             "method"="GET",
@@ -23,7 +24,8 @@ use Doctrine\ORM\Mapping as ORM;
  *         "put"={
  *             "method"="PUT",
  *             "path"="/etatstationmeteo/{id}"
- *         }
+ *         },
+ *        "patch"={"method"="PATCH","path"="/etatstationmeteo/{id}"} 
  *     }
  * )
  */

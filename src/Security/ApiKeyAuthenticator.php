@@ -11,15 +11,19 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 
 class ApiKeyAuthenticator extends AbstractGuardAuthenticator
 {
+ 
     public function supports(Request $request)
     {
-        return $request->headers->has('X-API-KEY');
+        return $request->headers->has('X-API-KEY') || $request->query->has('apikey');
     }
 
+
+    
     public function getCredentials(Request $request)
     {
-        return $request->headers->get('X-API-KEY');
+        return $request->headers->get('X-API-KEY') ?? $request->query->get('apikey');
     }
+
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {

@@ -1,20 +1,20 @@
 {
     "dateheure": {
-        "date": "2025-06-28 14:59:33.000000",
-        "timezone_type": 1,
-        "timezone": "+00:00"
+        "date": "2025-10-26 14:32:49.447000",
+        "timezone_type": 2,
+        "timezone": "Z"
     },
-    "temp1": 29,
-    "humiditer": 10,
-    "temp2": 31,
-    "pression_ajt": 1120,
-    "lumiere": 3,
+    "temp1": 12,
+    "humiditer": 50,
+    "temp2": 10,
+    "pression_ajt": 1100,
+    "lumiere": 65,
     "pluvio": 0,
-    "anemo": 0,
-    "girou": 190,
-    "pt_rosee": "12,3",
-    "bitvie": "0",
+    "anemo": 10,
+    "girou": 180,
+    "pt_rosee": "string",
+    "bitvie": "string",
     "eclaire_1km": 0,
     "eclaire_10km": 0,
-    "eclaire_50km": 0
+    "eclaire_50km": 6
 }

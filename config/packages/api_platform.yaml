@@ -5,3 +5,5 @@ api_platform:
         json: ['application/merge-patch+json']
     swagger:
         versions: [3]
+    
+    #name_converter: 'serializer.name_converter.camel_case_to_snake_case'

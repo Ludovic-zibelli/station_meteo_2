@@ -38,6 +38,13 @@ services:
             $alerteMeteo: '@App\Notification\AlerteMeteoNotification'
             $vigilanceRepo: '@App\Repository\VigilanceMeteofranceRepository'
             $orages: '@App\Repository\OragesRepository'
+    
+    App\DataPersister\EtatStationMeteoPersister:
+        autowire: true
+        autoconfigure: true
+        tags:
+        - { name: 'api_platform.data_persister', priority: 128 }
+
 
     
     App\Twig\AppExtension:
