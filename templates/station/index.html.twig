@@ -124,10 +124,10 @@
 			    
 			<h5 class="card-title text-center">Relevés en direct de la station de {{ sta.user.prenom }} à {{ sta.ville }} </h5>
 			<p>La Station est : 	
-			{% if  sta.stationdirect.ghost == 1 %}
+			{% if  sta.stationdirect.ghost == 0 %}
 			En ligne <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
 			{% endif %}
-			{% if  sta.stationdirect.ghost == 0 %}
+			{% if  sta.stationdirect.ghost == 1 %}
 			Hors ligne <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
 			{% endif %}</p>
 			<p>Dernière mise à jour : {{ sta.stationdirect.dateheure|date("d/m/Y H:i") }}</p>

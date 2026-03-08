@@ -58,10 +58,10 @@
                                 <td>{{ station.user.nom }}/{{station.user.email}}</td>
                                 <td>{{ station.stationdirect.tpsvie}}</td>
                                 <td>
-                                    {% if  station.stationdirect.ghost == 1 %}
+                                    {% if  station.stationdirect.ghost == 0 %}
                                     <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
                                     {% endif %}
-                                    {% if  station.stationdirect.ghost == 0 %}
+                                    {% if  station.stationdirect.ghost == 1 %}
                                         <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
                                     {% endif %}
                                 </td>

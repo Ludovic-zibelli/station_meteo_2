@@ -10,12 +10,16 @@ use Doctrine\Common\Collections\Collection;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Vich\UploaderBundle\Entity\File as EmbeddedFile;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=StationMeteosRepository::class)
  * @Vich\Uploadable
  * @ApiResource(
+ * 
+ *     normalizationContext={"groups"={"station:read"}},
+ *     denormalizationContext={"groups"={"station:write"}}
  * 
  *   
  * )
@@ -28,36 +32,43 @@ use Symfony\Component\HttpFoundation\File\File;
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"station:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"station:read"})
      */
     private $date_creation;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"station:read", "station:write"})
      */
     private $ville;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"station:read", "station:write"})
      */
     private $codepostal;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"station:read"})
      */
     private $gps_latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"station:read"})
      */
     private $gps_longitude;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"station:read"})
      */
     private $lien_photo;
 
@@ -73,16 +84,19 @@ use Symfony\Component\HttpFoundation\File\File;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"station:read"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"station:read"})
      */
     private $diy;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="stationMeteos")
+     * @Groups({"station:read"})
      */
     private $user;
 
@@ -94,16 +108,19 @@ use Symfony\Component\HttpFoundation\File\File;
     /**
      * @ORM\OneToMany(targetEntity=Station::class, mappedBy="stationMeteos", cascade={"persist", "remove"})
      * 
+     * 
      */
     private $stations;
 
     /**
      * @ORM\Embedded(class="Vich\UploaderBundle\Entity\File")
+     * 
      */
     private EmbeddedFile $photo;
 
     /**
      * @ORM\OneToOne(targetEntity=StationDirect::class, mappedBy="stationMeteos", cascade={"persist", "remove"})
+     * @Groups({"station:read"})
      */
     private ?StationDirect $stationDirect = null;
 

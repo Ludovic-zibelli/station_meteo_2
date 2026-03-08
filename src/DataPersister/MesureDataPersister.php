@@ -78,7 +78,7 @@ class MesureDataPersister implements DataPersisterInterface
             'temp1' => $data->getTempbmp280(),
             'humiditer' => $data->getHumidite(),
             'temp2' => $data->getTempdh22(),
-            'pression_ajt' => $data->getPression(),
+            'pression' => $data->getPression(),
             'lumiere' => $data->getLumiere(),
             'pluvio' => $data->getPluviometre(),
             'anemo' => $data->getAnemometre(),
@@ -89,10 +89,14 @@ class MesureDataPersister implements DataPersisterInterface
             'eclaire_1km' => $data->getEclaire1Km(),
             'eclaire_10km' => $data->getEclaire10Km(),
             'eclaire_50km' => $data->getEclaire50Km(),
+            'vgilance' => $data->getAlerteMeteoFrance(),
+            'vigilancedebut' => $data->getDateDebutMeteoFrance(),
+            'vigilancefin' => $data->getDateFinMeteoFrance(),
+            'vigilancecouleur' => $data->getCouleurMeteoFrance(),
             
         ];
 
-        file_put_contents('station_direct.json', json_encode($dataArray, JSON_PRETTY_PRINT));
+        file_put_contents('stationdirect.json', json_encode($dataArray, JSON_PRETTY_PRINT));
     
 
         return $this->decorated->persist($data, $context);

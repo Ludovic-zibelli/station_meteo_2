@@ -48,12 +48,21 @@ class StationDirect
 
     /**
      * @ORM\Column(type="float")
-     * 
+     * @Assert\Range(
+     *     min=-50,
+     *     max=50,
+     *     notInRangeMessage="La température doit être comprise entre {{ min }} et {{ max }} degrés Celsius."
+     * )
      */
     private $tempdh22;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Range(
+     *     min=-50,
+     *     max=50,
+     *     notInRangeMessage="La température doit être comprise entre {{ min }} et {{ max }} degrés Celsius."
+     * )
      */
     private $tempbmp280;
 
@@ -64,6 +73,11 @@ class StationDirect
 
     /**
      * @ORM\Column(type="float")
+     * 
+     * @Assert\Range(
+     *     min=850,
+     *     max=1200,
+     *     notInRangeMessage="La pression doit être entre {{ min }} hPa et {{ max }} hPa.")
      */
     private $pression;
 

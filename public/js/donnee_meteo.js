@@ -45,7 +45,7 @@ getDonnee();
 function getDonnee()
 {
     var donnee = getXMLHttpRequest();
-    donnee.open("GET", "station_direct.json", false);
+    donnee.open("GET", "stationdirect.json", false);
     donnee.send(null);
 
     if (donnee.status === 200) {
@@ -80,8 +80,8 @@ function getAffichage(data)
     document.getElementById("capt_lumi").innerHTML = data.lumiere;
     document.getElementById("anemo").innerHTML = data.anemo;
     document.getElementById("tens_capt").innerHTML = data.tension;
-    document.getElementById("humiditer").innerHTML = data.lumiere;
-    document.getElementById("pression").innerHTML = data.pression_ajt;
+    document.getElementById("humiditer").innerHTML = data.humiditer;
+    document.getElementById("pression").innerHTML = data.pression;
     document.getElementById("pluvio").innerHTML = data.pluvio;
     document.getElementById("girou").innerHTML = data.girou;
     document.getElementById("heure_releve").innerHTML = heure;
