@@ -31,7 +31,8 @@ class addBddMiniMaxCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->bdd->AddBddMiniMaxi();
+        $this->bdd->AddBddMiniMaxi(); //Sauvegarde des données mini maxi en bdd
+        $this->bdd->resetMiniMaxiHFromSensors(); //Remise à zéro des données mini maxi horaire pour les capteurs
         return 0;
 
         // or return this if some error happened during the execution

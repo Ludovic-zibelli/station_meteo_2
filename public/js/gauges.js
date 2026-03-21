@@ -63,7 +63,7 @@ gauges = (function () {
             showGaugeShadow    : true,                   // Show a drop shadow outside the gauges
             roundCloudbaseVal  : true,                   // Round the value shown on the cloud base gauge to make it easier to read
                                                          // The realtime files should be absolute paths, "/xxx.txt" refers to the public root of your web server
-            realTimeUrlLongPoll: 'src/realtimegauges-longpoll.php',     // *** ALL Users: If using long polling, change to your location of the PHP long poll realtime file ***
+            realTimeUrlLongPoll: '/js/src/realtimegauges-longpoll.php',     // *** ALL Users: If using long polling, change to your location of the PHP long poll realtime file ***
                                                                     // *** the supplied file is for Cumulus only
             realTimeUrlCumulus : 'realtimegauges.txt',     // *** Cumulus Users: Change to your location of the realtime file ***
             realTimeUrlWD      : 'customclientraw.txt',    // *** WD Users: Change to your location of the ccr file ***
@@ -4460,3 +4460,46 @@ document.addEventListener('DOMContentLoaded', function() {
     updateMinimaxTable();
     setInterval(updateMinimaxTable, 60000);
 });
+
+
+
+// stationId est déjà défini plus haut dans ton fichier (défaut 2)
+function updateStationStatus() {
+  fetch('/api/station-status/' + stationId, {
+    headers: {
+      'X-API-KEY': '2878ece33344e4f6d9e1105c0362f0671d9432fb4d997023acb734f4c6e6793a',
+      'Accept': 'application/json'
+    }
+  })
+  .then(async (response) => {
+    const text = await response.text();
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
+    }
+    return JSON.parse(text);
+  })
+  .then((data) => {
+    const statusText = document.getElementById('status-text');
+    const lastUpdate = document.getElementById('last-update');
+    if (!statusText || !lastUpdate) return;
+
+    // REMARQUE IMPORTANT : N'utilise pas {{ asset(...) }} dans le JS du navigateur
+    const iconGreen = "<img src=\"/images/button-green.png\" width=\"20\" height=\"20\" alt=\"bouton vert\">";
+    const iconRed   = "<img src=\"/images/button-red.png\" width=\"20\" height=\"20\" alt=\"bouton rouge\">";
+
+    if (Number(data.ghost) === 0) {
+      statusText.innerHTML = `En ligne ${iconGreen}`;
+    } else {
+      statusText.innerHTML = `Hors ligne ${iconRed}`;
+    }
+    lastUpdate.textContent = 'Dernière mise à jour : ' + (data.dateheure ?? '--');
+  })
+  .catch((err) => {
+    console.error('Erreur statut station :', err);
+  });
+}
+
+// Démarrage + rafraîchissement périodique
+updateStationStatus();
+setInterval(updateStationStatus, 30000);
+

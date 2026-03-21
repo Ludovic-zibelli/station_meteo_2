@@ -3,6 +3,7 @@
 namespace App\Notification;
 
 use App\Entity\MiniMaxi;
+use App\Entity\MiniMaxiH;
 use App\Entity\Station;
 use App\Repository\MiniMaxiHRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -105,12 +106,13 @@ class BddNotification
         }
 
         // Récupère les valeurs mini/maxi actuelles
-        $minimaxih = $this->repo->findBy(['stationMeteos' => $stationId]);
+        $minimaxih = $this->repo->findBy(['stationMeteos' => $stationMeteo]);
         if (empty($minimaxih)) {
             return;
         }
 
         // Récupère le dernier MiniMaxi enregistré pour cette station
+
         $lastMiniMaxi = $this->em->getRepository(MiniMaxi::class)
             ->findOneBy(['stationMeteos' => $stationMeteo], ['id' => 'DESC']);
 
@@ -156,5 +158,87 @@ class BddNotification
             $this->em->persist($minimaxi);
             $this->em->flush();
         }
+        
     }
+
+    
+/**
+     * Réinitialise MiniMaxiH pour une station avec les valeurs capteurs courantes :
+     * mini = maxi = valeur instantanée au moment de l'appel.
+     */
+    public function resetMiniMaxiHFromSensors(int $stationId = 2): void
+    {
+        // 1) Charger la station
+        $stationMeteo = $this->stationMeteosRepo->find($stationId);
+        if (!$stationMeteo) {
+            return;
+        }
+
+        // 2) Dernière mesure StationDirect pour cette station
+        //    (la plus récente par dateheure)
+        $last = $this->repoDirect->findOneBy(
+            ['station_id' => $stationId],     // <-- dans ton entité StationDirect tu as bien station_id
+            ['dateheure' => 'DESC']
+        );
+        if (!$last) {
+            return; // rien à “réinitialiser” si aucune mesure
+        }
+
+        // 3) Tenter de récupérer un MiniMaxiH existant (le plus récent)
+        //    NB: on filtre par la RELATION et pas par l'ID (on passe $stationMeteo)
+        $currentH = $this->repo->findOneBy(
+            ['stationMeteos' => $stationMeteo],
+            ['id' => 'DESC']
+        );
+
+        if (!$currentH) {
+            $currentH = new MiniMaxiH();
+            $currentH->setStationMeteos($stationMeteo);
+        }
+
+        // 4) Récupérer les valeurs courantes venant de StationDirect
+        //    (les champs existent tels quels dans ta classe StationDirect)
+        $temp    = $last->getTempbmp280();
+        $humi    = $last->getHumidite();
+        $pres    = $last->getPression();
+        $lumi    = $last->getLumiere();
+        $ptro    = $last->getPointRose();     // point de rosée (string dans ton entité ; si c'est string, caster si besoin)
+        $pluvio  = $last->getPluviometre();
+        $girou   = $last->getGirouette();
+        $anemo   = $last->getAnemometre();
+
+        // 5) Injecter "mini = maxi = valeur courante"
+        //    (setters déjà utilisés dans AddBddMiniMaxi => ils existent sur MiniMaxiH)
+        $currentH->setMiniTemp($temp);
+        $currentH->setMaxiTemp($temp);
+
+        $currentH->setMiniHumi($humi);
+        $currentH->setMaxiHumi($humi);
+
+        $currentH->setMiniPres($pres);
+        $currentH->setMaxiPres($pres);
+
+        $currentH->setMiniLumi($lumi);
+        $currentH->setMaxiLumi($lumi);
+
+        // ptro (point de rosée) : selon ton mapping, si ce champ est float/décimal dans MiniMaxiH,
+        // et que StationDirect le fournit en string, pense à le normaliser (floatval)
+        $ptroFloat = is_null($ptro) ? null : (float) $ptro;
+        $currentH->setMiniPtro($ptroFloat);
+        $currentH->setMaxiPtro($ptroFloat);
+
+        $currentH->setMiniPluvio($pluvio);
+        $currentH->setMaxiPluvio($pluvio);
+
+        $currentH->setMiniGirou($girou);
+        $currentH->setMaxiGirou($girou);
+
+        $currentH->setMiniAnemo($anemo);
+        $currentH->setMaxiAnemo($anemo);
+
+        // 6) Persister
+        $this->em->persist($currentH);
+        $this->em->flush();
+    }
+
 }

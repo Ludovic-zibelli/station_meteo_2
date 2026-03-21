@@ -124,13 +124,18 @@
 			    
 			<h5 class="card-title text-center">Relevés en direct de la station de {{ sta.user.prenom }} à {{ sta.ville }} </h5>
 			<p>La Station est : 	
-			{% if  sta.stationdirect.ghost == 0 %}
-			En ligne <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" class=" " alt=" boutonvert">
-			{% endif %}
-			{% if  sta.stationdirect.ghost == 1 %}
-			Hors ligne <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" class=" " alt=" boutonrouge">
-			{% endif %}</p>
-			<p>Dernière mise à jour : {{ sta.stationdirect.dateheure|date("d/m/Y H:i") }}</p>
+			
+			<p id="status-text">
+				{% if sta.stationdirect.ghost == 0 %}
+					En ligne <img src="{{ asset('/images/button-green.png') }}" width="20" height="20" alt="bouton vert">
+				{% else %}
+					Hors ligne <img src="{{ asset('/images/button-red.png') }}" width="20" height="20" alt=" boutonrouge">
+				{% endif %}
+			</p>
+
+			<p id="last-update">
+				Dernière mise à jour : {{ sta.stationdirect.dateheure|date('d/m/Y H:i') }}
+			</p>
 			{% endfor %}
 	 				<noscript>
 					    <h2 style="color:red; text-align:center">&gt;&gt;This pages requires JavaScript enabling in your browser.&lt;&lt;<br>&gt;&gt;Please enable scripting it to enjoy this site at its best.&lt;&lt;</h2>
@@ -659,6 +664,9 @@
 
 {% endblock %}
 {% block javascripts %}
+
+
+
 
 
 {% endblock %}
