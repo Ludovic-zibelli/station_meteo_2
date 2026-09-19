@@ -4,9 +4,24 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\StationMeteos;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MiniMaxiHRepository")
+ * @ApiResource(
+ *     collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/minimaxih"
+ *         }
+ *     },
+ *     itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "path"="/minimaxih/{id}"
+ *         }
+ *     }
+ * )
  */
 class MiniMaxiH
 {

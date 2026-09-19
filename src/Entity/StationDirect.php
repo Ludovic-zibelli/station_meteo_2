@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiProperty;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\StationDirectRepository")
  * @ApiResource(
@@ -123,6 +124,7 @@ class StationDirect
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Length(max=255)
      */
     private $alertemeteofrance;
 
