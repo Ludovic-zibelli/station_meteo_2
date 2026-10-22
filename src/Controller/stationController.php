@@ -277,8 +277,7 @@ class stationController extends AbstractController
     public function getStation(Request $request, GetStationNotification $getstation, MiniMaxiNotification $minimax, MiniMaxiANotification $mna, AlerteMeteoNotification $alert)
     {
         $getstation->getStation($request);
-        $temp1 = $request->get('temp2');
-        $alert->calculAlerteTempAuto($temp1);
+        $alert->calculAlerteTempAuto($request->get('temp2'), $request->get('temp1'));
         //$mna->minimaxicompare();
         //$minimax->getMinimaxi($request);
         return $this->render('station/essai.html.twig');
@@ -394,5 +393,4 @@ class stationController extends AbstractController
     }
 
 }
-
 

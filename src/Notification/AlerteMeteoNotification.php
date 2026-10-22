@@ -38,13 +38,25 @@ class AlerteMeteoNotification
         $this->vigilance_repo = $vigilance_repo;
     }
 
-    public function calculAlerteTempAuto($temperature)
+    public function calculAlerteTempAuto($temperatureBmp280, $temperatureDht22)
     {
+        if (!is_numeric($temperatureBmp280) || !is_numeric($temperatureDht22)) {
+            return;
+        }
+
+        $temperatureBmp280 = (float) $temperatureBmp280;
+        $temperatureDht22 = (float) $temperatureDht22;
+
+        if (!is_finite($temperatureBmp280) || !is_finite($temperatureDht22)
+            || abs($temperatureBmp280 - $temperatureDht22) > 3) {
+            return;
+        }
+
         $alert_auto = $this->repo->findByType(1);
         $alerteAuto = new AlertMeteo();
         if($alert_auto[0]->getOnline() == false)
         {
-            if ($temperature <= 3)
+            if ($temperatureBmp280 <= 3)
             {
 
                 $alerteAuto->setType(false);
@@ -60,7 +72,7 @@ class AlerteMeteoNotification
             }
         }
 
-        if ($temperature >= 4)
+        if ($temperatureBmp280 >= 4)
         {
             $alert_auto[0]->setOnline(false);
             $this->em->flush();

@@ -124,7 +124,7 @@ gauges = (function () {
             windScaleDefMaxMph    : 20,
             windScaleDefMaxKts    : 20,
             windScaleDefMaxMs     : 10,
-            windScaleDefMaxKmh    : 30,
+            windScaleDefMaxKmh    : 130,
             rainScaleDefMaxmm     : 10,
             rainScaleDefMaxIn     : 0.5,
             rainRateScaleDefMaxmm : 10,

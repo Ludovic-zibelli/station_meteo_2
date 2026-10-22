@@ -40,7 +40,7 @@ class MesureDataPersister implements DataPersisterInterface
     {
         $this->miniMaxiNotification->getMinimaxi($data);
         $this->miniMaxiANotification->minimaxicompare($data);
-        $this->alerteMeteo->calculAlerteTempAuto($data->getTempbmp280());
+        $this->alerteMeteo->calculAlerteTempAuto($data->getTempbmp280(), $data->getTempdh22());
         //$this->alerteMeteo->vigilanceMeteoFrance();
         
         

@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class VigilanceMeteoFranceNotification
 {
-    private const DEPARTEMENT_MOSELLE = '57';
+    private const DEPARTEMENT_MOSELLE = 'Moselle';
 
     private EntityManagerInterface $em;
 
@@ -49,7 +49,7 @@ class VigilanceMeteoFranceNotification
             return;
         }
 
-        $textBloc = $this->findTextBlocByDomainId($data['product']['text_bloc_items'], self::DEPARTEMENT_MOSELLE);
+        $textBloc = $this->findTextBlocByDomainName($data['product']['text_bloc_items'], self::DEPARTEMENT_MOSELLE);
         if ($textBloc === null) {
             error_log('Bulletin Meteo France introuvable pour le departement ' . self::DEPARTEMENT_MOSELLE . '.');
             return;
@@ -85,10 +85,10 @@ class VigilanceMeteoFranceNotification
         $this->alerteMeteo->VigilanceMeteoFrance();
     }
 
-    private function findTextBlocByDomainId(array $textBlocItems, string $domainId): ?array
+    private function findTextBlocByDomainName(array $textBlocItems, string $domainName): ?array
     {
         foreach ($textBlocItems as $textBloc) {
-            if (($textBloc['domain_id'] ?? null) === $domainId) {
+            if (($textBloc['domain_name'] ?? null) === $domainName) {
                 return $textBloc;
             }
         }
